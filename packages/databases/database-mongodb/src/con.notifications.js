@@ -1,26 +1,24 @@
 /**
  * @import { db_notifications as db_col } from '@storecraft/core/database'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+import { 
+  count_regular, get_regular, list_regular, 
+  remove_regular, 
+} from './con.shared.js'
 import { to_objid } from './utils.funcs.js';
 import { add_search_terms_relation_on } from './utils.relations.js';
 import { union } from '@storecraft/core/api/utils.func.js';
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('notifications');
 
 /**
  * @param {MongoDB} driver 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -29,11 +27,8 @@ const upsert = (driver) => {
   }
 }
 
-
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsertBulk"]}
  */
 const upsertBulk = (driver) => {
@@ -84,8 +79,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  */
 export const impl = (driver) => {

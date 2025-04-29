@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { useIndexDB } from "./use-index-db.js"
 import { 
   api_query_to_searchparams 
-} from "@storecraft/core/api/utils.query.js";
+} from "@storecraft/core/api/query.js";
 
 /**
  * @template T

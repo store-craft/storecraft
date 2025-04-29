@@ -271,6 +271,7 @@ const GallerySource = (
       className={`flex flex-col justify-center items-center p-2
                   shelf-media-source rounded-lg 
                   border-4 border-dashed cursor-pointer
+                  border-gray-300
                   ${className}`} {...rest}>
     <div className='flex flex-col justify-center items-center'>
       <RiGalleryLine className='w-10 h-10 text-gray-400 stroke-red-400' />
@@ -332,35 +333,36 @@ const UrlSource = (
   return (
 <div className={`p-3 --h-32 shelf-text-minor
                 text-xs font-semibold 
+                border-gray-300
                 rounded-lg shelf-media-source
                 border-4 border-dashed cursor-pointer 
                 ${className}`}>
   <div className="flex flex-col justify-start items-center ">
     <div className='flex flex-row justify-between items-center w-full mb-3'>
       <BlingButton 
-          children='from url' 
-          className='w-fit h-9' 
-          onClick={_ => onAdd(url)}/>
+        children='from url' 
+        className='w-fit h-9' 
+        onClick={_ => onAdd(url)}/>
 
       <BsClipboardPlus 
-          className='text-2xl text-kf-400' 
-          onClick={onFromClipboard} />
+        className='text-2xl text-kf-400' 
+        onClick={onFromClipboard} />
       <label htmlFor='cb_url' className='flex flex-row items-center'>
         <span children='edit' className='text-center align-middle'/>
         <input 
-            id='cb_url' type='checkbox' 
-            className='ml-1 accent-pink-500 w-4 h-4
-                     bg-white dark:bg-slate-600' 
-            onChange={e => setEdit(e.currentTarget.checked)}/>
+          id='cb_url' type='checkbox' 
+          className='ml-1 accent-pink-500 w-4 h-4
+                    bg-white dark:bg-slate-600' 
+          onChange={e => setEdit(e.currentTarget.checked)}/>
       </label>
     </div>
     <p children={error ?? ''} className='text-red-600' />
     <BlingInput 
-        className='mt-1 w-full' 
-        placeholder='from URL..' 
-        type='text' 
-        value={url} 
-        onChange={e => setUrl(e.currentTarget.value)}
+      className='mt-1 w-full' 
+      placeholder='from URL..' 
+      type='text' 
+      value={url} 
+      onChange={e => setUrl(e.currentTarget.value)}
     />
   </div>
 </div>

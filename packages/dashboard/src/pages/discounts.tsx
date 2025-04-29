@@ -13,7 +13,7 @@ const schema_fields = [
     key: 'handle', name: 'Code', comp: Code 
   },
   { 
-    key: 'info.details.meta', name: 'Type', comp: DiscountType 
+    key: 'info.details', name: 'Type', comp: DiscountType 
   },
   { 
     key: 'updated_at', name: 'Last Updated', 
@@ -54,16 +54,19 @@ export default ({}) => {
         ref={ref_actions} 
         createLink='/pages/discounts/create'
         searchTitle='Search by Code, type...' 
-        isLoading={loading} />
+        isLoading={loading} 
+      />
       <ShowIf show={!error && page?.length}>
         <TableSchemaView 
           context={context} 
           data={page} 
-          fields={schema_fields} />
+          fields={schema_fields} 
+        />
         <BottomActions 
           prev={prev} next={next} 
           limit={query_api.limit}
-          onLimitChange={onLimitChange} />
+          onLimitChange={onLimitChange} 
+        />
       </ShowIf>
     </div>    
   </div>

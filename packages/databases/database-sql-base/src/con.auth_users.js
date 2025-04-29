@@ -7,7 +7,7 @@ import {
   count_regular, delete_me, insert_search_of, insert_tags_of, 
   regular_upsert_me, where_id_or_handle_table, with_media, with_tags
 } from './con.shared.js'
-import { query_to_eb, query_to_sort } from './utils.query.js';
+import { withQuery } from './utils.query.js';
 import { remove as remove_customer_and_auth_user } from './con.customers.js';
 
 
@@ -126,22 +126,26 @@ const removeByEmail = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client.selectFrom(table_name)
+    const items = await withQuery(
+      driver.client.selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_tags(eb, eb.ref('auth_users.id'), driver.dialectType),
         with_media(eb, eb.ref('auth_users.id'), driver.dialectType),
-      ])
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, 'auth_users'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      ]),
+      query, table_name
+      // .where(
+      //   (eb) => {
+      //     return query_to_eb(eb, query, table_name);
+      //   }
+      // )
+      // .orderBy(query_to_sort(query, 'auth_users'))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+    )
+    .execute();
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

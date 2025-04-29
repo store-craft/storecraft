@@ -32,7 +32,20 @@ export const create_routes = (app) => {
     '/settings',
     authorize_admin(app),
     async (req, res) => {
-      res.sendJson(app.config);
+      res.sendJson(
+        {
+          ...app.config,
+          core_version: app.version
+        }
+      );
+    }
+  );
+
+  // public info
+  polka.get(
+    '/info',
+    async (req, res) => {
+      res.sendJson(app.info);
     }
   );
 

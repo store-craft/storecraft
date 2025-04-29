@@ -5,10 +5,12 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, 
-  create_handle, file_name } from './api.utils.crud.js';
+import { 
+  create_handle, file_name 
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
 const handle_sf = create_handle('sf', file_name(import.meta.url));
 

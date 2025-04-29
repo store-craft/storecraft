@@ -7,7 +7,7 @@ import { ID, apply_dates, assert, to_handle } from './utils.func.js'
 import { customerTypeUpsertSchema } from './types.autogen.zod.api.js'
 import { 
   regular_get, regular_list, 
-  regular_remove } from './con.shared.js'
+} from './con.shared.js'
 import { create_search_index, isDef } from './utils.index.js';
 import { assert_zod } from './middle.zod-validate.js';
 import { App } from '../index.js';

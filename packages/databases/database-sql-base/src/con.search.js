@@ -5,7 +5,7 @@
 
 import { SQL } from '../index.js'
 import { jsonArrayFrom } from './con.helpers.json.js';
-import { query_to_eb, query_to_sort } from './utils.query.js';
+import { withQuery } from './utils.query.js';
 
 /**
  * @type {(keyof db_driver["resources"])[]}
@@ -85,6 +85,7 @@ export const quicksearch = (driver) => {
     const db = driver.client;
     const expand = query.expand ?? ['*']; 
     const all = expand.includes('*');
+    query.limit ??= 5;
 
     const sts = db
     .selectNoFrom(
@@ -99,16 +100,12 @@ export const quicksearch = (driver) => {
             // console.log(table_name, props)
             props
             return jsonArrayFrom(
-              eb
-              .selectFrom(table_name)
-              .select(props)
-              .where(
-                (eb) => {
-                  return query_to_eb(eb, query, table_name);
-                }
-              )
-              .orderBy(query_to_sort(query, table_name))
-              .limit(query.limit ?? 5),
+              withQuery(
+                eb
+                .selectFrom(table_name)
+                .select(props),
+                query, table_name
+              ),
               driver.dialectType
             ).as(table_name)
           }
@@ -120,12 +117,15 @@ export const quicksearch = (driver) => {
       await sts.executeTakeFirst())
     );
 
+    
     const sanitized = Object.fromEntries(
       Object.entries(items).filter(
         ([key, value]) => Boolean(value?.length)
       )
     );
-
+    
+    // console.log('items', JSON.stringify(items, null, 2))
+    
     // console.log('sanitized', JSON.stringify(sanitized, null, 2))
 
     return sanitized;

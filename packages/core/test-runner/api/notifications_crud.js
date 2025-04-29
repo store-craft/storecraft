@@ -3,7 +3,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name, get_static_ids } from './api.utils.crud.js';
+import { file_name, get_static_ids } from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 

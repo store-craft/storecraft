@@ -16,7 +16,7 @@ import { MongoDB } from '@storecraft/database-mongodb'
 const app = new App(
     config
   )
-  .withPlatform(new NodePlatform())
+  .withPlatform(new DenoPlatform())
   .withDatabase(new MongoDB())
   .withStorage(new DenoLocalStorage('storage'))
 

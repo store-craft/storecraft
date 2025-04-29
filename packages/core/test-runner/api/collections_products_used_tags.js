@@ -1,13 +1,16 @@
 /**
- * @import { CollectionTypeUpsert, ProductTypeUpsert } from '../../api/types.api.js'
+ * @import { 
+ *  CollectionTypeUpsert, ProductTypeUpsert 
+ * } from '../../api/types.api.js'
  */
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_handle, file_name, promises_sequence } from './api.utils.crud.js';
+import { 
+  create_handle, file_name, withTimestamp 
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { withTimestamp } from './utils.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));

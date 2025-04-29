@@ -8,9 +8,10 @@
  * @import { ExpressionBuilder, BinaryOperator } from 'kysely'
  */
 import { enums } from "@storecraft/core/api";
+import { assert } from "console";
 
 /** @param {DiscountType} d */
-const is_order_discount = d => {
+export const is_order_discount = d => {
   return (
     (d.info.details.type===enums.DiscountMetaEnum.order.type) ||
     // @ts-ignore
@@ -19,7 +20,7 @@ const is_order_discount = d => {
 }
 
 /** @param {DiscountType} d */
-const is_automatic_discount = d => {
+export const is_automatic_discount = d => {
   return (d.application.id===enums.DiscountApplicationEnum.Auto.id);
 }
 
@@ -53,7 +54,7 @@ const eb_in = (eb, table, value) => {
 }
 
 /**
- * create a mongodb conjunctions clauses from discount, intended
+ * @description create a filter conjunctions clauses from discount
  * for filtering.
  * @param {ExpressionBuilder<Database, 'products'>} eb 
  * @param {DiscountType} d 
@@ -65,7 +66,10 @@ export const discount_to_conjunctions = (eb, d) => {
     d.active && d?.info?.filters?.length
   );
 
-  if(!is_good) return [];
+  assert(
+    is_good,
+    `discount_to_conjunctions: discount is not a product discount`
+  );
 
   const conjunctions = [];
   const filters = d.info.filters;

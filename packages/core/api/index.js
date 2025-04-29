@@ -22,7 +22,7 @@ import { inter as ai } from './con.ai.logic.js';
 import { inter as storage } from './con.storage.logic.js';
 export * as func from './utils.func.js'
 export * as index from './utils.index.js'
-export * as query from './utils.query.js'
+export * as query from './query.js'
 import * as enums from './types.api.enums.js'
 export * as enums from './types.api.enums.js'
 import { App } from '../index.js';

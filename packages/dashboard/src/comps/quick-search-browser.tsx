@@ -259,6 +259,8 @@ const QuickSearchBrowser = (
           name: it[0]
         }
       )
+    ).filter(
+      it => it.name!=='auth_users' && it.name!=='notifications'
     )
     , [result]
   );

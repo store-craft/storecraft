@@ -1,8 +1,7 @@
 /**
  * @import { 
- *  CollectionTypeUpsert, DiscountTypeUpsert, 
- Filter_p_in_products, 
- *  OrderDataUpsert, OrderDiscountExtra, PostTypeUpsert, ProductTypeUpsert, 
+ *  CollectionTypeUpsert, DiscountTypeUpsert, Filter_p_in_products, 
+ *  OrderDataUpsert, PostTypeUpsert, ProductTypeUpsert, 
  *  QuickSearchResult, ShippingMethodTypeUpsert, StorefrontTypeUpsert, 
  *  TagTypeUpsert 
  * } from '../../api/types.public.js'
@@ -10,9 +9,9 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { add_sanity_crud_to_test_suite, 
-  create_handle, file_name, 
-  get_static_ids} from './api.utils.crud.js';
+import {  
+  file_name, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
 import { enums } from '../../api/index.js';
@@ -25,8 +24,8 @@ import { enums } from '../../api/index.js';
  * - we then query using `vql` on these tokens
  */
 
-const A = 'tokenaaaaaaaa'
-const B = 'tokenbbbbbbbb'
+const A = 'aaaaaaaa'
+const B = 'bbbbbbbb'
 
 /** @type {TagTypeUpsert[]} */
 const tags_upsert = [
@@ -176,8 +175,7 @@ const base_discount = {
   priority: 0,
   info: {
     details: {
-      type: 'order',
-      meta: enums.DiscountMetaEnum.order,
+      type: 'regular',
       extra: {
         fixed: 0,
         percent: 10
@@ -186,10 +184,10 @@ const base_discount = {
     filters: [
       {
         op: 'p-in-products',
-        meta: enums.FilterMetaEnum.p_in_products,
         value: [
           {
-            id: 'i-dont-exist-sajsiajsiasi'
+            handle: 'i-dont-exist',
+            id: 'i-dont-exist'
           }
         ]
       }
@@ -225,9 +223,12 @@ const verify = (result, inClass, outClass) => {
   const INDEX_IN = inClass==='A' ? 0 : 1;
   const INDEX_OUT = outClass==='B' ? 1 : 0;
 
+  // console.log(result.products)
+
   const find_product = result.products.find(
     it => it.handle===products_upsert[INDEX_IN].handle
-  ) && !result.products.find(
+  ) && 
+  !result.products.find(
     it => it.handle===products_upsert[INDEX_OUT].handle
   );
 
@@ -366,29 +367,28 @@ export const create = app => {
   );
 
   s('sanity', async () => {
+
+    // const get = await app.api.products.get(products_upsert[0].handle);
+    // console.log({get})
+
     const resultA = await app.api.search.quicksearch(
       {
         limit: 5,
-        vql: `${A} | tag:${A}`
+        vql: A
       }
     );
 
-    const resultB = await app.api.search.quicksearch(
-      {
-        limit: 5,
-        vql: `${B} | tag:${B}`
-      }
-    );
-
-    // console.log('resultA', resultA)
-    // console.log('resultB', resultB)
-
-    // now verify
     assert.ok(
       verify(resultA, 'A', 'B'),
       'result A failed'
     );
 
+    const resultB = await app.api.search.quicksearch(
+      {
+        limit: 5,
+        vql: B
+      }
+    );
     assert.ok(
       verify(resultB, 'B', 'A'),
       'result B failed'

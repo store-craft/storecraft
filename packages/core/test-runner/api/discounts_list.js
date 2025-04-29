@@ -4,14 +4,15 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
-import { file_name, 
-  iso, add_query_list_integrity_tests,
+import { 
+  file_name, iso,
   get_static_ids,
-  create_handle} from './api.utils.crud.js';
+  create_handle
+} from './api.utils.js';
 import { enums } from '../../api/index.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 const handle_gen = create_handle('dis', file_name(import.meta.url));
 
@@ -46,7 +47,8 @@ const items = get_static_ids('dis').map(
         filters: [
           {
             op: 'p-all',
-            meta: enums.FilterMetaEnum.p_all,
+            // meta: enums.FilterMetaEnum.p_all,
+            value: undefined
           }
         ]
       }

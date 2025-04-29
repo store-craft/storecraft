@@ -4,30 +4,50 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
-import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests,
-  get_static_ids} from './api.utils.crud.js';
+import { 
+  create_handle, file_name, 
+  iso, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 const handle = create_handle('post', file_name(import.meta.url));
 
 /** 
  * @type {PostTypeUpsert[]} 
  */
-const items = get_static_ids('post').map(
-  (id, ix, arr) => {
-    // 5 last items will have the same timestamps
-    let jx = Math.min(ix, arr.length - 3);
-    return {
-      title: `post ${ix}`, text: `text ${ix}`,
-      handle: handle(),
-      id,
-      created_at: iso(jx + 1),
+const items = 
+[
+  ...get_static_ids('post').slice(1).map(
+    (id, ix, arr) => {
+      // 3 last items will have the same `created_at` timestamps
+      // last id will be smaller than the rest
+      let jx = Math.min(ix, arr.length - 3);
+      return {
+        title: `post ${ix + 1}`, 
+        text: `text ${ix + 1}`,
+        handle: handle(),
+        id,
+        created_at: iso(jx),
+      }
     }
+  ),
+  {
+    title: `post 10`, 
+    text: `text 10`,
+    handle: handle(),
+    id: get_static_ids('post')[0],
+    created_at: iso(10),
   }
-);
+  // {
+  //   title: `post 10`, 
+  //   text: `text 10`,
+  //   handle: handle(),
+  //   id: get_static_ids('post')[0],
+  //   created_at: iso(6),
+  // }
+]
 
 
 /**
@@ -63,6 +83,7 @@ export const create = app => {
     s.after(async () => { await app.db.disconnect() });
     s.run();
   } catch (e) {
+    console.log(e);
   }
 })();
 

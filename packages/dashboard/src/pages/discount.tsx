@@ -46,7 +46,6 @@ const info = {
   fields: [
     {
       key: 'filters', name: '🔎 Filters', validate: true, 
-      validator : discount_filters_validator, 
       desc: 'Define which products or orders (by date, amount \
         or customers) are eligible for discount',
       comp: withCard(DiscountFilters, { className: 'w-full h-9'}, true),
@@ -148,7 +147,7 @@ const right = {
       defaultValue: DiscountApplicationEnum.Auto,
       comp: withCard(
         withBling(create_select_view(Object.values(DiscountApplicationEnum))), 
-        { className : 'text-gray-600'}, true
+        { className : ''}, true
         ),
       comp_params: {className: 'w-full text-xs py-auto --font-semibold '} 
     },

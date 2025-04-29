@@ -2,15 +2,12 @@ import { useDocument } from '@storecraft/sdk-react-hooks'
 import ShowIf from '@/comps/show-if'
 import ErrorMessage from '@/comps/error-message'
 import { JsonViewCard } from '@/comps/json'
-import { 
-  HR
-} from '@/comps/common-ui'
+import { HR } from '@/comps/common-ui'
 import { MarkdownViewCard } from '../comps/markdown-card'
 import { SettingsApiKeys } from '../comps/settings-api-keys'
 import { ResourceTitle } from '../comps/resource-title'
 import { SettingsChangePassword } from '@/comps/settings-change-password'
 import { StorecraftConfig } from '@storecraft/core'
-
 
 const info_auth = (value: StorecraftConfig) => {
   let text = 'Here is what you need to know: \n\n';
@@ -52,9 +49,11 @@ const info_more = (value: StorecraftConfig) => {
 
   switch(value?.checkout_reserve_stock_on) {
     case 'checkout_create':
-      text += '> Stock is **automatically** reserved upon \`checkout creation\`'
+      text += '> Stock is **automatically** reserved upon \`checkout creation\`';
+      break;
     case 'checkout_complete':
-      text += '> Stock is **automatically** reserved upon \`checkout completion\`'
+      text += '> Stock is **automatically** reserved upon \`checkout completion\`';
+      break;
     default:
       text += '> Stock is **manually** reserved'
   }

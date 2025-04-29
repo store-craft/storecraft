@@ -1,27 +1,28 @@
 /**
- * @import { db_crud, RegularGetOptions } from '@storecraft/core/database'
- * @import { ApiQuery, BaseType, Cursor, ExpandQuery, QuickSearchResource, QuickSearchResult, Tuple, withOptionalID } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { db_crud, withConcreteId, withConcreteIdAndHandle } from '@storecraft/core/database'
+ * @import { 
+ *  BaseType, ExpandQuery, withOptionalID 
+ * } from '@storecraft/core/api'
  * @import { WithRelations } from './utils.types.js'
  * @import { WithId } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { handle_or_id, isUndef, sanitize_array, 
-  sanitize_one, to_objid } from './utils.funcs.js'
+import { 
+  handle_or_id, isUndef, sanitize_array, 
+  sanitize_one, to_objid 
+} from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 import { add_search_terms_relation_on } from './utils.relations.js'
 
 
 /**
- * @template {BaseType} T
- * @template {BaseType} G
- * 
+ * @description Upsert function for MongoDB
+ * @template {Partial<withConcreteIdAndHandle<{}>>} T
+ * @template {Partial<withConcreteIdAndHandle<{}>>} G
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
  * @returns {db_crud<T, G>["upsert"]}
  */
 export const upsert_regular = (driver, col) => {
@@ -72,20 +73,6 @@ export const upsert_regular = (driver, col) => {
 
           );
 
-          // const res = await col.replaceOne(
-          //   // @ts-ignore
-          //   { 
-          //     $or: [
-          //       data.id && { _id: to_objid(data.id) },
-          //       data.handle && { handle: data.handle }
-          //     ].filter(Boolean)
-          //   }, 
-          //   data,
-          //   { 
-          //     session, upsert: true 
-          //   }
-          // );
-
           ////
           // REPORT IMAGES USAGE
           ////
@@ -105,7 +92,7 @@ export const upsert_regular = (driver, col) => {
 }
 
 /**
- * Extract relations names from item
+ * @description Extract relations names from item
  * @template {WithRelations<{}>} T
  * @param {T} item
  */
@@ -114,10 +101,8 @@ export const get_relations_names = item => {
 }
 
 /**
- * Expand relations in-place
- * 
+ * @description Expand relations in-place
  * @template {any} T
- * 
  * @param {WithRelations<T>[]} items
  * @param {ExpandQuery<T>} [expand_query] 
  */
@@ -224,7 +209,7 @@ export const get_regular = (driver, col) => {
 }
 
 /**
- * get bulk of items, ordered, if something is missing, `undefined`
+ * @description get bulk of items, ordered, if something is missing, `undefined`
  * should be instead
  * @template {withOptionalID} T
  * @template {withOptionalID} G
@@ -234,11 +219,10 @@ export const get_regular = (driver, col) => {
  */
 export const get_bulk = (driver, col) => {
   return async (ids, options) => {
-    const objids = ids.map(handle_or_id)
-                      .map(v => ('_id' in v) ? v._id : undefined)
-                      .filter(Boolean);
-
-
+    const objids = ids
+    .map(handle_or_id)
+    .map(v => ('_id' in v) ? v._id : undefined)
+    .filter(Boolean);
 
     const res = /** @type {(WithRelations<WithId<G>>)[]} */ (
       await col.find(
@@ -264,7 +248,6 @@ export const get_bulk = (driver, col) => {
       )
     );
     
-    
     const sanitized = /** @type {G[]} */(
       /** @type {unknown} */(
         sanitize_array(res)
@@ -273,7 +256,9 @@ export const get_bulk = (driver, col) => {
 
     // now let's order them
     return ids.map(
-      id => sanitized.find(s => s.id===id || s?.['handle']===id)
+      id => sanitized.find(
+        s => s.id===id || s?.['handle']===id
+      )
     );
     
   }
@@ -282,12 +267,8 @@ export const get_bulk = (driver, col) => {
 
 /**
  * @template T, G
- * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
- * 
  * @returns {db_crud<T, G>["remove"]}
  */
 export const remove_regular = (driver, col) => {
@@ -321,7 +302,8 @@ export const list_regular = (driver, col) => {
 
     /** @type {WithRelations<WithId<G>>[]} */
     const items = await col.find(
-      filter,  {
+      filter, 
+      {
         sort, 
         limit: reverse_sign==-1 ? query.limitToLast : query.limit,
         projection: expand_to_mongo_projection(query?.expand)
@@ -349,12 +331,8 @@ export const list_regular = (driver, col) => {
 /**
  * @template {any} T
  * @template {any} G
- * 
- * 
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
- * 
- * 
  * @returns {db_crud<T, G>["count"]}
  */
 export const count_regular = (driver, col) => {

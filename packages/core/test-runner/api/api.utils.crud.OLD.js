@@ -443,7 +443,8 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
     }
   );
 
-  
+  return s;
+
   s('query endAt=(created_at:iso(5)), sortBy=(created_at), order=asc|desc, limitToLast=2', 
     async (ctx) => {
       /** @type {ApiQuery<any>} */

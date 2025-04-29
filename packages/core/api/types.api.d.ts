@@ -143,6 +143,30 @@ export interface StorecraftConfig  {
   cors?: CORSOptions;
 }
 
+/**
+ * @description Storecraft app public info
+ */
+export interface StorecraftAppPublicInfo {
+  /** @description Core engine version */
+  core_version: string,
+  /** @description Default dashboard version */
+  dashboard_default_version: string,
+  /** @description Store description */
+  store_description: string,
+  /** @description Store name */
+  store_name: string,
+  /** @description Store website */
+  store_website: string,
+  /** @description Store support email */
+  store_support_email: string,
+  /** @description Store logo url */
+  store_logo_url: string,
+  /** @description Store confirm email base url */
+  confirm_email_base_url: string,
+  /** @description Store forgot password confirm base url */
+  forgot_password_confirm_base_url: string,
+}
+
 export interface CORSOptions  {
   origin: string | string[];
   allowMethods?: string[];
@@ -1048,6 +1072,7 @@ export type Filter_p_all = {
   op?: FilterMetaEnum['p_all']["op"],
   /** @deprecated */
   meta?: FilterMetaEnum['p_all'],
+  value?: any
 };
 
 /**
@@ -1349,7 +1374,8 @@ export interface DiscountMetaEnum  {
     name?: string,
   },
   any: { 
-    id?: number, type?: unknown, 
+    id?: number, 
+    type?: unknown, 
     name?: string,
   },
 

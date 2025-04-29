@@ -8,6 +8,7 @@ import { Pink, Lime, Purple } from './labels'
 import { to_handle } from '@/utils/func.utils'
 import { EventsTable } from './event-table'
 import { SimpleTable } from './simple-table'
+import { VQLTable } from './vql-table'
 
 const getNodeText = (node: React.ReactNode): string => {
   if (node == null) return '';
@@ -70,6 +71,7 @@ const components = {
   Image,
   Pink, Purple, Lime,
   EventsTable,
+  VQLTable,
   SimpleTable
 } satisfies Record<string, React.FC<any>>
 

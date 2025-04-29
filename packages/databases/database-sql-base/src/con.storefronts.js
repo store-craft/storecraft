@@ -20,7 +20,7 @@ import { delete_entity_values_of_by_entity_id_or_handle_and_context,
   products_with_variants,
   products_with_related_products} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery } from './utils.query.js'
 
 export const table_name = 'storefronts'
 
@@ -193,7 +193,8 @@ const list = (driver) => {
     const expand_shipping = expand_all || expand.includes('shipping_methods');
     const expand_posts = expand_all || expand.includes('posts');
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
@@ -216,17 +217,22 @@ const list = (driver) => {
             eb, eb.ref('storefronts.id'), driver.dialectType
           ),
         ].filter(Boolean)
-      )
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, table_name))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      ),
+      query, table_name
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
+
+      // .where(
+      //   (eb) => {
+      //     return query_to_eb(eb, query, table_name);
+      //   }
+      // )
+      // .orderBy(query_to_sort(query, table_name))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }
@@ -268,7 +274,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at desc']),
+          .orderBy('updated_at', 'desc'),
           driver.dialectType
         ).as('collections'),
   
@@ -287,7 +293,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at desc'])
+          .orderBy('updated_at', 'desc')
           .limit(10),
           dialectType
         ).as('products'),
@@ -303,7 +309,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at desc']),
+          .orderBy('updated_at', 'desc'),
           dialectType
         ).as('discounts'),
   
@@ -318,7 +324,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at desc']),
+          .orderBy('updated_at', 'desc'),
           dialectType
         ).as('shipping_methods'),
   
@@ -333,7 +339,7 @@ const get_default_auto_generated_storefront = (driver) => {
             ]
           )
           .where('active', '=', 1)
-          .orderBy(['updated_at desc'])
+          .orderBy('updated_at', 'desc')
           .limit(3),
           dialectType
         ).as('posts'),

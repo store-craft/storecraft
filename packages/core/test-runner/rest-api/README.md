@@ -30,7 +30,7 @@ to the REST API and from the REST API to the internal Storecraft API.
 - Patch the `api` layer to 
  - Intercept invocations to the internal Storecraft API.
  - Assert that the internal Storecraft API was invoked with the expected arguments.
- - Path the `api` layer to return a string response, that acts as a proof, that the
+ - Patch the `api` layer to return a string response, that acts as a proof, that the
   internal Storecraft API was invoked and was returned from the rest-api.
 - Invoke a function in the JS client SDK.
 - This will in turn invoke the REST API, which will invoke 

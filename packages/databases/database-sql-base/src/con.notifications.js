@@ -8,7 +8,7 @@ import {
   with_search 
 } from './con.shared.js'
 import { sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery } from './utils.query.js'
 
 export const table_name = 'notifications'
 
@@ -117,22 +117,29 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
-      .select(eb => [
-        with_search(eb, eb.ref('notifications.id'), driver.dialectType),
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, 'notifications'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .select(
+        eb => [
+          with_search(eb, eb.ref('notifications.id'), driver.dialectType),
+        ].filter(Boolean)
+      ),
+      query, table_name
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
+      // .where(
+      //   (eb) => {
+      //     return query_to_eb(eb, query, table_name);
+      //   }
+      // )
+      // .orderBy(query_to_sort(query, 'notifications'))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

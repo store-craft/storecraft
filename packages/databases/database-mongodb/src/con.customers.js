@@ -4,17 +4,17 @@
  * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
-
 import { Collection, ObjectId } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, get_regular, list_regular, 
-  upsert_regular } from './con.shared.js'
+import { 
+  count_regular, get_regular, list_regular, 
+  upsert_regular 
+} from './con.shared.js'
 import { handle_or_id, isDef, sanitize_array, to_objid } from './utils.funcs.js'
 import { query_to_mongo } from './utils.query.js';
 
 /**
  * @param {MongoDB} d 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('customers');
@@ -31,8 +31,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["getByEmail"]}
  */
 const getByEmail = (driver) => {
@@ -44,10 +42,7 @@ const getByEmail = (driver) => {
 }
 
 /**
- * 
  * @param {string} email_or_id 
- * 
- * 
  * @returns { {_id:ObjectId} | {email: string}}
  */
 export const email_or_id = (email_or_id) => {
@@ -109,8 +104,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["list_customer_orders"]}
  */
 const list_customer_orders = (driver) => {
@@ -177,10 +170,8 @@ const count_customer_orders = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
- * */
+ */
 export const impl = (driver) => {
 
   return {

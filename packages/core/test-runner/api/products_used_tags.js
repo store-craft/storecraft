@@ -4,12 +4,11 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { 
-  add_sanity_crud_to_test_suite, create_handle, file_name, 
-  promises_sequence
-} from './api.utils.crud.js';
+  create_handle, file_name, 
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { withTimestamp } from './utils.js';
+import { withTimestamp } from './api.utils.js';
 
 const handle = create_handle('pr', file_name(import.meta.url));
 

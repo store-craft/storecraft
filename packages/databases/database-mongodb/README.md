@@ -91,7 +91,8 @@ So, you can instantiate with empty config
 
 ## Testing Locally (I recommend to use `Atlas`)
 
-1. First start a `mongo-db` server
+1. Start a `mongo-db` server with `docker`
+
 First, make sure you have `docker` installed,
 Then, run
 

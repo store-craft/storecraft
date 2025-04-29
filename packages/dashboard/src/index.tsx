@@ -48,9 +48,11 @@ export const Dashboard = (
   useEffect(
     () => {
       if(!isAuthenticated) {
+        // window.location.hash 
         const base = new URL(
-          window.location.pathname ,window.location.origin
+          window.location.pathname, window.location.origin
         );
+        base.hash = window.location.hash;
         window.history.replaceState(null, null, base);
       }
     }, [isAuthenticated]

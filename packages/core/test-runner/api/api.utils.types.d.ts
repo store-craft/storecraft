@@ -1,5 +1,7 @@
-import type { BaseType } from "../../api/types.api.js"
-import type { App } from "../../types.public.js"
+import { type BaseType } from "../../api/types.api.js"
+import { type ApiQuery } from "../../api/types.api.query.js"
+import { type PubSubEvent } from "../../pubsub/types.public.js"
+import { type App } from "../../types.public.js"
 
 export type PartialBase = Partial<BaseType>
 
@@ -26,7 +28,7 @@ export type QueryTestContext<G extends Partial<BaseType>, U extends Partial<Base
     upsert?: (item: U) => Promise<string>
     get?: (id: string) => Promise<G>
     remove?: (id: string) => Promise<boolean>
-    list?: (q: ApiQuery<G>) => Promise<G[]>
+    list?: (q: ApiQuery<any>) => Promise<G[]>
     count?: (q: ApiQuery<G>) => Promise<number>
   }
   events?: {

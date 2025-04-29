@@ -3,7 +3,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
 import { 
@@ -72,7 +72,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -139,7 +143,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -207,7 +215,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -275,7 +287,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -352,7 +368,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -429,7 +449,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,
@@ -498,7 +522,11 @@ export const create = app => {
     // get all recent products
     const products_queried = await app.api.products.list(
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 1000,

@@ -1,23 +1,21 @@
 /**
  * @import { db_templates as db_col } from '@storecraft/core/database'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
-import { count_regular, get_regular, list_regular, 
-  remove_regular, upsert_regular } from './con.shared.js'
+import { 
+  count_regular, get_regular, list_regular, 
+  remove_regular, upsert_regular 
+} from './con.shared.js'
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('templates');
 
 /**
  * @param {MongoDB} driver 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => upsert_regular(driver, col(driver));
@@ -44,8 +42,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  * */
 export const impl = (driver) => {

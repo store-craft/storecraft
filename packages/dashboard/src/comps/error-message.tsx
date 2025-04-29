@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai"
 import { Bling } from "./common-ui"
 
 /**
- * error message view from document pages
+ * @description error message view from document pages
  */
 export type EditMessageParams = {
   error?: import('@storecraft/core/api').error;
@@ -13,10 +13,11 @@ export type EditMessageParams = {
 
 
 /**
- * Easily `format` errors coming from the `storecraft` backend
- * 
+ * @description Easily `format` errors coming from the `storecraft` backend
  */
-export const format_storecraft_errors = (error: import('@storecraft/core/api').error) => {
+export const format_storecraft_errors = (
+  error: import('@storecraft/core/api').error
+) => {
   return error?.messages?.map(
     it => {
       let msg = '';
@@ -30,14 +31,14 @@ export const format_storecraft_errors = (error: import('@storecraft/core/api').e
 }
 
 /**
- * error message view from document pages
+ * @description error message view from document pages
  */
 const ErrorMessage = (
   { 
     error, positive=false, className, ...rest 
   }: EditMessageParams
 ) => {
-  console.log('error ', error)
+  // console.log('error ', error)
 
   const [visible, setVisible] = useState(false)
   const messages = useMemo(
@@ -61,24 +62,25 @@ const ErrorMessage = (
   return (
 <div className={cls}>
   <Bling 
-      stroke='border-2 dark:border mt-5' 
-      rounded='rounded-lg' >
+    stroke='border-2 dark:border mt-5' 
+    rounded='rounded-lg' >
     <div 
-        className=' relative rounded-md dark:rounded-lg bg-gradient-to-br 
-                   to-slate-50 dark:to-slate-800 
-                   from-slate-50 dark:from-slate-800 
-                   w-full'>
+      className='relative rounded-md dark:rounded-lg bg-gradient-to-br 
+      to-slate-50 dark:to-slate-800 
+      from-slate-50 dark:from-slate-800 w-full'
+    >
       <AiOutlineClose 
-          className='text-xl absolute right-2 top-2 
-                   text-kf-500 cursor-pointer hover:text-pink-500' 
-          onClick={() => setVisible(false)} />
+        className='text-xl absolute right-2 top-2 
+        text-kf-500 cursor-pointer hover:text-pink-500' 
+        onClick={() => setVisible(false)} />
       <ul className='list-disc w-full	list-inside p-5'>
         {
           messages?.map((it, ix) => (
             <li 
-                children={it ?? String(it)} 
-                key={ix} 
-                className={'px-2 py-1 text-base font-semibold ' + cls_text} />
+              children={it ?? String(it)} 
+              key={ix} 
+              className={'px-2 py-1 text-base font-semibold ' + cls_text} 
+            />
           ))
         }
       </ul>

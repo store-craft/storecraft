@@ -8,7 +8,7 @@ import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { assert_generic_auth, authorize_admin, 
   is_admin, parse_auth_user } from './con.auth.middle.js'
-import { parse_query } from '../api/utils.query.js'
+import { parse_query } from '../api/query.js'
 
 /**
  * 

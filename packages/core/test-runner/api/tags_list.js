@@ -4,12 +4,13 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
-import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests,
-  get_static_ids} from './api.utils.crud.js';
+import { 
+  create_handle, file_name, 
+  iso, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 
@@ -17,22 +18,6 @@ const handle_tag = create_handle('tag', file_name(import.meta.url));
 // In order to create syntatic data with controlled dates,
 // we will write straight to the databse, bypassing the
 // virtual api of storecraft for insertion
-
-// /** 
-//  * @type {TagTypeUpsert[]} 
-//  */
-// const items = Array.from({length: 10}).map(
-//   (_, ix, arr) => {
-//     // 5 last items will have the same timestamps
-//     ix = Math.min(ix, arr.length - 3);
-//     return {
-//       handle: handle_tag(),
-//       values: ['a'],
-//       id: ID('tag'),
-//       created_at: iso(ix + 1),
-//     }
-//   }
-// );
 
 /** 
  * @type {TagTypeUpsert[]} 

@@ -15,20 +15,23 @@ export const discount_types_to_color = (type: DiscountDetails["meta"]["type"]) =
 
 }
 
-export type DiscountTypeParams = TableSchemaViewComponentParams<DiscountDetails["meta"]>
+export type DiscountTypeParams = TableSchemaViewComponentParams<DiscountDetails>
 
 const DiscountType = ({ value, ...rest }: DiscountTypeParams) => {
-  const name = useMemo(() => 
-    Object.values(enums.DiscountMetaEnum)
-          .find(it => it.type===value?.type)
-          ?.name.split(' ')[0], 
-          [value])
+  const type = value?.type ?? value?.meta?.type;
+  const name = useMemo(
+    () => Object
+      .values(enums.DiscountMetaEnum)
+      .find(it => it.type===type)
+      ?.name?.split?.(' ')?.[0] ?? type ?? 'unknown', 
+    [value]
+  );
 
   const cls = 'text-white rounded-xl py-px px-2 whitespace-nowrap border shelf-border-color-blend ' + 
-            discount_types_to_color(value?.type)
+    discount_types_to_color(value?.type)
 
   return (
-<span className={cls + ' bg-'} children={name}/>
+    <span className={cls + ' bg-'} children={name}/>
   )
 }
 

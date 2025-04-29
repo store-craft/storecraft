@@ -1,15 +1,9 @@
 /**
- * @import { events } from '../../pubsub/types.public.js'
  * @import { ApiAuthResult } from '../../api/types.public.js'
  */
-import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
 import { App } from '../../index.js';
-import esMain from './utils.esmain.js';
-import { sleep } from './utils.js';
 import * as jwt from '../../crypto/jwt.js'
-
 
 export const admin_email = 'admin@sc.com';
 export const admin_password = 'password';
@@ -20,7 +14,9 @@ export const admin_password = 'password';
  * @param {Partial<ApiAuthResult>} auth_result 
  * @param {string} [verify_email] optional email to verify is in the claims
  */
-export const verify_api_auth_result = async (app, auth_result, verify_email) => {
+export const verify_api_auth_result = async (
+  app, auth_result, verify_email
+) => {
 
   // general verify
   assert.ok(auth_result, 'no auth result');

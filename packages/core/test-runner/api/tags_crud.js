@@ -6,11 +6,13 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { assert_async_throws } from './utils.js';
-import { add_sanity_crud_to_test_suite, 
-  create_handle, file_name } from './api.utils.crud.js';
+import {  } from './api.utils.js';
+import { 
+  create_handle, file_name 
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
 const handle_tag = create_handle('tag', file_name(import.meta.url));
 

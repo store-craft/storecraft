@@ -87,9 +87,9 @@ const stats_data = [
     msg : 'unfulfilled orders', 
     Icon : <MdOutlineGamepad 
     className='text-pink-400 text-3xl'/> , 
-    link: '/pages/orders/q/vql=fulfill:1', 
+    link: '/pages/orders/q/search=fulfill:draft | fulfill:processing', 
     which_table: 'orders', 
-    search: 'fulfill:1'
+    search: 'fulfill:draft | fulfill:processing'
   },
   { 
     msg : 'all time orders', 
@@ -102,7 +102,7 @@ const stats_data = [
     msg : 'automatic discounts', 
     Icon : <MdOutlineGamepad 
     className='text-pink-400 text-3xl'/> , 
-    link: '/pages/discounts/q/vql=app:automatic', 
+    link: '/pages/discounts/q/search=app:automatic', 
     which_table: 'discounts', 
     search: 'app:automatic'
   },
@@ -110,7 +110,7 @@ const stats_data = [
     msg : 'coupons', 
     Icon : <MdOutlineGamepad 
     className='text-pink-400 text-3xl'/> , 
-    link: '/pages/discounts/q/vql=app:manual', 
+    link: '/pages/discounts/q/search=app:manual', 
     which_table: 'discounts', 
     search: 'app:manual' 
   },

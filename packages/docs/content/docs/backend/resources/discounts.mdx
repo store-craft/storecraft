@@ -4,9 +4,6 @@ First, learn about discounts concepts at the [Dashboard](admin/discounts) docume
 
 **Storecraft** is commerce-as-code platform, so you can do everything with code.
 
-> in the future, we will add syntactic sugar methods and builder helpers to assist with
-creating discount with code faster.
-
 First, make sure you have a running app.
 
 ```js
@@ -35,92 +32,15 @@ with product and order filter:
 - **Bundle Discounts**
 - **Order Discounts**
 
-### How to use
-
-Each discount has a `info.details.meta` property, which is a const enum, that
-you assign to specify the type of discount.
-
-This enum is called `DiscountMetaEnum` and is Found at `import { enums } from '@storecraft/core/api'`
-
-Here is it's defintion
-
-```ts
-/** 
- * @enum {import('./types.api.d.ts').DiscountMetaEnum} 
- */
-export const DiscountMetaEnum = {
-  regular: { 
-    id: 0, 
-    type: 'regular',          
-    name : 'Regular Discount', 
-  },
-  bulk: { 
-    id: 1, type: 'bulk',          
-    name : 'Bulk Discount', 
-  },
-  buy_x_get_y: { 
-    id: 2, type: 'buy_x_get_y' ,  
-    name : 'Buy X Get Y',
-  },
-  order: { 
-    id: 3, type: 'order', 
-    name : 'Order Discount',
-  },
-  bundle: { 
-    id: 4, type: 'bundle', 
-    name : 'Bundle Discount',
-  },
-}
-
-```
-
-Each enum hints the type of extra parameters, that you have to specify for the discount and
-is assigned at `info.details.extra`
-
-```ts
-import type { 
-  RegularDiscountExtra, OrderDiscountExtra, BulkDiscountExtra, 
-  BuyXGetYDiscountExtra, BundleDiscountExtra
-} from '@storecraft/core/api'
-```
-
-> You will see soon in the examples below how simple it is
-
 ## Discount Application Type
 
 There are two types of discount applications:
 - **Automatic** discounts, applied automatically at checkout
-- **Manual (Coupons)** discounts, applied manually using a code or handle 
-
-Each discount has a `application` property, which is a const enum, that
-you assign to specify the type of discount application.
-
-This relevant enum is called `DiscountApplicationEnum` and is Found at `import { enums } from '@storecraft/core/api'`
-
-Here is it's defintion
-
-```ts
-/** 
- * @enum {import('./types.api.d.ts').DiscountApplicationEnum} 
- */
-export const DiscountApplicationEnum = {
-  Auto:   { id: 0, name: 'Automatic', name2: 'automatic'},
-  Manual: { id: 1, name: 'Manual', name2: 'manual'},
-}
-
-```
+- **Manual (Coupons)** discounts, applied manually using a code 
 
 ## Discount Filters
 
 So, every discount has an array of filters at `filters` property.
-
-Each filter in the array is treated as **AND** logically.
-
-Each filter consists of, 
-- a `meta` const enum for identification
-- a `value` property to describe the filter arguments
-
-
 There are two types of filters, product and order filters.
 
 ### Product Filters
@@ -135,89 +55,6 @@ We support,
 - **Product NOT In Products**, which qualifies products, that dont have the same `id` and `handle` as in the value array
 - **Product In Price Range**, which qualifies products, have their price in the range specified at `value` object
 
-Here is it's defintion, found at `import { enums } from '@storecraft/core/api'`, but also declared
-at `import type { FilterMetaEnum } from '@storecraft/core/api'`
-
-```ts
-/**
- * @enum {import('./types.api.d.ts').FilterMetaEnum} 
- */
-export const FilterMetaEnum = { 
-  p_in_collections: 
-  { 
-    id: 0, type:'product', 
-    op: 'p-in-collections', 
-    name: 'Product In Collection'
-  },
-  p_not_in_collections: { 
-    id: 1, type:'product', 
-    op: 'p-not-in-collections', 
-    name: 'Product not in Collection'
-  },
-  p_in_products: {
-    id: 2, type:'product', 
-    op: 'p-in-products', 
-    name: 'Product belongs to'
-  },
-  p_not_in_products: { 
-    id: 3, type:'product', 
-    op: 'p-not-in-products', 
-    name: 'Product does not belong to'
-  },
-  p_in_tags: { 
-    id: 4, type:'product', 
-    op: 'p-in-tags', 
-    name: 'Product has Tag'
-  },
-  p_not_in_tags: {
-    id: 5, type:'product', 
-    op: 'p-not-in-tags', 
-    name: 'Product excludes Tag'
-  },    
-  p_all: {
-    id: 6, type:'product', 
-    op: 'p-all', name: 'All Products'
-  },    
-  p_in_price_range: {
-    id: 7, type:'product', 
-    op: 'p-in-price-range', 
-    name: 'Product in Price range'
-  },    
-  o_subtotal_in_range: {
-    id: 100, type:'order', 
-    op: 'o-subtotal-in-range', 
-    name: 'Order subtotal in range'
-  },    
-  o_items_count_in_range: {
-    id: 101, type:'order', 
-    op: 'o-items-count-in-range', 
-    name: 'Order items count in range'
-  },    
-  o_date_in_range: {
-    id: 102, type:'order', 
-    op: 'o-date-in-range', 
-    name: 'Order in dates'
-  },    
-  o_has_customer: {
-    id: 103, type:'order', 
-    op: 'o-has-customer', 
-    name: 'Order has Customers'
-  },    
-}
-
-```
-
-Each Filter enum hints the type of `value` parameters, that you have to specify for the discount filter to work
-
-```ts
-import type { 
-  FilterValue_p_in_collections, FilterValue_p_not_in_collections,
-  FilterValue_p_in_products, FilterValue_p_not_in_products,
-  FilterValue_p_in_tags, FilterValue_p_not_in_tags,
-  FilterValue_p_in_price_range
-} from '@storecraft/core/api'
-```
-
 ### Order Filters
 
 We support,
@@ -225,16 +62,6 @@ We support,
 - **Order Date In Range** filter, which qualifies orders, that were ordered at specific time frames.
 - **Order Items Count In Range** filter, which qualifies orders, that were has a range of items count (for example at least 3).
 - **Order Subtotal In Range** filter, which qualifies orders, that have subtoal range (example, orders above >= 100USD).
-
-Each Filter enum hints the type of `value` parameters, that you have to specify for the discount filter to work
-
-```ts
-import type { 
-  FilterValue_o_subtotal_in_range, FilterValue_o_items_count_in_range,
-  FilterValue_o_date_in_range, FilterValue_o_has_customers
-} from '@storecraft/core/api'
-```
-
 
 ## Upsert Regular Discount
 
@@ -252,16 +79,14 @@ const discount: DiscountUpsertType = {
   application: enums.DiscountApplicationEnum.Auto, 
   info: {
     details: {
-      meta: enums.DiscountMetaEnum.regular,
-      /** @type {import('@storecraft/core/api').RegularDiscountExtra} */
+      type: 'regular',
       extra: {
         fixed: 0, percent: 10
       }
     },
     filters: [
       { 
-        meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+        op: 'p-in-tags',
         value: ['regular']
       }
     ]
@@ -291,8 +116,7 @@ const discount: DiscountUpsertType = {
   application: enums.DiscountApplicationEnum.Auto, 
   info: {
     details: {
-      meta: enums.DiscountMetaEnum.bulk,
-      /** @type {import('@storecraft/core/api').BulkDiscountExtra} */
+      type: 'bulk',
       extra: {
         qty: 3,
         percent: 100,
@@ -302,8 +126,7 @@ const discount: DiscountUpsertType = {
     },
     filters: [
       { // discount for a specific product handle
-        meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+        op: 'p-in-tags',
         value: ['bulk']
       }
     ]
@@ -332,24 +155,20 @@ const discount: DiscountUpsertType = {
   application: enums.DiscountApplicationEnum.Auto, 
   info: {
     details: {
-      meta: enums.DiscountMetaEnum.bundle,
-      /** @type {import('@storecraft/core/api').BundleDiscountExtra} */
+      type: 'bundle',
       extra: {
         fixed: 0, percent: 50, recursive: false
       }
     },
     filters: [ // in bundle, each filter is part of the bundle
       { 
-        meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+        op: 'p-in-tags',
         value: ['robot_arm']
       },
       { 
-        meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+        op: 'p-in-tags',
         value: ['robot_leg']
       }
-
     ]
   }
 }    
@@ -358,8 +177,14 @@ await app.api.discounts.upsert(discount);
 
 ```
 
-
 ## Upsert `Buy X Get Y` Discount
+
+Apply a **Buy X Get Y** Discount, 50% OFF for:
+- Buy 2 robot legs
+- Get 1 robot arms for 50% OFF (ONCE, NOT Recursive)
+
+```ts
+- robot legs
 
 
 ```ts
@@ -367,15 +192,14 @@ import { enums } from '@storecraft/core/api';
 import type { DiscountUpsertType } from '@storecraft/core/api';
 
 const discount: DiscountUpsertType = { 
-  active: true, id: '',
-  handle: '', 
-  title: 'buy X get Y discount: Buy 2 robot legs -> Get 1 Robot arms for 50% OFF (ONCE, NOT Recursive)',
+  active: true,
+  handle: 'buy-x-get-y-robot-arms', 
+  title: 'Buy 2 robot legs -> Get 1 Robot arms for 50% OFF (ONCE, NOT Recursive)',
   priority: 0, 
   application: enums.DiscountApplicationEnum.Auto, 
   info: {
     details: {
-      meta: enums.DiscountMetaEnum.buy_x_get_y,
-      /** @type {import('@storecraft/core/api').BuyXGetYDiscountExtra} */
+      type: 'buy-x-get-y',
       extra: {
         fixed: 0, percent: 50,
         recursive: false,
@@ -383,8 +207,7 @@ const discount: DiscountUpsertType = {
         qty_y: 1,
         filters_y: [
           { // get y filters
-            meta: enums.FilterMetaEnum.p_in_tags,
-            /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+            op: 'p-in-tags',
             value: ['robot_arm']
           },
         ]
@@ -393,8 +216,7 @@ const discount: DiscountUpsertType = {
     },
     filters: [ // in buy x get y, each filter is part of the buy x
       { 
-        meta: enums.FilterMetaEnum.p_in_tags,
-        /** @type {import('@storecraft/core/api').FilterValue_p_in_tags} */
+        op: 'p-in-tags',
         value: ['robot_leg']
       },
     ]
@@ -413,7 +235,6 @@ To fetch, you can use it's `handle` or `ID`
 ```js
 const by_id = await app.api.discounts.get('dis_65e5ca42c43e2c41ae5216a9');
 const by_handle = await app.api.discounts.get('50-off-robot-legs');
-
 ```
 
 
@@ -424,9 +245,11 @@ You can query the resource with
 ```js
 const items = await app.api.discounts.list(
   {
-    startAfter: [
-      ['updated_at', '2024-06-13T08:51:52.202Z']
-    ],
+    vql: {
+      updated_at: {
+        $gt: '2024-06-13T08:51:52.202Z'
+      }
+    },
     order: 'desc',
     sortBy: [
       'updated_at'
@@ -436,7 +259,6 @@ const items = await app.api.discounts.list(
 );
 
 ```
-
 
 ## Query Eligible Products of a Discount
 

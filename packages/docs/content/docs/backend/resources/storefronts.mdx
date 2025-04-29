@@ -52,12 +52,8 @@ const id = await app.api.storefronts.upsert(
   }
 );
 
-
 console.log(id)
-//
 // Will print ID such as `sf_65e5ca42c43e2c41ae5216a9`
-//
-
 ```
 
 > `handle` is optional for new inserts
@@ -87,12 +83,31 @@ const store = await app.api.storefronts.get(
 
 You can query the `storefronts` resource with
 
-```js
+```ts
 const items = await app.api.storefronts.list(
   {
-    startAfter: [
-      ['updated_at', '2024-06-13T08:51:52.202Z']
+    vql: 'active=true & title~black',
+    order: 'desc',
+    sortBy: [
+      'updated_at'
     ],
+    limit: 5
+  }
+);
+
+```
+
+And also in object mode
+
+```ts
+const items = await app.api.storefronts.list(
+  {
+    vql: {
+      $and: [
+        { active: { $eq: true } },
+        { title: { $like: 'black' } }
+      ]
+    },
     order: 'desc',
     sortBy: [
       'updated_at'
@@ -107,45 +122,35 @@ const items = await app.api.storefronts.list(
 ## List all Featured Products of storefront
 
 ```js
-const featured = await app.api.storefronts.list_storefront_products(
-  'my-black-friday-store', 
-);
-
+const storefront = await app.api.storefronts.get('my-black-friday-store');
+const products = storefront.products;
 ```
 
 ## List all Featured Collections of storefront
 
 ```js
-const featured = await app.api.storefronts.list_storefront_collections(
-  'my-black-friday-store', 
-);
-
+const storefront = await app.api.storefronts.get('my-black-friday-store');
+const collections = storefront.collections;
 ```
 
 ## List all Featured Discounts of storefront
 
 ```js
-const featured = await app.api.storefronts.list_storefront_discounts(
-  'my-black-friday-store', 
-);
-
+const storefront = await app.api.storefronts.get('my-black-friday-store');
+const discounts = products.discounts;
 ```
 
 ## List all Featured Posts of storefront
 
 ```js
-const featured = await app.api.storefronts.list_storefront_posts(
-  'my-black-friday-store', 
-);
-
+const storefront = await app.api.storefronts.get('my-black-friday-store');
+const posts = products.posts;
 ```
 
 
 ## List all Featured Shipping methods of storefront
 
 ```js
-const featured = await app.api.storefronts.list_storefront_shipping_methods(
-  'my-black-friday-store', 
-);
-
+const storefront = await app.api.storefronts.get('my-black-friday-store');
+const shipping_methods = products.shipping_methods;
 ```

@@ -231,7 +231,7 @@ export const BlingButton = (
     className={className} >
   <button 
       className={`h-full w-full align-middle text-center px-3 
-                  rounded-md shelf-button-color-soft
+                  rounded-md shelf-button-color-soft cursor-pointer
                   whitespace-nowrap ${btnClassName}`} 
       children={children ?? text} {...rest}/>
 </Bling>            

@@ -1,261 +1,269 @@
 /**
- * @import { ApiQuery, Cursor } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { ApiQuery } from '@storecraft/core/api'
+ * @import { VQL, VQL_OPS } from '@storecraft/core/vql'
  * @import { Database } from '../types.sql.tables.js'
- * @import { BinaryOperator, ExpressionBuilder } from 'kysely'
- * @import {DirectedOrderByStringReference, QueryableTables} from './utils.types.js'
+ * @import { ExpressionBuilder, SelectQueryBuilder } from 'kysely'
+ * @import { legal_value_types } from "@storecraft/core/vql";
  */
-
-import { parse } from "@storecraft/core/vql";
+import { legacy_query_with_cursors_to_vql_string } from "@storecraft/core/api/query.legacy.js";
+import { parse, utils } from "@storecraft/core/vql";
 
 /**
- * Convert an API Query cursor into mongo dialect, also sanitize.
- * 
- * 1. (a1, a2) >  (b1, b2) ==> (a1 > b1) || (a1=b1 & a2>b2)
- * 2. (a1, a2) >= (b1, b2) ==> (a1 > b1) || (a1=b1 & a2>=b2)
- * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
- * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
- * 
- * @param {ExpressionBuilder<Database>} eb 
- * @param {Cursor} c 
- * @param {'>' | '>=' | '<' | '<='} relation 
- * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer 
- * Your chance to change key and value
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {ExpressionBuilder<Database, Table>} eb 
+ * @param {VQL} vql 
+ * @param {Table} table_name 
  */
-export const query_cursor_to_eb = (eb, c, relation, transformer=(x)=>x) => {
+export const query_vql_root_to_eb = (eb, vql, table_name) => {
 
-  /** @type {BinaryOperator} */
-  let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
-  /** @type {BinaryOperator} */
-  let rel_key_2; // relation in last conjunction term in last disjunction
-
-  if (relation==='>' || relation==='>=') {
-    rel_key_1 = rel_key_2 = '>';
-    if(relation==='>=')
-      rel_key_2='>=';
-  }
-  else if (relation==='<' || relation==='<=') {
-    rel_key_1 = rel_key_2 = '<';
-    if(relation==='<=')
-      rel_key_2='<=';
-  } else return undefined;
-
-  
-  const disjunctions = [];
-  // each disjunction clause
-  for (let ix = 0; ix < c.length; ix++) {
-    const is_last_disjunction = ix==c.length-1;
-    const conjunctions = [];
-    // each conjunction clause up until the last term (not inclusive)
-    for (let jx = 0; jx < ix; jx++) {
-      // the a_n=b_n
-      const r = transformer(c[jx]);
-      
-      // conjunctions.push({ [r[0]] : r[1] });
-      conjunctions.push(eb(r[0], '=', r[1]));
-    }
-
-    // Last conjunction term
-    const relation_key = is_last_disjunction ? rel_key_2 : rel_key_1;
-    const r = transformer(c[ix]);
-    // conjunctions.push({ [r[0]] : { [relation_key]: r[1] } });
-    conjunctions.push(eb(r[0], relation_key, r[1]));
-    // Add to disjunctions list
-    // disjunctions.push({ $and: conjunctions });
-    disjunctions.push(eb.and(conjunctions));
+  /** @template T @param {T} fn @returns {T} */
+  const identity = (fn) => {
+    return fn;
   }
 
-  if(disjunctions.length==0)
-    return undefined;
+  /**
+   * @param {VQL_OPS<legal_value_types>} ops `ops` object about this property
+   * @param {(keyof (Database[keyof Database]))} name 
+   * property name in the table
+   */
+  const leaf_ops = (ops, name) => {
+    
+    const ops_keys = /** @type {(keyof VQL_OPS)[]} */(
+      Object.keys(ops)
+    );
+    const values = ops_keys.map(
+      (k) => {
+        /** `arg` is basically `op.$eq` `op.$gte` etc.. */
+        const arg = boolean_to_0_or_1(ops[k]);
+        const arg_any = /** @type {any} */(arg);
+        let result;
 
-  // const result = {
-  //   $or: disjunctions
-  // };
+        const prop_ref = eb.ref(`${table_name}.${name}`)
+        switch (k) {
+          case '$eq':
+            result = eb(prop_ref, '=', arg_any);
+            break;
+          case '$ne':
+            result = eb(prop_ref, '!=', arg_any);
+            break;
+          case '$gt':
+            result = eb(prop_ref, '>', arg_any);
+            break;
+          case '$gte':
+            result = eb(prop_ref, '>=', arg_any);
+            // console.log('$gte ', {value, arg, result, name})
+            break;
+          case '$lt':
+            result = eb(prop_ref, '<', arg_any);
+            break;
+          case '$lte':
+            result = eb(prop_ref, '<=', arg_any);
+            break;
+          case '$like':
+            // @ts-ignore
+            result = eb(prop_ref, 'like', `%${String(arg_any)}%`);
+            break;
+          case '$in': {
+            result = eb(prop_ref, 'in', arg_any)
+            break;
+          }
+          case '$nin': {
+            result = eb(prop_ref, 'not in', arg_any)
+            break;
+          }
+          default:
+            if(result===undefined)
+              throw new Error('VQL-ops-failed');
+        }
 
-  return eb.or(disjunctions);
+        // debug
+        // console.log(
+        //   'test_ops',
+        //   {k, arg, result}
+        // );
 
-  // return result;
-}
+        return result;
+      }
+    );
+    
+    return eb.and(values);
+  }
 
-/**
- * @template {QueryableTables} T
- * @param {ExpressionBuilder<Database>} eb 
- * @param {VQL.Node} node 
- * @param {T} table_name 
- */
-export const query_vql_node_to_eb = (eb, node, table_name) => {
-  if(node.op==='LEAF') {
-    // console.log('value', node.value)
-    return eb
-    .exists(
-      eb => eb
-      .selectFrom('entity_to_search_terms')
-      .select('id')
-      .where(
-        eb => eb.and(
-          [
-            eb.or(
+  const reduced = utils.reduce_vql(
+    {
+      vql,
+
+      map_leaf: (node) => {
+        return leaf_ops(
+          node.op, 
+          /** @type {any} */(node.name)
+        );
+      },
+
+      reduce_AND: identity(
+        (nodes) => {
+          return eb.and(nodes);
+        }
+      ),
+
+      reduce_OR: (nodes) => {
+        return eb.or(nodes);
+      },
+
+      reduce_NOT: (node) => {
+        return eb.not(node);
+      },
+
+      reduce_SEARCH: (value) => {
+        return eb
+        .exists(
+          eb => eb
+          .selectFrom('entity_to_search_terms')
+          .select('id')
+          .where(
+            eb => eb.and(
               [
-                eb(
-                  `entity_to_search_terms.entity_id`, '=', 
-                  eb.ref(`${table_name}.id`)
+                eb.or(
+                  [
+                    eb(
+                      'entity_to_search_terms.entity_id', '=', 
+                      eb.ref(`${table_name}.id`)
+                    ),
+                    eb(
+                      `entity_to_search_terms.entity_handle`, '=', 
+                      eb.ref(`${table_name}.handle`)
+                    ),
+                  ]
                 ),
                 eb(
-                  `entity_to_search_terms.entity_handle`, '=', 
-                  eb.ref(`${table_name}.handle`)
-                ),
+                  `entity_to_search_terms.value`, 'like', 
+                  `%${String(value.toLowerCase())}%`
+                )
               ]
-            ),
-            eb(
-              `entity_to_search_terms.value`, 'like', 
-              node.value.toLowerCase()
             )
-          ]
+          )
         )
-      )
-    )
-  }
+      },
 
-  let conjunctions = [];
-  for(let arg of node?.args) {
-    conjunctions.push(query_vql_node_to_eb(eb, arg, table_name));
-  }
+    }
+  );
 
-  switch (node.op) {
-    case '&':
-      return eb.and(conjunctions)
-    case '|':
-      return eb.or(conjunctions)
-    case '!':
-      return eb.not(conjunctions[0])
-    default:
-      throw new Error('VQL-failed')
-  }
-
+  return reduced;
 }
 
 /**
- * @param {ExpressionBuilder<Database>} eb 
- * @param {VQL.Node} root 
- * @param {QueryableTables} table_name 
+ * @description Transform booleans to 0 or 1. We write `boolean`
+ * types as `0` or `1` in SQL to be uniform with **SQLite**.
+ * @param {legal_value_types | legal_value_types[]} value 
+ * @returns {legal_value_types | legal_value_types[]}  
  */
-export const query_vql_to_eb = (eb, root, table_name) => {
-  return root ? 
-    query_vql_node_to_eb(eb, root, table_name) : 
-    undefined;
-}
-
-
-/**
- * 
- * @param {[k: string, v: any]} kv 
- * @param {keyof Database} table_name 
- * @returns {[k: string, v: any]}  
- */
-const transform_boolean_to_0_or_1 = (kv, table_name) => {
-
-  // console.log('transform_boolean_to_0_or_1', kv)
-  kv = [
-    table_name ? `${table_name}.${kv[0]}` : kv[0],
-    typeof kv[1] === 'boolean' ? (kv[1] ? 1 : 0) : kv[1]
-  ];
-
-  return kv;
+const boolean_to_0_or_1 = (value) => {
+  return (typeof value==='boolean') ? 
+    (value ? 1 : 0) : 
+    value;
 }
 
 /**
- * Convert an API Query into dialect, also sanitize.
- * 
- * @template {any} [T=any]
- * 
- * @param {ExpressionBuilder<Database>} eb 
- * @param {ApiQuery<T>} q 
- * @param {QueryableTables} table_name 
- * 
+ * @description Convert an {@link ApiQuery} into **SQL** Clause.
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @template {any} [G=any]
+ * @param {ExpressionBuilder<Database, Table>} eb 
+ * @param {ApiQuery<G>} q 
+ * @param {Table} table_name 
  */
 export const query_to_eb = (eb, q={}, table_name) => {
   const clauses = [];
 
-  const sort_sign = q.order === 'asc' ? 1 : -1;
-  const asc = sort_sign==1;
-  const transformer = (x) => transform_boolean_to_0_or_1(x, table_name);
-
-  // compute index clauses
-  if(q.startAt) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.startAt, asc ? '>=' : '<=', transformer
-      )
-    );
-  } else if(q.startAfter) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.startAfter, asc ? '>' : '<', transformer
-      )
-    );
+  try { // compute VQL clauses 
+    q.vql = /** @type {VQL<G>} */({
+      $and: [
+        parse(q.vql),
+        // supports legacy queries with cursors, will be deprecated
+        // in future versions.
+        parse(
+          legacy_query_with_cursors_to_vql_string(q)
+        )
+      ].filter(Boolean)
+    });
+  } catch(e) {
+    console.error('VQL parse error:\n', e, '\nfor query:\n', q);
   }
 
-  if(q.endAt) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.endAt, asc ? '<=' : '>=', transformer
-      )
+  if(q.vql) {
+    const vql_clause = query_vql_root_to_eb(
+      eb, /** @type {VQL} */(q.vql), table_name
     );
-  } else if(q.endBefore) {
-    clauses.push(
-      query_cursor_to_eb(
-        eb, q.endBefore, asc ? '<' : '>', transformer
-      )
-    );
+    vql_clause && 
+      clauses.push(vql_clause);
   }
-
-  // compute VQL clauses 
-  try {
-    if(q.vql && !q.vqlParsed) {
-      q.vqlParsed = parse(q.vql)
-    }
-  } catch(e) {}
-
-  const vql_clause = query_vql_to_eb(
-    eb, q.vqlParsed, table_name
-  );
-
-  vql_clause && clauses.push(vql_clause);
 
   return eb.and(clauses);
 }
 
-const SIGN = {
+const SIGN = /** @type {const} */({
   '1': 'asc',
   '-1': 'desc'
-}
+});
+
 
 /**
- * Convert an API Query into mongo dialect, also sanitize.
- * @template {Record<string, any>} [Type=Record<string, any>]
- * @template {keyof Database} [Table=keyof Database]
- * 
- * @param {ApiQuery<Type>} q 
+ * @description Convert an API Query into sort clause.
+ * @template O
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {SelectQueryBuilder<Database, Table, O>} qb 
+ * @param {ApiQuery<any>} q 
  * @param {Table} table 
- * @returns {DirectedOrderByStringReference<Database, Table, Database[Table]>[]}
+ * @returns {SelectQueryBuilder<Database, Table, O>}
  */
-export const query_to_sort = (q={}, table) => {
-  // const sort_sign = q.order === 'asc' ? 'asc' : 'desc';
+export const withSort = (qb, q={}, table) => {
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const reverse_sign = q.limitToLast ? -1 : 1;
   const asc = q.order === 'asc';
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
   // compute sort fields and order
-  const keys = q.sortBy?.length ? q.sortBy :  ['updated_at', 'id'];
-  const sort = keys.map(
-    s => table ? `${table}.${s} ${SIGN[sort_sign]}` : `${s} ${SIGN[sort_sign]}`
-  )
-  // it's too complicated to map each ket to table column.
-  // kysely was designed to do this in place
-  return (
-    /** @type {DirectedOrderByStringReference<Database, Table, Database[Table]>[]} */ (
-      sort
+  const props = /** @type {(keyof (Database[Table]))[]} */(
+    q.sortBy?.length ? 
+    q.sortBy : 
+    ['updated_at', 'id']
+  );
+
+  let next = qb;
+  
+  // we do it iteratively because `kysely` deprecated 
+  // array of `orderBy` in favor of chaining
+  for(const prop of props) {
+    // console.log('add_sort_to_eb', {s, table});
+    next = next.orderBy(
+      `${table}.${prop}`,
+      SIGN[sort_sign]
+    );
+  }
+
+  return next;
+}
+
+
+/**
+ * @description Apply a {@link ApiQuery} into {@link SelectQueryBuilder},
+ * with `sorting`, `filtering` and `limit`.
+ * @template O
+ * @template {keyof Database} [Table=(keyof Database)]
+ * @param {SelectQueryBuilder<Database, Table, O>} qb 
+ * @param {ApiQuery<any>} query 
+ * @param {Table} table 
+ * @returns {SelectQueryBuilder<Database, Table, O>}
+ */
+export const withQuery = (qb, query={}, table) => {
+  return withSort(
+    qb.where(
+      (eb) => {
+        return query_to_eb(
+          eb, query, table
+        );
+      }
     )
+    .limit(query.limitToLast ?? query.limit ?? 10),
+    query, table
   );
 }

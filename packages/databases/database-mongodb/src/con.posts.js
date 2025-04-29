@@ -2,7 +2,6 @@
  * @import { db_posts as db_col } from '@storecraft/core/database'
  * @import { WithRelations } from './utils.types.js'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular } from './con.shared.js'
@@ -14,23 +13,14 @@ import {
   update_entry_on_all_connection_of_relation 
 } from './utils.relations.js';
 
-
-/**
- * @typedef {import('@storecraft/core/database').db_posts} db_col
- */
-
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('posts');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -49,7 +39,6 @@ const upsert = (driver) => {
           ////
           // STOREFRONTS --> POSTS RELATION
           ////
-
           await update_entry_on_all_connection_of_relation(
             driver, 'storefronts', 'posts', objid, data, session
           );
@@ -82,8 +71,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -137,8 +124,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  */
 export const impl = (driver) => {

@@ -16,7 +16,6 @@ const app = new App(config)
   .withStorage(new R2());
   
 await app.init();
-
 ```
 
 ## Upsert a new product
@@ -33,10 +32,7 @@ const id = await app.api.products.upsert(
 );
 
 console.log(id)
-//
 // Will print ID such as `pr_65e5ca42c43e2c41ae5216a9`
-//
-
 ```
 
 ## Upsert an existing product
@@ -83,7 +79,8 @@ const id = await app.api.products.upsert(
     handle: 'a-white-shirt',
     collections: [
       {
-        handle: 'shirts-collection', id:'col_65e5ca42c43e2c41ae521def'
+        handle: 'shirts-collection', 
+        id:'col_65e5ca42c43e2c41ae521def'
       }
     ]
   }
@@ -105,14 +102,39 @@ In the future we will add sugar methods and examples here.
 
 ## Query products
 
-You can query the `products` resource with
+You can query the `products` resource with **VQL**
 
-```js
+```ts
 const products = await app.api.products.list(
   {
-    startAfter: [
-      ['updated_at', '2024-06-13T08:51:52.202Z']
+    vql: 'active=true & price>19 & -collection:nitendo-games & (tag:genre_action | tag:genre_adventure)',
+    order: 'desc',
+    sortBy: [
+      'updated_at'
     ],
+    limit: 5
+  }
+);
+
+```
+And also in object mode
+
+```ts
+const products = await app.api.products.list(
+  {
+    vql: {
+      $and: [
+        { active: { $eq: true } },
+        { price: { $gt: 19 } },
+        { $not: { $search: 'collection:nitendo-games' } },
+        {
+          $or: [
+            { $search: 'tag:genre_action' },
+            { $search: 'tag:genre_adventure' }
+          ]
+        }
+      ]
+    },
     order: 'desc',
     sortBy: [
       'updated_at'
@@ -123,13 +145,13 @@ const products = await app.api.products.list(
 
 ```
 
-
-## List product Collections
+## List all product Collections
 
 Simply,
 
 ```js
-const products = await app.api.products.list_product_collections(HANDLE_OR_ID)
+const products = await app.api.products.get(HANDLE_OR_ID);
+const collections = products.collections;
 ```
 
 ## List product Variants
@@ -137,7 +159,8 @@ const products = await app.api.products.list_product_collections(HANDLE_OR_ID)
 Simply,
 
 ```js
-const products = await app.api.products.list_product_variants(HANDLE_OR_ID)
+const products = await app.api.products.get(HANDLE_OR_ID);
+const variants = products.variants;
 ```
 
 ## List product Discounts
@@ -145,7 +168,8 @@ const products = await app.api.products.list_product_variants(HANDLE_OR_ID)
 Simply,
 
 ```js
-const products = await app.api.products.list_product_discounts(HANDLE_OR_ID)
+const products = await app.api.products.get(HANDLE_OR_ID);
+const discounts = products.discounts;
 ```
 
 ## List Related Products
@@ -153,7 +177,8 @@ const products = await app.api.products.list_product_discounts(HANDLE_OR_ID)
 Simply,
 
 ```js
-const products = await app.api.products.list_related_products(HANDLE_OR_ID)
+const products = await app.api.products.get(HANDLE_OR_ID);
+const related = products.related;
 ```
 
 ## List All the tags of all products

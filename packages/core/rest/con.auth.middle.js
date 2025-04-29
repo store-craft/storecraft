@@ -18,12 +18,10 @@ export const assert_generic_auth = (o) => {
 }
 
 /**
- * 
  * @param {App} app 
  */
 export const parse_auth_user = (app) => {
   /**
-   * 
    * @param {ApiRequest} req 
    * @param {ApiResponse} [res={}] 
    */
@@ -34,12 +32,10 @@ export const parse_auth_user = (app) => {
 }
 
 /**
- * 
  * @param {App} app 
  */
 export const parse_bearer_auth = (app) => {
   /**
-   * 
    * @param {Partial<ApiRequest>} req 
    * @param {Partial<ApiResponse>} [res={}] 
    */
@@ -67,12 +63,10 @@ export const parse_bearer_auth = (app) => {
 }
 
 /**
- * 
  * @param {App} app 
  */
 export const parse_basic_auth_or_apikey = (app) => {
   /**
-   * 
    * @param {ApiRequest} req 
    * @param {ApiResponse} [res={}] 
    */
@@ -107,7 +101,6 @@ export const parse_basic_auth_or_apikey = (app) => {
 
 
 /**
- * 
  * @param {Role[]} roles 
  * @param {ApiRequest["user"]} user 
  */
@@ -118,7 +111,6 @@ export const has_role = (roles=[], user) => {
 }
 
 /**
- * 
  * @param {ApiRequest["user"]} user 
  */
 export const is_admin = (user) => {
@@ -126,7 +118,6 @@ export const is_admin = (user) => {
 }
 
 /**
- * 
  * @param {Role[]} roles 
  */
 export const roles_guard = (roles=[]) => {

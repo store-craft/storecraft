@@ -242,7 +242,7 @@ export class Stripe {
     }
 
     if(o) { // just an intent
-      const date = new Date(o.created).toUTCString();
+      const date = new Date(o.created*1000).toUTCString();
       stat.messages = [
         `A payment intent of **${fmt(o.amount)}** was initiated at ${date}`,
         `The status is \`${o.status}\` and the ID is \`${o.id}\``
@@ -284,18 +284,10 @@ export class Stripe {
 
     let event;
   
-    try {
-      event = await this.stripe.webhooks.constructEventAsync(
-        request.rawBody, sig, this.config.webhook_endpoint_secret, undefined,
-        StripeCls.createSubtleCryptoProvider()
-      );
-    }
-    catch (err) {
-      response.status = 400;
-      response.end();
-      console.log(err.message);
-      return;
-    }
+    event = await this.stripe.webhooks.constructEventAsync(
+      request.rawBody, sig, this.config.webhook_endpoint_secret, undefined,
+      StripeCls.createSubtleCryptoProvider()
+    );
   
     let order_id;
     /** @type {StripeCls.PaymentIntent} */
@@ -329,9 +321,12 @@ export class Stripe {
       case 'charge.refunded':
       case 'charge.refund.updated':
         payment_status = PaymentOptionsEnum.refunded;
-
+        break;
       default: {
         console.log(`Unhandled event type ${event.type}`);
+
+
+
         return undefined;
       }
     }

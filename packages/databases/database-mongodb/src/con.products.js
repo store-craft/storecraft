@@ -2,9 +2,8 @@
  * @import { db_products as db_col, RegularGetOptions } from '@storecraft/core/database'
  * @import { ProductType, VariantType } from '@storecraft/core/api'
  * @import { WithRelations } from './utils.types.js'
- * @import { Filter, AnyBulkWriteOperation } from 'mongodb'
+ * @import { AnyBulkWriteOperation } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
@@ -38,16 +37,12 @@ import {
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<WithRelations<db_col["$type_get"]>>}
  */
 const col = (d) => d.collection('products');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -206,15 +201,12 @@ const upsert = (driver) => {
  
 
 /**
- * 
  * @param {MongoDB} driver 
  */
 const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {

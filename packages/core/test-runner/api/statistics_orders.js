@@ -4,7 +4,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name, promises_sequence } from './api.utils.crud.js';
+import { file_name, promises_sequence } from './api.utils.js';
 import { enums } from '../../api/index.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';

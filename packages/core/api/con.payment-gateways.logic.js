@@ -86,19 +86,28 @@ export const webhook = (app) =>
       `Payment Gateway with handle=${handle} does not have a webhook handler`
     );
 
-    const { status, order_id } = await pg.webhook(
+    const webhook_result = await pg.webhook(
       request, response
     );
+    const order_id = webhook_result?.order_id;
+    // new status of the order, basically the `payment` and `checkout` status
+    const status = webhook_result?.status;
 
     { // set the side-effects lazily, so the webhook response will be sent quick
-      
       if(order_id && status) {
         const order = await app.api.orders.get(order_id);
+
+        assert(
+          order, 
+          `gateway::webhook:: Order ${order_id} not found`, 
+          400
+        );
+
         await app.api.orders.upsert(
           {
             ...order,
             status: {
-              ...order.status,
+              ...order?.status,
               payment: status.payment,
               checkout: status.checkout
             }

@@ -65,6 +65,10 @@
       "import": "./vql/index.js",
       "types": "./vql/types.d.ts"
     },
+    "./vql/bool-ql": {
+      "import": "./vql/bool-ql/index.js",
+      "types": "./vql/bool-ql/types.d.ts"
+    },
     "./payments": {
       "import": "./payments/public.js",
       "types": "./payments/types.public.d.ts"
@@ -242,7 +246,7 @@
     "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
     "core:test": "uvu -c",
     "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
-    "core:gen:vql": "node ./vql/compile.js",
+    "core:gen:vql": "node ./vql/bool-ql/compile.js",
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },
   "devDependencies": {

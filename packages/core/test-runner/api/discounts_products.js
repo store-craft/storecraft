@@ -4,7 +4,7 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '@storecraft/core';
 import { 
@@ -62,7 +62,11 @@ export const create = app => {
 
     /** @type {ApiQuery<ProductType>} */
     const query = {
-      startAt: [['updated_at', now]],
+      vql: {
+        updated_at: {
+          $gte: now
+        }
+      },
       sortBy: ['updated_at'],
       order: 'asc',
       limit: 1000
@@ -136,7 +140,11 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100
@@ -194,7 +202,11 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100
@@ -252,11 +264,14 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100
-
       }
     );
 
@@ -322,7 +337,11 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100
@@ -388,7 +407,11 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100
@@ -445,7 +468,11 @@ export const create = app => {
     const products_queried = await app.api.discounts.list_discount_products(
       discount.handle,
       {
-        startAt: [['updated_at', now]],
+        vql: {
+          updated_at: {
+            $gte: now
+          }
+        },
         sortBy: ['updated_at'],
         order: 'asc',
         limit: 100

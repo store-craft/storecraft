@@ -6,9 +6,10 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { enums } from '../../api/index.js';
-import { add_sanity_crud_to_test_suite, file_name } from './api.utils.crud.js';
+import { file_name } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
+import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
 
 /** @type {DiscountTypeUpsert[]} */

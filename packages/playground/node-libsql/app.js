@@ -77,3 +77,9 @@ export const app = new App(
     x: new XAuth(),
   }
 )
+.on(
+  'posts/list',
+  e => {
+    e.payload.current
+  }
+)

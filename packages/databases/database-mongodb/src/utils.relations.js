@@ -1,25 +1,19 @@
 /**
- * @import { ID } from '@storecraft/core/database'
  * @import { BaseType } from '@storecraft/core/api'
  * @import { Relation, WithRelations } from './utils.types.js'
- * @import { Filter } from 'mongodb'
+ * @import { Collection, Filter } from 'mongodb'
  */
-
 import { ClientSession, ObjectId } from 'mongodb';
 import { isDef, isUndef, to_objid } from './utils.funcs.js';
 import { MongoDB } from '../index.js';
 import { zeroed_relations } from './con.shared.js';
 
 /**
- * 
- * On upsert Create a relation on a given field that represents a relation.
- * for example, each product specifies collections it belongs to.
- * Basically creates an ids array and embedded documents for fast retrival.
- * 
- * 
+ * @description On upsert Create a relation on a given 
+ * field that represents a relation. for example, each 
+ * product specifies collections it belongs to. Basically 
+ * creates an ids array and embedded documents for fast retrival.
  * @template {BaseType} T
- * 
- * 
  * @param {MongoDB} driver our driver
  * @param {T} data data to create the connection from
  * @param {string} fieldName the field name, that represents 
@@ -27,8 +21,6 @@ import { zeroed_relations } from './con.shared.js';
  * @param {string} belongsToCollection which collection 
  * does the field relate to
  * @param {boolean} [reload=false] re-retrive documents ?
- * 
- * 
  * @returns {Promise<WithRelations<T>>}
  */
 export const create_explicit_relation = async (
@@ -50,11 +42,16 @@ export const create_explicit_relation = async (
   /** @type {Relation<any>} */
   const relation = data_with_rel._relations[fieldName] = {};
 
-  relation.ids = items.filter(i => isDef(i?.id)).map(c => to_objid(c.id));
+  relation.ids = items
+  .filter(i => isDef(i?.id))
+  .map(c => to_objid(c.id));
+
   relation.entries = {};
 
   if(reload) {
-    const entries = await driver.collection(belongsToCollection).find(
+    const entries = await driver
+    .collection(belongsToCollection)
+    .find(
       { 
         _id: { 
           $in : relation.ids 
@@ -76,7 +73,9 @@ export const create_explicit_relation = async (
 
   } else {
     relation.entries = Object.fromEntries(
-      items.map(it => [it.id.split('_').at(-1), it])
+      items.map(
+        it => [it.id.split('_').at(-1), it]
+      )
     );
   }
 
@@ -87,17 +86,14 @@ export const create_explicit_relation = async (
 }
 
 /**
- * Create a `search` relation on the document (embed it)
- * 
+ * @description Create a `search` relation on the document (embed it)
  * @template {Object.<string, any>} T
- * 
  * @param {WithRelations<T>} data 
  * @param {string[]} terms 
- * 
  */
 export const add_search_terms_relation_on = (data, terms=[]) => {
   if(!data)
-    return;
+    return undefined;
 
   if(!Array.isArray(terms))
     throw new Error('terms is not an array !');
@@ -112,12 +108,9 @@ export const add_search_terms_relation_on = (data, terms=[]) => {
 
 
 /**
- * 
- * Update an `entry` on all of it's connections in the `relation`.
+ * @description Update an `entry` on all of it's connections in the `relation`.
  * Suppose, we have a many-to-x relation, then we update `x` on
  * all of these many connections at once.
- * 
- * 
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
@@ -126,7 +119,6 @@ export const add_search_terms_relation_on = (data, terms=[]) => {
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
  * to all the affected connections
- * 
  */
 export const update_entry_on_all_connection_of_relation = (
   driver, collection, relation_name, entry_objid, entry, session,
@@ -155,23 +147,20 @@ export const update_entry_on_all_connection_of_relation = (
 
 
 /**
- * 
- * Update / Create an `entry` on a specific connection, that is 
- * found by `mongodb` filter in the `relation`.
+ * @description Update / Create an `entry` on a specific connection, 
+ * that is found by `mongodb` filter in the `relation`.
  * Suppose, we have a many-to-x relation, then we create a new
  * connection a-to-x
- * 
- * 
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
- * @param {import('mongodb').Filter<any>} from_object_filter the proper `ObjectId` of the from connection
+ * @param {import('mongodb').Filter<any>} from_object_filter 
+ * the proper `ObjectId` of the from connection
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {object} entry the entry data
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
  * to the affected connection
- * 
  */
 export const update_specific_connection_of_relation_with_filter = (
   driver, collection, relation_name, from_object_filter, 
@@ -198,12 +187,9 @@ export const update_specific_connection_of_relation_with_filter = (
 }
 
 /**
- * 
- * Update / Create an `entry` on a specific connection in the `relation`.
- * Suppose, we have a many-to-x relation, then we create a new
- * connection a-to-x
- * 
- * 
+ * @description Update / Create an `entry` on a specific connection 
+ * in the `relation`. Suppose, we have a many-to-x relation, then we 
+ * create a new connection a-to-x
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
@@ -213,7 +199,6 @@ export const update_specific_connection_of_relation_with_filter = (
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_add=[]] Extra `search` terms to add
  * to the affected connection
- * 
  */
 export const update_specific_connection_of_relation = (
   driver, collection, relation_name, from_objid, entry_objid, 
@@ -233,12 +218,9 @@ export const update_specific_connection_of_relation = (
 
 
 /**
- * 
- * Remove an `entry` from all of it's connections in the `relation`.
- * Suppose, we have a many-to-x relation, then we remove `x` from
- * all these many connections at once.
- * 
- * 
+ * @description Remove an `entry` from all of it's connections 
+ * in the `relation`. Suppose, we have a many-to-x relation, then 
+ * we remove `x` from all these many connections at once.
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
@@ -247,13 +229,14 @@ export const update_specific_connection_of_relation = (
  * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
  * @param {string[]} [tags_to_remove=[]] Extra `tags` terms to remove
  * from all the connections
- * 
  */
 export const remove_entry_from_all_connection_of_relation = (
   driver, collection, relation_name, entry_objid, session,
   search_terms_to_remove=[], tags_to_remove=[]
 ) => {
-  return driver.collection(collection).updateMany(
+  return /** @type {Collection<{}>} */(driver
+  .collection(collection))
+  .updateMany(
     { 
       [`_relations.${relation_name}.ids`] : entry_objid 
     },
@@ -276,12 +259,9 @@ export const remove_entry_from_all_connection_of_relation = (
 
 
 /**
- * 
- * Remove an `entry` from a specific connection in the `relation`.
- * Suppose, we have a a-to-x relation, then we remove `x` from
- * `a` connection.
- * 
- * 
+ * @description Remove an `entry` from a specific connection in 
+ * the `relation`. Suppose, we have a a-to-x relation, then we remove 
+ * `x` from `a` connection.
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
@@ -290,7 +270,6 @@ export const remove_entry_from_all_connection_of_relation = (
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
  * from the affected connection
- * 
  */
 export const remove_specific_connection_of_relation = (
   driver, collection, relation_name, from_objid, entry_objid, session,
@@ -309,31 +288,27 @@ export const remove_specific_connection_of_relation = (
 
 
 /**
- * 
- * Remove an `entry` from a specific connection in the `relation`.
+ * @description Remove an `entry` from a specific connection in the `relation`.
  * Suppose, we have a a-to-x relation, then we remove `x` from
- * `a` connection. 
- * 
- * We locate `a` by a `mongodb` filter
- * 
- * 
+ * `a` connection. We locate `a` by a `mongodb` filter
  * @param {MongoDB} driver mongodb driver instance
  * @param {string} collection the collection from which the `relation` is from
  * @param {string} relation_name the `relation` name
- * @param {Filter<any>} from_object_filter 
+ * @param {Filter<{}>} from_object_filter 
  * `mongodb` Filter to locate the first document, the from part of the connection
  * @param {ObjectId} entry_objid the proper `ObjectId` of the entry
  * @param {ClientSession} [session] client `session` for atomicity purposes
  * @param {string[]} [search_terms_to_remove=[]] Extra `search` terms to remove
  * from the affected connection
- * 
  */
 export const remove_specific_connection_of_relation_with_filter = (
   driver, collection, relation_name, from_object_filter, entry_objid, session,
   search_terms_to_remove
 ) => {
 
-  return driver.collection(collection).updateOne(
+  return /** @type {Collection<{}>} */(driver
+  .collection(collection))
+  .updateOne(
     from_object_filter,
     { 
       $pull: {
@@ -353,16 +328,12 @@ export const remove_specific_connection_of_relation_with_filter = (
 
 
 /**
- * 
- * A simple `save` (using **Mongo** `replaceOne`)
- * 
- * 
+ * @description A simple `save` (using **Mongo** `replaceOne`)
  * @param {MongoDB} driver `mongodb` driver
  * @param {string} collection the `collection` to save into
  * @param {ObjectId} object_id the `object id` of the item
  * @param {object} document the document data
  * @param {ClientSession} [session] client `session` for atomicity purposes
- * 
  */
 export const save_me = (driver, collection, object_id, document, session) => {
   return driver.collection(collection).replaceOne(
@@ -375,20 +346,16 @@ export const save_me = (driver, collection, object_id, document, session) => {
       upsert: true 
     }
   );
-
 }
 
 
 /**
- * 
- * A simple `delete` (using **Mongo** `deleteOne`) with `session` transaction
- * 
- * 
+ * @description A simple `delete` (using **Mongo** `deleteOne`) 
+ * with `session` transaction
  * @param {MongoDB} driver `mongodb` driver
  * @param {string} collection the `collection` to save into
  * @param {ObjectId} object_id the `object id` of the item
  * @param {ClientSession} [session] client `session` for atomicity purposes
- * 
  */
 export const delete_me = (driver, collection, object_id, session) => {
   return driver.collection(collection).deleteOne(

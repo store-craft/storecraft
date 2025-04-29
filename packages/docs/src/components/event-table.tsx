@@ -224,10 +224,10 @@ return (
 <div className={className} {...rest}>
   <div className='w-full overflow-x-auto '>
     <table className='w-full overflow-clip rounded-t-lg'>
-      <thead className='text-left text-sm bg-slate-100 dark:bg-slate-100/10 h-10 '>
+      <thead className='text-left text-sm font-light bg-slate-100 dark:bg-slate-100/10 h-10 '>
         <tr >
-          <th children={'event'} className='pl-1'/>
-          <th children={'dispatches'} className='pr-5 text-right'/>
+          <th children={'event'} className='pl-1 font-light'/>
+          <th children={'dispatches'} className='pr-5 font-light text-right'/>
           {/* <th children={'description'} className='px-3 text-right'/> */}
           {/* <th children={rows[0][0]} className='pl-1'/>
           <th children={rows[0][1]} className='pl-5'/>

@@ -5,7 +5,8 @@ import * as assert from 'uvu/assert';
 import { App } from '../../index.js'
 
 /**
- * Aggregate all {@link TestSpec} objects from the setup object recursively.
+ * @description Aggregate all {@link TestSpec} objects 
+ * from the setup object recursively.
  * @param {object} o 
  * @param {string} path path till now
  * @param {(path: string, spec: TestSpec) => void} onFind prefix till now
@@ -119,7 +120,9 @@ export const patch_api = async (api, path, test_spec) => {
 
 
 /**
- * 
+ * @description Given an {@link App} and a {@link PROOF_MOCKUP_API_SETUP} object,
+ * it will run all the tests defined in the setup object. and will intercept
+ * the `api` layer and will restore it after each test.
  * @param {App} app
  * @param {PROOF_MOCKUP_API_SETUP} setup 
  */

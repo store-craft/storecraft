@@ -7,11 +7,13 @@
  */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { create_handle, file_name, 
-  iso, add_query_list_integrity_tests,
-  get_static_ids} from './api.utils.crud.js';
+import { 
+  create_handle, file_name, 
+  iso, get_static_ids
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
 
 const handle_col = create_handle('col', file_name(import.meta.url));
 const handle_pr = create_handle('pr', file_name(import.meta.url));

@@ -7,7 +7,7 @@ import {
   helper_compute_product_extra_tags_because_of_discount_side_effect_for_db
  } from '@storecraft/core/database'
 import { SQL } from '../index.js'
-import { discount_to_conjunctions } from './con.discounts.utils.js'
+import { discount_to_conjunctions, is_order_discount } from './con.discounts.utils.js'
 import { 
   delete_entity_values_by_value_or_reporter_and_context, 
   delete_me, delete_media_of, delete_search_of, 
@@ -16,7 +16,7 @@ import {
   with_media, with_tags, count_regular, with_search,
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { query_to_eb, withQuery, withSort } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 
 export const table_name = 'discounts'
@@ -59,7 +59,13 @@ const upsert = (driver) => {
               trx, extra_tag);
           }
   
-          if(item.active && item.application.id===enums.DiscountApplicationEnum.Auto.id) {
+          // make connections into `products_to_discounts`, only applicable for
+          // `product` discounts and automatic discounts
+          if(
+            item.active && 
+            item.application.id===enums.DiscountApplicationEnum.Auto.id &&
+            !is_order_discount(item)
+          ) {
             // make connections
             await trx
             .insertInto('products_to_discounts')
@@ -243,24 +249,24 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_media(eb, eb.ref('discounts.id'), driver.dialectType),
         with_tags(eb, eb.ref('discounts.id'), driver.dialectType),
         with_search(eb, eb.ref('discounts.id'), driver.dialectType),
-      ].filter(Boolean))
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, table_name))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      ].filter(Boolean)),
+      query, table_name
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
+      // .orderBy(query_to_sort(query, table_name))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }
@@ -273,7 +279,8 @@ const list = (driver) => {
 const list_discount_products = (driver) => {
   return async (handle_or_id, query={}) => {
 
-    const items = await driver.client
+    const items = await withSort(
+      driver.client
       .selectFrom('products')
       .innerJoin(
         'products_to_discounts', 
@@ -298,11 +305,15 @@ const list_discount_products = (driver) => {
           ].filter(Boolean)        
         )
       )
-      .orderBy(query_to_sort(query, 'products'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .limit(query.limitToLast ?? query.limit ?? 10),
+      query, 'products'
+    ).execute();
 
-    if(query.limitToLast) items.reverse();
+      // .orderBy(query_to_sort(query, 'products'))
+      // .execute();
+
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

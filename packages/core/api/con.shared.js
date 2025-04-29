@@ -1,6 +1,6 @@
 /**
- * @import {searchable, BaseType} from './types.api.js'
- * @import {RegularGetOptions, db_crud, withConcreteId} from '../database/types.public.js'
+ * @import { BaseType} from './types.api.js'
+ * @import {RegularGetOptions, db_crud } from '../database/types.public.js'
  * @import {PubSubEvent} from '../pubsub/types.public.js'
  * @import {ApiQuery, ExpandQuery} from './types.api.query.js'
  */
@@ -78,7 +78,10 @@ export const regular_upsert = (
     }
 
     // Check if exists
-    const id = !Boolean(item.id) ? ID(id_prefix) : String(item.id);
+    const id = !Boolean(item.id) ? 
+      ID(id_prefix) : 
+      String(item.id);
+      
     const final = apply_dates({ ...item, id });
     const search = [
       ...create_search_index(final), 
@@ -112,7 +115,8 @@ export const regular_upsert = (
  * @template {Partial<BaseType>} U
  * @param {App} app
  * @param {db_crud<U, G>} db db instance
- * @param {PubSubEvent} [event] keep `undefined` to avoid event processing
+ * @param {PubSubEvent} [event] keep `undefined` 
+ * to avoid event processing
  */
 export const regular_get = (app, db, event) => 
 /**
@@ -154,7 +158,8 @@ export const regular_remove = (app, db, event) =>
    * @param {string} id_or_handle 
    */
   async (id_or_handle) => {
-    const requires_event_processing = Boolean(event) && app.pubsub.has(event);
+    const requires_event_processing = Boolean(event) && 
+      app.pubsub.has(event);
 
     /** @type {G} */
     let previous;

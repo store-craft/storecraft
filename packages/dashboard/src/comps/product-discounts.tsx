@@ -5,6 +5,7 @@ import ShowIf from './show-if'
 import MDView from './md-view'
 import { DiscountType, ProductType } from '@storecraft/core/api'
 import { FieldLeafViewParams } from './fields-view'
+import { enums } from '@storecraft/core/api'
 
 export type ItemParams = {
   /**
@@ -22,20 +23,33 @@ const Item = (
     value, onClick 
   }: ItemParams
 ) => {
+  const type = value.info.details.type ?? value.info.details.meta.type;
+  const readable_discount_type = enums.DiscountMetaEnum?.[type]?.name ?? 
+    type ?? 'unknown';
 
   return (
-<div className='w-full flex flex-col gap-2
-                py-3 border-b shelf-border-color'>
-  <div className='flex flex-row justify-between items-center'>
+<div 
+  className='w-full flex flex-col gap-2
+    py-3 border-b shelf-border-color'>
+  <div 
+    className='flex flex-row justify-between items-center'>
     <Label >
-      <a onClick={() => onClick(value)} className='cursor-pointer' >
+      <a 
+        onClick={() => onClick(value)} 
+        className='cursor-pointer' 
+      >
         <span children={value?.title} />                  
       </a>
     </Label>
-    <MDView value={`**\`${value.info.details.meta.name}\`**`} className='text-right' />
+    <MDView 
+      value={`**\`${readable_discount_type}\`**`} 
+      className='text-right' 
+    />
   </div>
 
-  <MDView value={value?.description ?? 'Discount does not have `description`'} />
+  <MDView 
+    value={value?.description ?? 'Discount does not have `description`'} 
+  />
 </div>    
   )
 }
@@ -76,9 +90,10 @@ const ProductDiscounts = (
       value.map(
         discount => (
           <Item 
-              value={discount} 
-              onClick={onClick}
-              key={discount.id} />
+            value={discount} 
+            onClick={onClick}
+            key={discount.id} 
+          />
         )
       )
     }

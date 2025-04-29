@@ -16,7 +16,7 @@ import Images from './src/images.js'
 import Posts from './src/posts.js'
 import Checkout from './src/checkout.js'
 import Payments from './src/payments.js'
-import Settings from './src/settings.js'
+import Reference from './src/reference.js'
 import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
@@ -27,7 +27,8 @@ import {
 import Email from './src/email.js'
 
 /**
- * @description The official `storecraft` universal **SDK** for `javascript`
+ * @description The official `storecraft` universal 
+ * **SDK** for `javascript`
  */
 export class StorecraftSDK {
 
@@ -64,13 +65,13 @@ export class StorecraftSDK {
     this.posts = new Posts(this);
     this.payments = new Payments(this);
     this.checkout = new Checkout(this);
-    this.settings = new Settings(this);
+    this.reference = new Reference(this);
     this.notifications = new Notifications(this);
     this.emails = new Email(this);
   }
 
   get fetcher() {
-    return this.#fetcher
+    return this.#fetcher;
   }
   
   /**

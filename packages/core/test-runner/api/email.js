@@ -7,10 +7,9 @@
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from './api.utils.crud.js';
+import { file_name, assert_partial_v2 } from './api.utils.js';
 import esMain from './utils.esmain.js';
 import { App } from '../../index.js';
-import { assert_partial, assert_partial_v2 } from './utils.js';
 import { compileTemplate } from '../../api/con.email.logic.js';
 import { DummyMailer } from '../../mailer/dummy-mailer.js';
 

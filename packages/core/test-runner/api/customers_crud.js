@@ -7,12 +7,11 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { 
-  file_name, add_sanity_crud_to_test_suite, 
-  create_handle 
-} from './api.utils.crud.js';
+  file_name, withRandom, 
+} from './api.utils.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
-import { withRandom } from './utils.js';
+import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
 /** @type {CustomerTypeUpsert[]} */
 const items_upsert = [

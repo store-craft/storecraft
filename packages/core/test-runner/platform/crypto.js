@@ -5,7 +5,7 @@
 import 'dotenv/config';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { file_name } from '../api/api.utils.crud.js';
+import { file_name } from '../api/api.utils.js';
 
 
 /**

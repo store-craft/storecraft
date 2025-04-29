@@ -2,7 +2,6 @@
  * @import { db_shipping as db_col } from '@storecraft/core/database'
  * @import { WithRelations } from './utils.types.js'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { count_regular, get_regular, list_regular } from './con.shared.js'
@@ -22,8 +21,6 @@ const col = (d) => d.collection('shipping_methods');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -79,8 +76,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -136,8 +131,6 @@ const count = (driver) => count_regular(driver, col(driver));
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  */
 export const impl = (driver) => {

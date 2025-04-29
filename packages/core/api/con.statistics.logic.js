@@ -21,7 +21,6 @@ export const startOfDay = (date=Date.now()) => {
 
 /**
  * @description Get the end of a day
- * 
  * @param  {ConstructorParameters<typeof Date>["0"]} date 
  */
 export const endOfDay = (date=Date.now()) => {
@@ -50,13 +49,15 @@ const DAY = 86400000
  */
 export const compute_statistics = app => 
 /**
- * @description Compute the `statistics` of `sales` / `orders` over a sparse 
- * period of time per day. sparse means, that days without sales are not reported.
- * it is up to the caller to fill the gaps. This is done to reduce the amount of
+ * @description Compute the `statistics` of `sales` / `orders` 
+ * over a sparse period of time per day. sparse means, that days 
+ * without sales are not reported. it is up to the caller to 
+ * fill the gaps. This is done to reduce the amount of
  * data to be transmitted.
- * 
- * @param {number | string | Date} [from_day] `ISO` / `UTC` / `timestamp` date
- * @param {number | string | Date} [to_day] `ISO` / `UTC` / `timestamp` date
+ * @param {number | string | Date} [from_day] 
+ * `ISO` / `UTC` / `timestamp` date
+ * @param {number | string | Date} [to_day] 
+ * `ISO` / `UTC` / `timestamp` date
  * @returns {Promise<OrdersStatisticsType>}
  */
 async (from_day, to_day) => {
@@ -73,18 +74,17 @@ async (from_day, to_day) => {
     {
       sortBy: ['created_at'],
       order: 'asc',
-      startAt:  [
-        ['created_at', date_from_day.toISOString()]
-      ],
-      endAt:  [
-        ['created_at', date_to_day.toISOString()]
-      ],
+      vql: {
+        created_at: {
+          $gte: date_from_day.toISOString(),
+          $lte: date_to_day.toISOString()
+        }
+      },
       limit: 1000000
     }
   );
 
   // process days stats
-
   /** @type {OrdersStatisticsType} */
   const stat = {
     from_day: date_from_day.toISOString(),
@@ -252,11 +252,10 @@ const tables = [
  */
 export const compute_count_of_query = app => 
  /**
-  * 
   * @description Compute the count `statistics` of a table with `query`
-  * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which `table` to get count of query
+  * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which 
+  * `table` to get count of query
   * @param {ApiQuery} [query] The `query` used for counting
-  * 
   * @returns {Promise<number>}
   */
   (table, query) => {

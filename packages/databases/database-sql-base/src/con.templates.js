@@ -8,7 +8,7 @@ import { count_regular, delete_me, delete_search_of, insert_search_of,
   regular_upsert_me, safe_trx, where_id_or_handle_table, 
   with_search} from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { withQuery } from './utils.query.js'
 import { base64 } from '@storecraft/core/crypto';
 
 export const table_name = 'templates'
@@ -137,36 +137,33 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(
         eb => [
           with_search(eb, eb.ref('templates.id'), driver.dialectType),
         ].filter(Boolean)
-      )
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, table_name))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute()
-      .then(
-        (items) => {
-          return items.map(
-            (item) => {
-              item.template_html = decode_base64_if_needed(item.template_html);
-              item.template_text = decode_base64_if_needed(item.template_text);
-              item.template_subject = decode_base64_if_needed(item.template_subject);
-              return item;
-            }
-          )
-        }
-      );
+      ),
+      query, table_name
+    )
+    .execute()
+    .then(
+      (items) => {
+        return items.map(
+          (item) => {
+            item.template_html = decode_base64_if_needed(item.template_html);
+            item.template_text = decode_base64_if_needed(item.template_text);
+            item.template_subject = decode_base64_if_needed(item.template_subject);
+            return item;
+          }
+        )
+      }
+    );
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
     
     return sanitize_array(items);
   }

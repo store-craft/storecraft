@@ -4,6 +4,10 @@ import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner';
 
+//
+// Main MongoDB test suite with the core test-runner for api layer
+//
+
 export const create_app = async () => {
   const app = new App(
     {

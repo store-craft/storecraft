@@ -1,7 +1,7 @@
 
 
 /**
- * Converts a ReadableStream to a string
+ * @description Converts a ReadableStream to a string
  * @param {ReadableStream} stream 
  * @returns {Promise<string>}
  */

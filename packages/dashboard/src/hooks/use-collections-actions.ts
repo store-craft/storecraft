@@ -1,29 +1,36 @@
 /**
- * @import { queryable_resources, InferQueryableType } from '@storecraft/sdk-react-hooks'
+ * @import { 
+ *  queryable_resources, InferQueryableType 
+ * } from '@storecraft/sdk-react-hooks'
  * @import { ApiQuery } from '@storecraft/core/api'
  */
-
 import { 
   InferQueryableType,
   q_initial, queryable_resources, useCollection 
 } from '@storecraft/sdk-react-hooks';
 import { 
   api_query_to_searchparams, parse_query 
-} from '@storecraft/core/api/utils.query.js';
+} from '@storecraft/core/api/query.js';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { count_query_of_resource } from '@storecraft/sdk/src/utils.api.fetch.js';
 import { ApiQuery } from '@storecraft/core/api';
 
-
 /**
- * `useCollectionsActions` is a hook designed for the collections pages,
- * for performing:
+ * @description `useCollectionsActions` is a hook designed for
+ * the collections pages, for performing:
  * - Viewing of collections
  * - Pagination through querying or navigation
  * - Querying
+ * It's main use case is for performing url navigation with query params
+ * although can be used without.
  * 
- * This hook wraps `useCollection` hook
+ * TODO: Rewrite the cursors to be used by `vql` in later versions.
+ * currently, i dont do that because it is a breaking change for dashboards
+ * that dont have the backend to support it.
+ * Also, `limit` always resets the query. 
+ * 
+ * This hook wraps {@link useCollection} hook
  * 
  * @param resource the collection id in backend 
  * @param slug front end slug
@@ -40,21 +47,28 @@ const useCollectionsActions = <
     autoLoadQuery=(q_initial as ApiQuery<T>)
   ) => {
 
-  const { query_params } = useParams()
- 
-  const query_api = useMemo(
+  const { query_params } = useParams();
+
+  const parsed_query_params = useMemo(
     () => {
-      const query_api =  (parse_query(query_params));
-      return query_api as ApiQuery<T>;
+      const search_params = new URLSearchParams(query_params);
+      return {
+        query_api: parse_query(search_params) as ApiQuery<T>,
+        // search input DOM value
+        search: search_params.get('search') ?? '',
+      }
     },
     [query_params]
   );
 
-  // console.log('query_api', query_api);
+  // console.log({query_params, parsed_query_params});
 
   const nav = useNavigate();
   
-  const ref_actions = useRef<import('@/comps/collection-actions.jsx').ImperativeInterface>(undefined);
+  const ref_actions = useRef<
+    import('@/comps/collection-actions.jsx').ImperativeInterface
+  >(undefined);
+
   const ref_use_cache = useRef(true);
 
   const { 
@@ -69,30 +83,35 @@ const useCollectionsActions = <
   useEffect(
     () => {
       ref_actions.current?.setSearch(
-        query_api.vql
+        parsed_query_params.search
       );
       // console.log('query_api', query_api)
-      query(query_api, ref_use_cache.current);
+      query(
+        {
+          ...parsed_query_params.query_api,
+          vql: parsed_query_params.search,
+        }, 
+        ref_use_cache.current
+      );
       
-    }, [query_api, query]
+    }, [parsed_query_params, query]
   );
 
   const onReload = useCallback(
     /**
-     * @param {boolean} [perform_navigation=true] perform `url` 
+     * @param perform_navigation perform `url` 
      * navigation with `search` params to enable query.
      */
     async (perform_navigation=true) => {
       const { 
         endBefore, endAt, startAfter, 
         startAt, limitToLast, ...rest 
-      } = query_api;
+      } = parsed_query_params.query_api;
 
       const search = ref_actions.current.getSearch();
       ref_use_cache.current = false;
-
      
-      const q =  /** @type {ApiQuery<T>} */ ({
+      const q = /** @type {ApiQuery<T>} */ ({
         ...rest,
         limit: 5,
         vql: search
@@ -100,7 +119,7 @@ const useCollectionsActions = <
 
       if(perform_navigation) {
         nav(
-          `${slug}/q/${api_query_to_searchparams(q as ApiQuery).toString()}`, 
+          `${slug}/q/${api_query_to_searchparams(q as ApiQuery).toString()}&search=${search}`, 
           { replace: true }
         );
       } else {
@@ -109,7 +128,7 @@ const useCollectionsActions = <
 
       return q;
 
-    }, [nav, query, slug, query_api]
+    }, [nav, query, slug, parsed_query_params]
   );
 
   const onLimitChange = useCallback(
@@ -119,74 +138,82 @@ const useCollectionsActions = <
     ($limit: number, perform_navigation=true) => {
       const { 
         limit, limitToLast, ...rest 
-      } = query_api
-
+      } = parsed_query_params.query_api
       
       const q = {
-        ...query_api,
+        ...parsed_query_params,
         limit: limit ? $limit : undefined,
         limitToLast: limitToLast ? $limit : undefined
       } as ApiQuery<T>;
 
+      const search = ref_actions.current.getSearch();
+
       if(perform_navigation) {
-        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+        nav(
+          `${slug}/q/${api_query_to_searchparams(q).toString()}&search=${search}`
+        );
       } else {
         query(q);
       }
 
       return q;
 
-    }, [nav, query, slug, query_api, page]
+    }, [nav, query, slug, parsed_query_params, page]
   );
+
+  // console.log({current_page: page})
 
   const next = useCallback(
     /**
-     * @param {boolean} [perform_navigation=true] perform `url` 
+     * @param perform_navigation perform `url` 
      * navigation with `search` params to enable query.
      */
     async (perform_navigation=true) => {
-      // if(!resource_has_more_pages)
-      //   return;
-
       const item = page?.at(-1);
       const { 
         endBefore, endAt, startAfter, 
         startAt, limit, limitToLast, ...rest 
-      } = query_api
+      } = parsed_query_params.query_api
       
-      
+      const search = ref_actions.current.getSearch();
+
       const q = {
         ...rest,
         startAfter: [
           ['updated_at', item.updated_at], 
           ['id', item.id]
         ],
+        vql: search,
         limit: limit ? limit : limitToLast
       } as ApiQuery<T>;
 
+      // console.dir({q, page, item}, {depth: 15})
+
+      { // test if the query is empty
+        const count = await count_query_of_resource(
+          sdk, resource, q
+        );
+        // console.log({count})
+        if(count==0) 
+          return q;
+      }
+
       if(perform_navigation) {
-        { // when using query with navigation
-          // we perform a different check for empty resources
-          // as opposed to the regular `query` function,
-          // becuase we are in stateless mode.
-          const count = await count_query_of_resource(
-            sdk, resource, q
-          );
-          if(count==0) return;
-        }
-        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+        nav(
+          `${slug}/q/${api_query_to_searchparams(q).toString()}&search=${search}`
+        );
       } else {
-        await query(q);
+        await query(q, true);
       }
 
       return q;
 
-    }, [nav, query, page, query_api, slug, resource]
+    }, [nav, query, page, parsed_query_params, slug, resource]
   );
 
   const prev = useCallback(
     /**
-     * @param {boolean} [perform_navigation=true] perform `url` 
+     * @param perform_navigation perform `url` 
      * navigation with `search` params to enable query.
      */
     async (perform_navigation=true) => {
@@ -194,34 +221,44 @@ const useCollectionsActions = <
       const { 
         endBefore, endAt, startAfter, 
         startAt, limit, limitToLast, ...rest 
-      } = query_api
-      
+      } = parsed_query_params.query_api
+
+      const search = ref_actions.current.getSearch();
+
+      // console.log({search})
+
       const q = {
         ...rest,
         endBefore: [
           ['updated_at', item.updated_at], ['id', item.id]
         ],
+        vql: search,
         limitToLast: limitToLast ? limitToLast : limit
       } as ApiQuery<T>;
 
+      // console.dir({q, page, item}, {depth: 15})
+      
+      { // test if the query is empty
+        const count = await count_query_of_resource(
+          sdk, resource, q
+        );
+        // console.log({count})
+        if(count==0) 
+          return q;
+      }
+
       if(perform_navigation) {
-        { // when using query with navigation
-          // we perform a different check for empty resources
-          // as opposed to the regular `query` function,
-          // becuase we are in stateless mode.
-          const count = await count_query_of_resource(
-            sdk, resource, q
-          );
-          if(count==0) return;
-        }
-        nav(`${slug}/q/${api_query_to_searchparams(q).toString()}`);
+        // console.log({look: api_query_to_searchparams(q).toString()})
+        nav(
+          `${slug}/q/${api_query_to_searchparams(q).toString()}&search=${search}`
+        );
       } else {
-        await query(q);
+        await query(q, true);
       }
 
       return q;
 
-    }, [nav, query, page, query_api, slug]
+    }, [nav, query, page, parsed_query_params, slug]
   );
 
   const context = useMemo(
@@ -234,7 +271,7 @@ const useCollectionsActions = <
 
   return {
     resource,
-    query_api, 
+    query_api: parsed_query_params.query_api, 
     ref_actions, 
     context,
     pages, 

@@ -1,3 +1,85 @@
+/**
+ */
+import { to_handle } from '../../api/utils.func.js';
+export { file_name } from './api.utils.file.js'
+
+/**
+ * @description timestamp to `iso`
+ * @param {number} number 
+ */
+export const iso = (number) => {
+  return new Date(number).toISOString();
+}
+
+/**
+ * @description Execute a bunch of functions, 
+ * that create promises sequentially. All tests 
+ * promises run in serial to avoid transactions locks.
+ * @template T
+ * @param {(() => Promise<T>)[]} items 
+ */
+export const promises_sequence = async (items) => {
+  const results = [];
+  for(const it of items)
+    results.push(await it())
+  return results;
+}
+
+/**
+ * @description A generator function to create a `handle`
+ * iteratively over prefixes and a moving index.
+ * @param  {...string} prefixs 
+ */
+export const create_handle = (...prefixs) => {
+  let index = 0;
+  return () => {
+    return to_handle([...prefixs, index+=1].join('-'));
+  }
+}
+
+/**
+ * @description A generator function to create a title
+ * iteratively over prefixes and a moving index.
+ * @param  {...string} prefixs 
+ */
+export const create_title_gen = (...prefixs) => {
+  let index = 0;
+  return () => {
+    return [...prefixs, index+=1].join(' ');
+  }
+}
+
+
+/**
+ * @description a list of 10 static ids, this is 
+ * helpful for testing
+ * @param {string} prefix 
+ */
+export const get_static_ids = (prefix) => {
+  return [
+    '65e5ca42c43e2c41ae5216a9',
+    '65e5ca42c43e2c41ae5216aa',
+    '65e5ca42c43e2c41ae5216ab',
+    '65e5ca42c43e2c41ae5216ac',
+    '65e5ca42c43e2c41ae5216ad',
+    '65e5ca42c43e2c41ae5216ae',
+    '65e5ca42c43e2c41ae5216af',
+    '65e5ca42c43e2c41ae5216b0',
+    '65e5ca42c43e2c41ae5216b1',
+    '65e5ca42c43e2c41ae5216b2'
+  ].map(id => `${prefix}_${id}`);
+}
+
+/**
+ * @description Pick a random item from an array
+ * @template T
+ * @param {T[]} items 
+ */
+export const pick_random = (items) => {
+  const idx = Math.floor(Math.random() * (items.length - 1));
+  return items.at(idx);
+}
+
 import * as assert from 'uvu/assert';
 
 export function sleep(ms=1000) {
@@ -21,10 +103,16 @@ const generateRandomString = (length=10) => {
   return result;
 }
 
-export const withRandom = (o='', length=10) => o + '-' + generateRandomString(length)
+/**
+ * @description Generate a random string with a prefix
+ * @param {string} o 
+ * @param {number} length 
+ */
+export const withRandom = (o='', length=10) => 
+  o + '-' + generateRandomString(length);
 
 /**
- * 
+ * @description Delete keys from an object
  * @param  {...string} keys 
  */
 export const delete_keys = (...keys) => {
@@ -49,9 +137,9 @@ const filter_actual_keys_by_expected = (actual, expected) => {
 }
 
 /**
- * @description given two objects `actual` and `expected`, perform deep equal test
- * between expected and it's mutual keys with actual
- * 
+ * @description given two objects `actual` and `expected`, 
+ * perform deep equal test between expected and it's 
+ * mutual keys with actual
  * @param {...string} keys 
  */
 export const assert_partial_with_ignored_keys = (...keys) => {
@@ -103,9 +191,9 @@ export const assert_partial_with_ignored_keys = (...keys) => {
 
 
 /**
- * @description given two objects `actual` and `expected`, perform deep equal test
- * between expected and it's mutual keys with actual
- * 
+ * @description given two objects `actual` and `expected`, 
+ * perform deep equal test between expected and it's mutual 
+ * keys with actual
  */
 export const assert_partial_minus_relations = () => {
   return assert_partial_with_ignored_keys(
@@ -114,9 +202,9 @@ export const assert_partial_minus_relations = () => {
 }
 
 /**
- * @description given two objects `actual` and `expected`, perform deep equal test
- * between expected and it's mutual keys with actual
- * 
+ * @description given two objects `actual` and `expected`, 
+ * perform deep equal test between expected and it's mutual 
+ * keys with actual
  * @param {Object | Object[]} actual 
  * @param {Object | Object[]} expected 
  * @param {string} prefix 

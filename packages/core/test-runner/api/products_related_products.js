@@ -8,11 +8,10 @@ import { App } from '../../index.js';
 import { 
   create_handle, file_name, 
   get_static_ids, promises_sequence
-} from './api.utils.crud.js';
+} from './api.utils.js';
 import esMain from './utils.esmain.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
-
 
 /** @type {withConcreteIdAndHandle<ProductTypeUpsert>} */
 const pr_upsert = {

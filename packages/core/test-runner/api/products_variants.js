@@ -4,14 +4,15 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 import { App } from '../../index.js';
-import { create_handle, file_name, 
+import { 
+  create_handle, file_name, 
   get_static_ids, 
-  promises_sequence} from './api.utils.crud.js';
+  promises_sequence
+} from './api.utils.js';
 import esMain from './utils.esmain.js';
 
 const handle_pr = create_handle('pr', file_name(import.meta.url));
 const handle_var = create_handle('var', file_name(import.meta.url));
-
 
 /** @type {ProductType} */
 const pr_upsert = {

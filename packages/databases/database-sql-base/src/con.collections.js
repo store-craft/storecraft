@@ -13,7 +13,7 @@ import {
   with_search
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
-import { query_to_eb, query_to_sort } from './utils.query.js'
+import { query_to_eb, withQuery, withSort } from './utils.query.js'
 
 export const table_name = 'collections'
 
@@ -120,22 +120,26 @@ const remove = (driver) => {
 const list = (driver) => {
   return async (query) => {
 
-    const items = await driver.client
+    const items = await withQuery(
+      driver.client
       .selectFrom(table_name)
       .selectAll()
       .select(eb => [
         with_tags(eb, eb.ref('collections.id'), driver.dialectType),
         with_media(eb, eb.ref('collections.id'), driver.dialectType),
         with_search(eb, eb.ref('collections.id'), driver.dialectType),
-      ])
-      .where(
-        (eb) => {
-          return query_to_eb(eb, query, table_name);
-        }
-      )
-      .orderBy(query_to_sort(query, 'collections'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      ]),
+      query, table_name
+    ).execute();
+
+      // .where(
+      //   (eb) => {
+      //     return query_to_eb(eb, query, table_name);
+      //   }
+      // )
+      // .orderBy(query_to_sort(query, 'collections'))
+      // .limit(query.limitToLast ?? query.limit ?? 10)
+      // .execute();
 
     if(query.limitToLast) items.reverse();
 
@@ -150,7 +154,8 @@ const list = (driver) => {
 const list_collection_products = (driver) => {
   return async (handle_or_id, query={}) => {
 
-    const items = await driver.client
+    const items = await withSort(
+      driver.client
       .selectFrom('products')
       .innerJoin(
         'products_to_collections', 
@@ -177,14 +182,17 @@ const list_collection_products = (driver) => {
           ].filter(Boolean)
         )
       )
-      .orderBy(query_to_sort(query, 'products'))
-      .limit(query.limitToLast ?? query.limit ?? 10)
-      .execute();
+      .limit(query.limitToLast ?? query.limit ?? 10),
+      query, 'products'
+    ).execute()
+      // .orderBy(query_to_sort(query, 'products'))
+      // .execute();
 
       // .compile();
       // console.log(items[0])
 
-    if(query.limitToLast) items.reverse();
+    if(query.limitToLast) 
+      items.reverse();
 
     return sanitize_array(items);
   }

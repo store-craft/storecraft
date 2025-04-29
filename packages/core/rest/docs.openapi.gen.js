@@ -1,5 +1,5 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { ZodSchema, z } from 'zod';
+import { ZodSchema, coerce, z } from 'zod';
 import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
@@ -52,6 +52,7 @@ import {
   shippingMethodTypeUpsertSchema,
   signWithOAuthProviderParamsSchema,
   similaritySearchResultSchema,
+  storecraftAppPublicInfoSchema,
   storecraftConfigSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
@@ -287,19 +288,6 @@ const example_order = {
 
 // Register definitions here
 const create_query = () => {
-  const cursor = z.string().optional().openapi(
-    { 
-      examples: [
-        '(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)',
-        '(updated_at:"2024-01-24T20:28:24.126Z", id:"tag_65b172ebc4c9552fd46c1027")',
-        '(price: 50, updated_at:"2024-01-24T20:28:24.126Z")',
-        '(active: true)',
-        '(active: false)',
-      ],
-      description: 'A cursor in CSV format of key and values, example: \
-      `(updated_at:2024-01-24T20:28:24.126Z, id:tag_65b172ebc4c9552fd46c1027)`'
-    }
-  );
 
   return z.object({
     limit: z.number().optional().openapi(
@@ -314,11 +302,6 @@ const create_query = () => {
         description: 'Limit filtered results from the end of a query range' 
       }
     ),
-    startAt: cursor,
-    startAfter: cursor,
-    endAt: cursor,
-    endBefore: cursor,
-    equals: cursor,
     sortBy: z.string().optional().openapi(
       { 
         examples: ['(updated_at,id)', '(price)'],
@@ -335,9 +318,10 @@ const create_query = () => {
     ),
     vql: z.string().optional().openapi(
       { 
-        examples: ["(term1 & (term2 | -term3))"],
-        description: 'Every item has a recorded search terms which you can use \
-        to refine your filtering with `VQL` boolean language, example: "term1 & (term2 | -term3)"'
+        examples: ["(active=true & updated_at>=2012 & (price>=20 & price<40) & (super | -mario))"],
+        description: '**VQL** is a query filtering language for `storecraft`. Learn about it \
+        in the following link https://storecraft.app/docs/backend/resources/query#vql. \
+        Example: `(active=true & updated_at>=2012 & (price>=20 & price<40) & (super | -mario))`',
       }
     ),
     expand: z.string().optional().openapi(
@@ -1319,7 +1303,7 @@ const register_ai = (registry) => {
 const register_similarity_search = (registry) => {
   
   registry.register('similaritySearchResultSchema', similaritySearchResultSchema);
-  
+  // return;
   registry.registerPath({
     method: 'get',
     path: `/similarity-search`,
@@ -1387,7 +1371,9 @@ const register_reference = (registry) => {
         description: `Your storecraft settings`,
         content: {
           'application/json': {
-            schema: storecraftConfigSchema,
+            schema: storecraftConfigSchema.extend(
+              {core_version: z.string().describe('The core version of the storecraft app')}
+            ),
             example: {
               general_store_name: 'Wush Wush Games',
               general_store_website: 'https://wush.games',
@@ -1407,6 +1393,36 @@ const register_reference = (registry) => {
     },
     ...apply_security()
   });
+
+  registry.registerPath({
+    method: 'get',
+    path: `/reference/info`,
+    summary: `Public store info`,
+    description: `Public store information such as engine version, store name, description etc..`,
+    tags: ['reference'],
+    responses: {
+      200: {
+        description: `Your storecraft public information`,
+        content: {
+          'application/json': {
+            schema: storecraftAppPublicInfoSchema,
+            example: {
+              core_version: '1.0.0',
+              dashboard_default_version: '1.0.0',
+              store_name: 'Wush Wush Games',
+              store_website: 'https://wush.games',
+              store_description: 'We sell retro video games',
+              store_support_email: 'support@wush.games',
+              store_logo_url: 'https://cdn.wush.games/logo.png',
+              confirm_email_base_url: 'https://wush.games/confirm-email',
+              forgot_password_confirm_base_url: 'https://wush.games/confirm-password',
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 /**

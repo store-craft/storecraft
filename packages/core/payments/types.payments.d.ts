@@ -1,6 +1,7 @@
 import type { ApiRequest, ApiResponse } from "../rest/types.public.d.ts";
 import type { 
-  OrderData, PaymentGatewayAction, PaymentGatewayInfo, PaymentGatewayStatus 
+  OrderData, PaymentGatewayAction, 
+  PaymentGatewayInfo, PaymentGatewayStatus 
 } from "../api/types.api.d.ts";
 import { App } from "../types.public.js";
 
@@ -8,7 +9,6 @@ import { App } from "../types.public.js";
 /**
  * @description A gateway `action` is a `function` recieving the 
  * **original** payment creation result and optional extra parameters
- * 
  */
 export type PaymentGatewayActionHandler<CheckoutCreateResult, Extra> = 
   /**
@@ -74,26 +74,22 @@ export type OnWebHookResult = {
  * 
  * @template {any} Config The config type
  * @template {any} CheckoutCreateResult The result of checkout creation type
- * 
  */
 export declare interface payment_gateway<
   Config extends any=any, CheckoutCreateResult extends any=any
 > {
 
   /** 
-   * 
    * @description info of the payment gateway 
    */
   info: PaymentGatewayInfo;
 
   /** 
-   * 
    * @description config of the gateway 
    */
   config: Config;
 
   /**
-   * 
    * @description the eligible actions in this interface for remote invocation
    */
   actions: PaymentGatewayAction[];
@@ -106,7 +102,6 @@ export declare interface payment_gateway<
 
   /**
    * @description Invoke a gateway `action`
-   * 
    * @param action_handle the identifier of the `action`
    * @param extra extra parameters for the action
    */
@@ -114,25 +109,18 @@ export declare interface payment_gateway<
       PaymentGatewayActionHandler<CheckoutCreateResult, any>;
 
   /**
-   * 
    * @description Create a checkout in the gateway, return a 
    * `CreateResult` object which will be given to you subsequntially 
-   * 
    * @param order store-craft order, use it to infer pricing
-   * 
    */
   onCheckoutCreate: (order: Partial<OrderData>) => Promise<CheckoutCreateResult>;
 
   /**
-   * 
    * @description Syncronous payment, customer has approved the payment, 
    * proceed to synchronous completion
-   * 
-   * 
    * @param checkout_create_result the result of checkout creation, 
    * use it to know the gateays order id etc..
    * @param extra_client_payload `anything` the client might send
-   * 
    */
   onCheckoutComplete: (
     checkout_create_result: CheckoutCreateResult, extra_client_payload: any
@@ -140,37 +128,29 @@ export declare interface payment_gateway<
 
 
   /**
-   * 
    * @description (Optional) After a `checkout` is created, you can send a buy link with
    * HTML UI to a customer to complete a `checkout`.
-   * 
    * @param order `storecraft` order. use the `order.payment_gateway.onCheckoutCreate`
    * to identify the gateway transaction.
-   * 
    * @returns {Promise<string>} returns `html` string
    */
   onBuyLinkHtml?: (order: Partial<OrderData>) => Promise<string>
 
   /**
-   * 
    * @description Query for the status of created payment, receive back 
    * a status object with available actions.
-   * 
    * @param checkout_create_result sthe result of `onCheckoutCreate`
    */
   status: (checkout_create_result: CheckoutCreateResult) => Promise<PaymentGatewayStatus>;
 
   /**
-   * 
    * @description Support async notifications and payments through webhooks.
    * The `webhook` is responsible for
    * - Verifying the integrity of the message
    * - Send a response to the webhook origin (success / error)
    * - Return the new `status` for the `order` so `storecraft` can save it
-   * 
    * @param request HTTP `Request` object
    * @param response HTTP `Response` object
-   * 
    */
   webhook?: (
     request: ApiRequest, response: ApiResponse

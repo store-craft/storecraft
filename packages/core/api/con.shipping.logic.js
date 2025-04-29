@@ -2,14 +2,14 @@
  * @import { ApiQuery, ShippingMethodType, ShippingMethodTypeUpsert } from './types.public.js'
  */
 import { shippingMethodTypeUpsertSchema } from './types.autogen.zod.api.js'
-import { regular_get, regular_list, 
-  regular_remove, regular_upsert } from './con.shared.js'
+import { 
+  regular_get, regular_list, 
+  regular_remove, regular_upsert 
+} from './con.shared.js'
 import { to_handle } from './utils.func.js';
 import { App } from '../index.js';
 
-/**
- * @param {App} app
- */
+/** @param {App} app */
 export const db = app => app.db.resources.shipping_methods;
 
 /**
@@ -41,7 +41,6 @@ export const upsert = (app) =>
 export const count = (app) => 
   /**
    * @description Count query results
-   * 
    * @param {ApiQuery<ShippingMethodType>} query 
    */
   (query) => {

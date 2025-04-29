@@ -1,127 +1,152 @@
 /**
- * @import { ApiQuery, Cursor, Tuple } from '@storecraft/core/api'
- * @import { VQL } from '@storecraft/core/vql'
+ * @import { ApiQuery, Tuple } from '@storecraft/core/api'
+ * @import { VQL, VQL_OPS, legal_value_types } from '@storecraft/core/vql'
+ * @import { Filter, FilterOperators, FindOptions } from 'mongodb'
  */
-
+import { 
+  legacy_query_with_cursors_to_vql_string 
+} from "@storecraft/core/api/query.legacy.js";
 import { to_objid } from "./utils.funcs.js";
-import { parse } from "@storecraft/core/vql";
-
-let a = { 
-  $or: [
-    { updated_at: { $gt: '2024-01-24T20:28:24.126Z'} },
-    { $and : [ { updated_at: '2024-01-24T20:28:24.126Z' }, { id: { $gte : 'tag_65b172ebc4c9552fd46c1027'}}]}
-  ], 
-}
+import { parse, utils } from "@storecraft/core/vql";
 
 /**
- * Convert an API Query cursor into mongo dialect, also sanitize.
- * 
- * 1. (a1, a2) >  (b1, b2) ==> (a1 > b1) || (a1=b1 & a2>b2)
- * 2. (a1, a2) >= (b1, b2) ==> (a1 > b1) || (a1=b1 & a2>=b2)
- * 3. (a1, a2, a3) >  (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>b3)
- * 4. (a1, a2, a3) >= (b1, b2, b3) ==> (a1 > b1) || (a1=b1 & a2>b2) || (a1=b1 & a2=b2 & a3>=b3)
- * 
- * 
- * @param {Cursor} c 
- * @param {'>' | '>=' | '<' | '<='} relation 
- * @param {(x: [k: string, v: any]) => [k: string, v: any]} transformer 
- * Your chance to change key and value
- * 
+ * @description Convert a **VQL** to a mongo filter
+ * @param {VQL} vql 
  */
-export const query_cursor_to_mongo = (c, relation, transformer=(x)=>x) => {
+export const query_vql_to_mongo_filter = (vql) => {
 
-  let rel_key_1; // relation in last conjunction term in [0, n-1] disjunctions
-  let rel_key_2; // relation in last conjunction term in last disjunction
-
-  if (relation==='>' || relation==='>=') {
-    rel_key_1 = rel_key_2 = '$gt';
-    if(relation==='>=')
-      rel_key_2='$gte';
-  }
-  else if (relation==='<' || relation==='<=') {
-    rel_key_1 = rel_key_2 = '$lt';
-    if(relation==='<=')
-      rel_key_2='$lte';
-  } else return undefined;
-
-  const disjunctions = [];
-  // each disjunction clause
-  for (let ix = 0; ix < c.length; ix++) {
-    const is_last_disjunction = ix==c.length-1;
-    const conjunctions = [];
-    // each conjunction clause up until the last term (not inclusive)
-    for (let jx = 0; jx < ix; jx++) {
-      // the a_n=b_n
-      const r = transformer(c[jx]);
-      conjunctions.push({ [r[0]] : r[1] });
-    }
-
-    // Last conjunction term
-    const relation_key = is_last_disjunction ? rel_key_2 : rel_key_1;
-    const r = transformer(c[ix]);
-    conjunctions.push({ [r[0]] : { [relation_key]: r[1] } });
-    // Add to disjunctions list
-    disjunctions.push({ $and: conjunctions });
-  }
-
-  if(disjunctions.length==0)
+  if(!vql)
     return undefined;
 
-  const result = {
-    $or: disjunctions
-  };
+  /** @template T @param {T} fn @returns {T} */
+  const identity = (fn) => {
+    return fn;
+  }
 
-  return result;
-}
+  /**
+   * @param {VQL_OPS<legal_value_types>} ops 
+   * `ops` object about this property
+   * @param {string} name 
+   * property name in the table
+   */
+  const leaf_ops = (ops, name) => {
+    
+    const ops_keys = /** @type {(keyof VQL_OPS)[]} */(
+      Object.keys(ops)
+    );
 
-/**
- * @param {VQL.Node} node 
- */
-export const query_vql_node_to_mongo = node => {
-  if(node.op==='LEAF') {
-    return {
-      '_relations.search': { $regex: `${node.value}` }
+    const values = ops_keys.map(
+      (k) => {
+        /** `arg` is basically the value of `op.$eq` `op.$gte` etc.. */
+        const arg = (ops[k]);
+
+        switch (k) {
+          case '$eq':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $eq: arg
+            });
+          case '$ne':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $ne: arg
+            });
+          case '$gt':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $gt: arg
+            });
+          case '$gte':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $gte: arg
+            });
+          case '$lt':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $lt: arg
+            });
+          case '$lte':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $lte: arg
+            });
+          case '$like':
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $regex: String(arg)
+            });
+          case '$in': {
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $in: arg
+            });
+          }
+          case '$nin': {
+            return /** @type {FilterOperators<legal_value_types>} */({
+              $nin: arg
+            });
+          }
+          default:
+            throw new Error(
+              `VQL-ops-failed: Unrecognized operator ${k}`
+            );
+        }
+      }
+    );
+    
+    if(values.length===0)
+      return undefined;
+
+    return /** @type {Filter<any>} */ ({
+      [name]: values.reduce(
+        (p, c) => {
+          return { ...p, ...c }
+        }, 
+        {}
+      )
+    }) 
+  }
+
+  const reduced = utils.reduce_vql(
+    {
+      vql,
+
+      map_leaf: (node) => {
+        return leaf_ops(
+          node.op, 
+          node.name
+        );
+      },
+
+      reduce_AND: identity(
+        (nodes) => {
+          return /** @type {Filter<any>} */({
+            $and: nodes
+          });
+        }
+      ),
+
+      reduce_OR: (nodes) => {
+        return /** @type {Filter<any>} */({
+          $or: nodes
+        });
+      },
+
+      reduce_NOT: (node) => {
+        return /** @type {Filter<any>} */({
+          $nor: [node]
+        });
+      },
+
+      reduce_SEARCH: (value) => {
+        return /** @type {Filter<{_relations : { search: string[]}}>} */({
+          '_relations.search': { $regex: value }
+        });
+      },
+
     }
-  }
 
-  let conjunctions = [];
-  for(let arg of node?.args) {
-    conjunctions.push(query_vql_node_to_mongo(arg));
-  }
+  );
 
-  switch (node.op) {
-    case '&':
-      return {
-        $and: conjunctions
-      }
-    case '|':
-      return {
-        $or: conjunctions
-      }
-    case '!':
-      return {
-        $nor: [ conjunctions[0] ]
-      }
-  
-    default:
-      throw new Error('VQL-to-mongo-failed')
-  }
-
+  return reduced;
 }
 
 /**
- * 
- * @param {VQL.Node} root 
- */
-export const query_vql_to_mongo = root => {
-  return root ? query_vql_node_to_mongo(root) : undefined;
-}
-
-/**
- * Let's transform ids into mongo ids
- * 
+ * @description Let's transform ids into mongo ids
  * @param {Tuple} c a cursor record
- * 
  * @returns {[k: string, v: any]}
  */
 const transform = c => {
@@ -131,54 +156,54 @@ const transform = c => {
 }
 
 /**
- * Convert an API Query into mongo dialect, also sanitize.
- * 
- * 
+ * @description Convert an API Query into mongo dialect, 
+ * also sanitize.
  * @param {ApiQuery<any>} q 
  */
 export const query_to_mongo = (q) => {
-  try {
-    if(q.vql && !q.vqlParsed) {
-      q.vqlParsed = parse(q.vql)
-    }
-  } catch(e) {}
+  
+  try { // compute VQL clauses 
+    const parts = [
+      parse(q.vql),
+      // supports legacy queries with cursors, will be deprecated
+      // in future versions.
+      parse(
+        legacy_query_with_cursors_to_vql_string(q)
+      )
+    ].filter(Boolean);
 
-  const filter = {};
-  const clauses = [];
+    if(parts.length>0) {
+      q.vql = /** @type {VQL} */({
+        $and: parts
+      });
+    }
+  } catch(e) {
+    console.error('VQL parse error:\n', e, '\nfor query:\n', q);
+  }
+
+  /** @type {Filter<any>} */
+  const filter = query_vql_to_mongo_filter(
+    /** @type {VQL} */(q.vql)
+  );
+
   // `reverse_sign=-1` means we need to reverse because of `limitToLast`
-  const reverse_sign = (q.limitToLast && !q.limit) ? -1 : 1;
+  const reverse_sign = q.limitToLast ? -1 : 1;
   const asc = q.order === 'asc';
   const sort_sign = (asc ? 1 : -1) * reverse_sign;
 
-  // const sort_sign = (q.order === 'asc' ? 1 : -1) * reverse_sign;
-  // const asc = (sort_sign * reverse_sign)==1;
-
-  // compute index clauses
-  if(q.startAt) {
-    clauses.push(query_cursor_to_mongo(q.startAt, asc ? '>=' : '<=', transform));
-  } else if(q.startAfter) {
-    clauses.push(query_cursor_to_mongo(q.startAfter, asc ? '>' : '<', transform));
-  }
-
-  if(q.endAt) {
-    clauses.push(query_cursor_to_mongo(q.endAt, asc ? '<=' : '>=', transform));
-  } else if(q.endBefore) {
-    clauses.push(query_cursor_to_mongo(q.endBefore, asc ? '<' : '>', transform));
-  }
-
-  // compute VQL clauses 
-  const vql_clause = query_vql_to_mongo(q.vqlParsed)
-  vql_clause && clauses.push(vql_clause);
-
   // compute sort fields and order
-  const sort = (q.sortBy?.length ? q.sortBy : ['updated_at', 'id']).reduce(
-    (p, c) => (p[c==='id' ? '_id' : c]=sort_sign) && p, 
+  /** @type {FindOptions["sort"]} */
+  const sort = (
+    q.sortBy?.length ? 
+    q.sortBy : 
+    ['updated_at', 'id']
+  )
+  .reduce(
+    (p, c) => (
+      p[c]=sort_sign
+    ) && p, 
     {}
   );
-
-  if(clauses?.length) {
-    filter['$and'] = clauses;
-  }
 
   return {
     filter,

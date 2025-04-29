@@ -7,10 +7,9 @@ import { App } from '../index.js';
 import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_admin } from './con.auth.middle.js'
-import { parse_query } from '../api/utils.query.js'
+import { parse_query } from '../api/query.js'
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -20,7 +19,6 @@ export const create_routes = (app) => {
 
   const middle_authorize_admin = authorize_admin(app)
 
-  // save tag
   polka.post(
     '/',
     middle_authorize_admin,

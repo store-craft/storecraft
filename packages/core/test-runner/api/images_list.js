@@ -4,13 +4,32 @@
  * @import { Test } from 'uvu';
  */
 import { suite } from 'uvu';
-import * as assert from 'uvu/assert';
-import { file_name, 
-  iso, add_query_list_integrity_tests,
-  get_static_ids,
-  image_mock_url_handle_name} from './api.utils.crud.js';
+import { 
+  file_name, iso, get_static_ids
+} from './api.utils.js';
+import { 
+  image_url_to_handle, image_url_to_name 
+} from '../../api/con.images.logic.js';
 import { App } from '../../index.js';
 import esMain from './utils.esmain.js';
+import { add_query_list_integrity_tests } from './api.crud.js';
+
+/**
+ * @param  {...string} prefixs 
+ */
+export const image_mock_url_handle_name = (...prefixs) => {
+  let index = 0;
+  
+  return () => {
+    const url = [...prefixs, index+=1].join('-') + '.png';
+    return {
+      url: url,
+      name: image_url_to_name(url),
+      handle: image_url_to_handle(url)
+    }
+  }
+}
+
 
 const url_handle_name = image_mock_url_handle_name(
   'img', file_name(import.meta.url)

@@ -4,7 +4,6 @@
  * @import { WithRelations } from './utils.types.js'
  * @import { Filter } from 'mongodb'
  */
-
 import { Collection } from 'mongodb'
 import { MongoDB } from '../index.js'
 import { 
@@ -13,7 +12,7 @@ import {
 import { 
   handle_or_id, isDef, sanitize_array, to_objid 
 } from './utils.funcs.js'
-import { discount_to_mongo_conjunctions } from './con.discounts.utils.js'
+import { discount_to_mongo_conjunctions, is_order_discount } from './con.discounts.utils.js'
 import { query_to_mongo } from './utils.query.js'
 import { report_document_media } from './con.images.js'
 import { enums } from '@storecraft/core/api'
@@ -30,8 +29,6 @@ import {
 
 /**
  * @param {MongoDB} d 
- * 
- * 
  * @returns {Collection<db_col["$type_get"]>}
  */
 const col = (d) => d.collection('discounts');
@@ -39,8 +36,6 @@ const col = (d) => d.collection('discounts');
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -82,7 +77,11 @@ const upsert = (driver) => {
           );
           
           // now filter and update for products
-          if(data.active && data.application.id===enums.DiscountApplicationEnum.Auto.id) {
+          if(
+            data.active && 
+            data.application.id===enums.DiscountApplicationEnum.Auto.id &&
+            !is_order_discount(data)
+          ) {
             const conjunctions = discount_to_mongo_conjunctions(data);
             await driver.resources.products._col.updateMany(
               conjunctions.length ? { $and: conjunctions } : {},
@@ -143,8 +142,6 @@ const get = (driver) => get_regular(driver, col(driver));
 
 /**
  * @param {MongoDB} driver 
- * 
- * 
  * @returns {db_col["remove"]}
  */
 const remove = (driver) => {
@@ -327,8 +324,6 @@ const count_discount_products = (driver) => {
 
 /** 
  * @param {MongoDB} driver
- * 
- * 
  * @return {db_col & { _col: ReturnType<col>}}
  */
 export const impl = (driver) => {

@@ -3,7 +3,7 @@
  * @import { 
  *  AddressType, OrderData, ProductType, ProductTypeUpsert,
  *  VariantType, VariantTypeUpsert, ShippingMethodType,
- *  DiscountType, DiscountDetails, LineItem, PricingData
+ *  DiscountType, LineItem, PricingData
  * } from './types.api.js';
  * @import { 
  *  Filter, Filter_o_date_in_range, Filter_o_has_customers, 

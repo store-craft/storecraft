@@ -6,10 +6,10 @@
 
 import { 
   api_query_to_searchparams, object_to_search_params, 
-  string_array_to_string 
-} from '@storecraft/core/api/utils.query.js';
+} from '@storecraft/core/api/query.js';
 import { StorecraftSDK } from '../index.js'
 import { fetchApiWithAuth, url } from './utils.api.fetch.js';
+import { string_array_to_string } from '@storecraft/core/api/query.utils.js';
 
 /**
  * @description **Search** API (two options):

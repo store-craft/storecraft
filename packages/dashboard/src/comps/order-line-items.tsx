@@ -242,7 +242,7 @@ const OrderLineItems = (
 <div {...rest} >
   <BlingButton 
     children='Browse products'
-    className='text-sm h-10 w-40 mx-auto' 
+    className='text-sm h-10 w-40 mx-auto cursor-pointer' 
     onClick={() => ref_overlay.current.show()} />
   <p children='or' 
      className='text-center text-gray-300 mt-5 text-3xl font-semibold' />

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/mailer-smtp",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Official SMTP email provider for node, deno and bun for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

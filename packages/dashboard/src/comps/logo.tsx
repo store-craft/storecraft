@@ -81,12 +81,13 @@ export const Logo = (
     <LogoGradient className='h-[27px]' />
     {/* <StorecraftText /> */}
     <div className='flex flex-row justify-between items-center'>
-      <span children={`v${pkg.version}`} 
-        className='tracking-wider text-sm font-light font-mono' />
+      <div className='flex flex-col'>
+        <span children={`v${pkg.version}`} 
+          className='tracking-wider text-sm font-light font-mono' />
+      </div>
       <a href='https://storecraft.app/docs' target='_blank' className='mr-1' >
         <Capsule />
       </a>
-  
     </div>              
   </div>                                  
 </div>

@@ -1371,7 +1371,9 @@ const register_reference = (registry) => {
         description: `Your storecraft settings`,
         content: {
           'application/json': {
-            schema: storecraftConfigSchema,
+            schema: storecraftConfigSchema.extend(
+              {core_version: z.string().describe('The core version of the storecraft app')}
+            ),
             example: {
               general_store_name: 'Wush Wush Games',
               general_store_website: 'https://wush.games',

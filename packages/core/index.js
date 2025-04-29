@@ -256,11 +256,18 @@ export class App {
   }
 
   /**
+   * @description Get `storecraft` version
+   */
+  get version() {
+    return pkg.version;
+  }
+
+  /**
    * @description Get `storecraft` app public information
    */
   get info() {
     return {
-      core_version: pkg.version,
+      core_version: this.version,
       dashboard_default_version: this.config.dashboard_version,
       store_description: this.config.general_store_description,
       store_name: this.config.general_store_name,

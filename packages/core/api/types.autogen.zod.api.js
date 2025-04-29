@@ -10,6 +10,20 @@ export const cORSOptionsSchema = z.object({
   credentials: z.boolean().optional(),
 });
 
+export const storecraftAppPublicInfoSchema = z.object({
+  core_version: z.string().describe("Core engine version"),
+  dashboard_default_version: z.string().describe("Default dashboard version"),
+  store_description: z.string().describe("Store description"),
+  store_name: z.string().describe("Store name"),
+  store_website: z.string().describe("Store website"),
+  store_support_email: z.string().describe("Store support email"),
+  store_logo_url: z.string().describe("Store logo url"),
+  confirm_email_base_url: z.string().describe("Store confirm email base url"),
+  forgot_password_confirm_base_url: z
+    .string()
+    .describe("Store forgot password confirm base url"),
+});
+
 export const errorItemSchema = z.object({
   message: z.string().optional(),
   code: z.string().optional(),
@@ -437,7 +451,7 @@ export const filterPAllSchema = z
   .object({
     op: filterMetaEnumSchema.shape.p_all.shape.op.optional(),
     meta: filterMetaEnumSchema.shape.p_all.optional(),
-    value: z.undefined(),
+    value: z.any().optional(),
   })
   .describe("Filter for product discount,\nthat chooses all products");
 

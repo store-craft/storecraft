@@ -1,5 +1,5 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { ZodSchema, z } from 'zod';
+import { ZodSchema, coerce, z } from 'zod';
 import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
@@ -52,6 +52,7 @@ import {
   shippingMethodTypeUpsertSchema,
   signWithOAuthProviderParamsSchema,
   similaritySearchResultSchema,
+  storecraftAppPublicInfoSchema,
   storecraftConfigSchema,
   storefrontTypeSchema,
   storefrontTypeUpsertSchema,
@@ -1302,7 +1303,7 @@ const register_ai = (registry) => {
 const register_similarity_search = (registry) => {
   
   registry.register('similaritySearchResultSchema', similaritySearchResultSchema);
-  
+  // return;
   registry.registerPath({
     method: 'get',
     path: `/similarity-search`,
@@ -1390,6 +1391,36 @@ const register_reference = (registry) => {
     },
     ...apply_security()
   });
+
+  registry.registerPath({
+    method: 'get',
+    path: `/reference/info`,
+    summary: `Public store info`,
+    description: `Public store information such as engine version, store name, description etc..`,
+    tags: ['reference'],
+    responses: {
+      200: {
+        description: `Your storecraft public information`,
+        content: {
+          'application/json': {
+            schema: storecraftAppPublicInfoSchema,
+            example: {
+              core_version: '1.0.0',
+              dashboard_default_version: '1.0.0',
+              store_name: 'Wush Wush Games',
+              store_website: 'https://wush.games',
+              store_description: 'We sell retro video games',
+              store_support_email: 'support@wush.games',
+              store_logo_url: 'https://cdn.wush.games/logo.png',
+              confirm_email_base_url: 'https://wush.games/confirm-email',
+              forgot_password_confirm_base_url: 'https://wush.games/confirm-password',
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });  
 }
 
 /**

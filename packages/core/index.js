@@ -256,6 +256,23 @@ export class App {
   }
 
   /**
+   * @description Get `storecraft` app public information
+   */
+  get info() {
+    return {
+      core_version: pkg.version,
+      dashboard_default_version: this.config.dashboard_version,
+      store_description: this.config.general_store_description,
+      store_name: this.config.general_store_name,
+      store_website: this.config.general_store_website,
+      store_support_email: this.config.general_store_support_email,
+      store_logo_url: this.config.general_store_logo_url,
+      confirm_email_base_url: this.config.general_confirm_email_base_url,
+      forgot_password_confirm_base_url: this.config.general_forgot_password_confirm_base_url,
+    }
+  }
+
+  /**
    * @description After init, we inspect for missing config values and try to 
    * find them in platform environment.
    */

@@ -36,6 +36,14 @@ export const create_routes = (app) => {
     }
   );
 
+  // public info
+  polka.get(
+    '/info',
+    async (req, res) => {
+      res.sendJson(app.info);
+    }
+  );
+
 
   return polka;
 }

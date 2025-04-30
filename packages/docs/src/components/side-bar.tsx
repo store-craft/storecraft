@@ -4,6 +4,12 @@ import { AiOutlineDatabase } from 'react-icons/ai'
 import { MdAdminPanelSettings } from 'react-icons/md'
 import { DiStackoverflow } from 'react-icons/di'
 import { FaServer } from 'react-icons/fa'
+import { FaRobot } from "react-icons/fa";
+import { TbSdk } from "react-icons/tb";
+import { MdHttp } from "react-icons/md";
+import { TbHttpGet } from "react-icons/tb";
+import { MdOutlineSpaceDashboard } from "react-icons/md";
+import { FaLaptopCode } from "react-icons/fa";
 import React, { useCallback, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { FaTerminal } from "react-icons/fa6";
@@ -86,7 +92,19 @@ const Icon = (
       return <FaServer {...rest} />
     case 'FaTerminal':
       return <FaTerminal {...rest} />
-    }
+    case 'FaRobot':
+      return <FaRobot {...rest} />
+    case 'TbSdk':
+      return <TbSdk {...rest} />
+    case 'MdHttp':
+      return <MdHttp {...rest} />
+    case 'TbHttpGet':
+      return <TbHttpGet {...rest} />
+    case 'MdOutlineSpaceDashboard':
+      return <MdOutlineSpaceDashboard {...rest} />
+    case 'FaLaptopCode':
+      return <FaLaptopCode {...rest} />
+  }
 }
 
 const Header = (

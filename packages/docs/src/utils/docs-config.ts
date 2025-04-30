@@ -59,10 +59,11 @@ export default {
 
       ]
     },
+
     {
       title: 'Backend',
       icon: {
-        name: 'FaServer',
+        name: 'FaLaptopCode',
         params: {}
       },
       empty: true,
@@ -392,7 +393,7 @@ export default {
     {
       title: 'Dashboard',
       icon: {
-        name: 'MdAdminPanelSettings',
+        name: 'MdOutlineSpaceDashboard',
         params: {}
       },
       empty: true,
@@ -442,14 +443,48 @@ export default {
     },
 
     {
+      title: "AI Chat",
+      icon: {
+        name: 'FaRobot',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      empty: false,
+      route: `chat`,
+      path: `content/docs/chat/intro.mdx`
+
+    },
+
+    {
+      title: "SDK",
+      icon: {
+        name: 'TbSdk',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      empty: true,
+      groups: [
+        {
+          title: "Javascript SDK",
+          route: `sdk/js-sdk`,
+          path: `content/docs/sdk/js-sdk.mdx`
+        },
+        {
+          title: "React Hooks SDK",
+          route: `sdk/react-hooks-sdk`,
+          path: `content/docs/sdk/react-hooks-sdk.mdx`
+        },
+      ]
+    },
+
+    {
       title: "REST API",
       icon: {
-        name: 'BiLogoStackOverflow',
+        name: 'TbHttpGet',
         params: { classNames: 'stroke-kf-600'}
       }, 
       padding_override: 'px-0',
       route: 'rest-api/api',
     },
+
     {
       title: "CLI",
       icon: {

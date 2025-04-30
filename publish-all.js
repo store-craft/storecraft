@@ -10,7 +10,7 @@ export const publish_folder = (
 
   try {
     chdir(path);
-    const ex = execSync('npm publish');
+    const ex = execSync('npm publish --access public');
     if(verbose_output) {
       if(ex) {
         console.log(

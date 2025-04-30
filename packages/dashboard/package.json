@@ -41,7 +41,7 @@
     "dashboard:analyze-lib": "npx vite-bundle-visualizer@latest -c vite.lib.config.ts --sourcemap -t treemap",
     "dashboard:analyze-website": "npx vite-bundle-visualizer@latest -c vite.config.ts --sourcemap -t treemap",
     "prepublishOnly": "npm version patch --force && npm run dashboard:build",
-    "sc-publish": "npm publish"
+    "sc-publish": "npm publish --access public"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",

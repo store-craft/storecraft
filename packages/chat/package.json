@@ -1,7 +1,7 @@
 {
   "name": "@storecraft/chat",
   "version": "0.0.1",
-  "description": "Storecraft Official Chat",
+  "description": "Storecraft Official Chat Agent",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",

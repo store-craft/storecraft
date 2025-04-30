@@ -10,8 +10,16 @@
       type="module"
     >
       import { mountStorecraftChat } from '/dist/lib/src/index.js';
-      mountChat(
-        document.getElementById('root'), true
+      mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'https://localhost:8000',
+            }
+          }
+        }
       );
   </script>
   </head>

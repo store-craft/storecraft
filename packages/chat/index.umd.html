@@ -13,9 +13,18 @@
       src="/dist/lib/src/index.umd.cjs" >
     </script>
     <script>
-      console.log({StorecraftChat})
+      console.log({StorecraftChat});
+      
       StorecraftChat.mountStorecraftChat(
-        document.getElementById('root'), true
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'https://localhost:8000',
+            }
+          }
+        }
       );
     </script>
   </body>

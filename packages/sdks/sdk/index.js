@@ -111,16 +111,30 @@ export class StorecraftSDK {
   }
 
   /**
+   * @description Update / override config with
+   * new properties.
    * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
     this.#config = {
-      ...config
+      ...(this.#config ?? {}),
+      ...(config ?? {})
     };
   }
 
+  /**
+   * @description get the current config
+   */
   get config() {
     return this.#config
+  }
+
+  /**
+   * @description set a config
+   * @param {StorecraftSDKConfig} config 
+   */  
+  set config(config) {
+    this.#config = config;
   }
 }
 
@@ -136,6 +150,7 @@ export const validateConfig = (config) => {
  */  
 export const create = (config) => { 
   const sdk = new StorecraftSDK(config);
+  
   return sdk;
 }
 

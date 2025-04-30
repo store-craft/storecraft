@@ -4,10 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Storecraft Chat</title>
+    <title>Storecraft Agentic Chat</title>
   </head>
   <body class="bg-gray-800">
     <div id="root"></div>
-    <script type="module" src="/src/auto-mount.ts"></script>
+    <script type="module" dsrc="/src/auto-mount.ts">
+      import { mountStorecraftChat } from '/src/index.tsx';
+      mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'https://api.storecraft.com',
+            }
+          }
+        }
+      );
+    </script>
   </body>
 </html>

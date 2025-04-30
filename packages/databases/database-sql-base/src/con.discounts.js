@@ -72,16 +72,17 @@ const upsert = (driver) => {
             .columns(['entity_handle', 'entity_id', 'value', 'reporter'])
             .expression(eb => 
               eb.selectFrom('products')
-                .select(eb => [
-                    'handle as entity_handle',
-                    'id as entity_id',
-                    eb.val(item.id).as('value'),
-                    eb.val(item.handle).as('reporter')
-                  ]
-                )
-                .where(
-                  eb => eb.and(discount_to_conjunctions(eb, item))
-                )
+              .select(
+                eb => [
+                  'handle as entity_handle',
+                  'id as entity_id',
+                  eb.val(item.id).as('value'),
+                  eb.val(item.handle).as('reporter')
+                ]
+              )
+              .where(
+                eb => eb.and(discount_to_conjunctions(eb, item))
+              )
             ).execute();
 
             for(const extra_search of extra_search_for_products) {

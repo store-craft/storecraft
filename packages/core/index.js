@@ -39,14 +39,12 @@ import { assert } from './api/utils.func.js';
 /**
  * @typedef {{
  *  'notifications': NotificationsExtension,
- *  [h: string]: extension
  * }} BaseExtensions
  */
 
 /**
  * @typedef {{
  *  'store': StoreAgent<any>,
-*   [h: string]: Agent
 * }} BaseAgents
  */
 
@@ -61,12 +59,12 @@ let ms_init_start = 0;
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {BaseExtensions} [ExtensionsMap=BaseExtensions]
+ * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
- * @template {BaseAgents} [AgentsMap=(BaseAgents)]
+ * @template {Record<string, Agent>} [AgentsMap=(BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {
@@ -711,7 +709,6 @@ ${c.yellow}⭑ ${c.reset + c.yellow}Statistics      ${c.reset}initialized in ${(
   }
 
   /** 
-   * 
    * @description Get the payment gateways 
    */
   get gateways() { 

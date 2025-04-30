@@ -266,9 +266,9 @@ export default {
               path: 'content/docs/backend/ai/vector-store-providers.mdx'
             },
             {
-              title: 'Store AI Agent',
-              route: 'backend/ai/agent-store',
-              path: 'content/docs/backend/ai/agent-store.mdx'
+              title: 'AI Agents',
+              route: 'backend/ai/agents',
+              path: 'content/docs/backend/ai/agents.mdx'
             },
           ]
         },   

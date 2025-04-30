@@ -9,20 +9,21 @@ import { App } from "../index.js";
 import { assert } from "./utils.func.js";
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app
  */
 export const speakWithAgentSync = (app) => 
   /**
    * @description speak with agent
-   * @param {string} agent_handle agent identifier
+   * @param {keyof T["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
    */
   async (agent_handle, params) => {
-    const agent = app.agents?.[agent_handle];
+    const agent = app.agents?.[String(agent_handle)];
     assert(
       agent,
-      `Agent ${agent_handle} not found !`
+      `Agent ${String(agent_handle)} not found !`
     );
 
     return agent.run(
@@ -31,20 +32,21 @@ export const speakWithAgentSync = (app) =>
   }
 
 /**
- * @param {App} app 
+ * @template {App} T
+ * @param {T} app
  */
 export const speakWithAgentStream = (app) => 
   /**
    * @description speak with agent
-   * @param {string} agent_handle agent identifier
+   * @param {keyof T["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunStreamResponse>}
    */
   async (agent_handle, params) => {
-    const agent = app.agents?.[agent_handle];
+    const agent = app.agents?.[String(agent_handle)];
     assert(
       agent,
-      `Agent ${agent_handle} not found !`
+      `Agent ${String(agent_handle)} not found !`
     );
     return agent.runStream(
       params
@@ -53,8 +55,8 @@ export const speakWithAgentStream = (app) =>
 
 
 /**
- * 
- * @param {App} app
+ * @template {App} T
+ * @param {T} app
  */  
 export const inter = app => {
 

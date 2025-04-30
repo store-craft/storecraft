@@ -67,7 +67,7 @@ export const app = new App(
   new LibSQLVectorStore(
     {
       embedder: new OpenAIEmbedder(),
-      
+
     }
   )
 )
@@ -86,10 +86,17 @@ export const app = new App(
   }
 )
 
-new MongoVectorStore(
+
+const { 
+  thread_id, contents 
+} = await app.api.ai.speakWithAgentSync(
+  'store',
   {
-    embedder: new OpenAIEmbedder(),
-    dimensions: 1536,
-    similarity: 'cosine',
+    prompt : [
+      {
+        content : 'Hi, I am looking for super mario games',
+        type : 'text'
+      }
+    ]
   }
 )

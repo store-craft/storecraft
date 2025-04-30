@@ -1,1 +1,1 @@
-export { StoreAgent } from './store/agent.js'
+export { StoreAgent } from './store/index.js'

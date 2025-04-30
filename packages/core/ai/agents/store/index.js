@@ -63,7 +63,7 @@ export class StoreAgent {
         params.thread_id, this.#app
       );
 
-      const sf = await this.#app.api.storefronts.get('default');
+      const sf = await this.#app.api.storefronts.get_default_auto_generated_storefront();
       const kvs = {
         store_info: store_info(this.#app),
         storefront_collections: sf.collections && sf.collections.map(c => ({title: c.title, handle: c.handle, description: c.description})),

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useMemo } from 'react'
 import Markdown from 'markdown-to-jsx'
 import { LoadingImage } from './loading-image'
@@ -14,20 +13,18 @@ const options = {
   }
 }
 
-/**
- * @typedef {object} InternalMDViewParams
- * @prop {string} [value]
- * 
- * @typedef {InternalMDViewParams & 
- *  Omit<React.ComponentProps<'div'>, 'value'>
- * } MDViewParams
- * 
- * @param {MDViewParams} param
- */
+export type MDViewParams = {
+  /**
+   * @description The markdown content to be rendered
+   */
+  value?: string,
+} & Omit<React.ComponentProps<'div'>, 'value'>;
+
+
 export const MDView = (
   {
     value, ...rest
-  }
+  }: MDViewParams
 ) => {
   const Comp = useMemo(
     () => (

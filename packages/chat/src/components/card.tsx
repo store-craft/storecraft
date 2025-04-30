@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { withDiv } from "./common.types"
+import { type withDiv } from "./common.types"
 import { sleep } from "@/hooks/sleep";
 
 export type CardParams = withDiv<
@@ -65,6 +65,9 @@ export const FlashCard = (
   );
 
   return (
-    <Card card={{loading: loading, border: card.border}} {...rest}/>
+    <Card 
+      card={{loading: loading, border: card.border}} 
+      {...rest}
+    />
   )
 }

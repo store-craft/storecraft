@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { withDiv } from "./common.types";
+import { type withDiv } from "./common.types";
 import { sleep } from "@/hooks/sleep";
 import { ShowBinarySwitch } from "./show-if";
 import { HiOutlineDuplicate } from "react-icons/hi";
@@ -25,7 +25,7 @@ export const CopyClipboard = (
 
   return (
     <div {...rest}>
-      <ShowBinarySwitch index={wasCopied ? 1 : 0}>
+      <ShowBinarySwitch toggle={wasCopied}>
         <HiOutlineDuplicate 
           className='text-xl opacity-80 hover:opacity-100 cursor-pointer'
           onClick={onClick} />

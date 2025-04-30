@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from "react"
 import { Card } from "./card"
 import { BsSend } from "react-icons/bs";
-import  { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
-import { withDiv } from "./common.types";
+import { createKeyboardMatchHook } from '@/hooks/use-keyboard-match'
+import { type withDiv } from "./common.types";
 import { DarkModeSwitch } from "./dark-mode-switch";
 import type { content } from "@storecraft/core/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -79,26 +79,30 @@ export const ChatInputView = (
 
   return (
     <div {...rest}>
-      <Card className={'w-full h-fit shadow-2xl '}
-            card={{loading: chat.loading, border: true}}>
+      <Card 
+        className={'w-full h-fit shadow-2xl '}
+        card={{loading: chat.loading, border: true}}>
 
         <div className='w-full h-fit flex flex-col gap-4 relative py-3'>
-          <textarea rows={1}
+          <textarea 
+            rows={1}
             ref={ref_ta} onChange={onChange}
             className='resize-none text-base w-full outline-none pl-3 
                       h-fit min-h-8 font-normal dark:font-light' 
-            placeholder='Ask me anything' />
+            placeholder='Ask me anything' 
+          />
 
-          <button onClick={chat.loading ? undefined : internal_onSend} 
-              className={`rounded-md h-8 w-8 p-2  absolute right-3 
-                        cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
-                        ease-in-out top-3 transition-all duration-300 ` + 
-                        ((hasText || chat.loading) ? `-translate-y-0` : '-translate-y-10') }>
-
+          <button 
+            onClick={chat.loading ? undefined : internal_onSend} 
+            className={`rounded-md h-8 w-8 p-2  absolute right-3 
+                      cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
+                      ease-in-out top-3 transition-all duration-300 ` + 
+                      ((hasText || chat.loading) ? `-translate-y-0` : '-translate-y-10') }
+          >
             <ShowSwitch index={chat.loading ? 1 : 0}>
               <BsSend className='w-full h-full text-white' />
               <AiOutlineLoading3Quarters 
-                  className='w-full h-full text-white animate-spin' />
+                className='w-full h-full text-white animate-spin' />
             </ShowSwitch>
           </button>
 
@@ -107,13 +111,11 @@ export const ChatInputView = (
               <DarkModeSwitch />
               <ToolTip tooltip='New chat'>
                 <FaRegPenToSquare className='---translate-y-px cursor-pointer'
-                    onClick={chat.onNewChat} />
+                  onClick={chat.onNewChat} />
               </ToolTip>
             </div>
             <Tip/>
           </div>
-
-
         </div>
       </Card>
     </div>
@@ -123,15 +125,17 @@ export const ChatInputView = (
 const Tip = () => {
 
   return (
-    <div className='w-fit h-fit text-xs self-end --px-3 -hidden 
+    <div 
+      className='w-fit h-fit text-xs self-end --px-3 -hidden 
         tracking-wider font-light'>
-      <span children='Shift' 
+      <span 
+        children='Shift' 
         className='border chat-border-overlay chat-bg-overlay p-0.5 
-              rounded-md text-[11px] font-mono font-bold'/>
+          rounded-md text-[11px] font-mono font-bold'/>
       <span children=' + ' className='opacity-60'/>
       <span children='Enter' 
         className='border chat-border-overlay chat-bg-overlay p-0.5 
-                rounded-md text-[11px] font-mono font-bold'/>
+          rounded-md text-[11px] font-mono font-bold'/>
       <span children=' to send' className='opacity-50'/>
     </div>    
   )

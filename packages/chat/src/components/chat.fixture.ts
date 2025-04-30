@@ -1,6 +1,6 @@
-import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { ChatMessage } from "./common.types";
-import type { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+import { type content_tool_result, type InferToolReturnSchema } from "@storecraft/core/ai";
+import { type ChatMessage } from "./common.types";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 
 type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
 

@@ -1,4 +1,4 @@
-import { withDiv } from "../common.types";
+import { type withDiv } from "../common.types";
 import { useCallback, useMemo, useState } from "react";
 import { BsFilterRight } from "react-icons/bs";
 

@@ -1,4 +1,4 @@
-import type { content_multiple_text_deltas, withDiv } from "./common.types";
+import { type content_multiple_text_deltas, type withDiv } from "./common.types";
 import { MDView } from "./md-view";
 import { useMemo, useState } from "react";
 
@@ -34,9 +34,11 @@ export const ChatMessageTextDeltasContent = (
       <MDView 
         value={reduced} 
         className='max-w-full flex-1 prose dark:prose-invert
-                    prose-headings:mt-0 prose-headings:mb-0 
-                    prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                    prose-ol:m-0 prose-li:my-1 prose-img:m-0' />
+          prose-headings:mt-0 prose-headings:mb-0 
+          prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+          prose-ol:m-0 prose-li:my-1 prose-img:m-0' 
+      />
+
       {/* <button onClick={
         () => { 
           chat.content = {

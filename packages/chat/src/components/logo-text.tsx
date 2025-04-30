@@ -1,12 +1,8 @@
 
-/**
- * 
- * @param {React.SVGProps<SVGSVGElement>} params
- */
 export const LogoText = (
   {
     children, ...rest
-  }
+  }: React.ComponentProps<'svg'>
 ) => {
 
   return (
@@ -33,13 +29,9 @@ export const LogoText = (
   )
 }
 
-/**
- * 
- * @param {React.SVGProps<SVGSVGElement>} params
- */
 export const LogoGradient = (
   {
-    className
+    className=''
   }
 ) => {
 

@@ -2,9 +2,10 @@ import {
   forwardRef, useCallback, useEffect, 
   useImperativeHandle, useRef 
 } from "react";
-import type { ChatMessage, withDiv } from "./common.types";
+import { type ChatMessage, type withDiv } from "./common.types";
 import { 
-  ChatMessagesViewImperativeInterface, ChatMessageView 
+  type ChatMessagesViewImperativeInterface, 
+  ChatMessageView 
 } from "./chat-message";
 
 export type MessagesParams = withDiv<
@@ -84,10 +85,12 @@ export const ChatMessagesView = forwardRef<
 
     return (
       <div {...rest}>
-        <div className='w-full h-full flex flex-col pb-44 
-              gap-0 pt-5 --pr-5 overflow-y-scroll'
-            onScroll={internal_onScroll}
-            ref={ref_div}>
+        <div 
+          className='w-full h-full flex flex-col pb-44 
+            gap-0 pt-5 --pr-5 overflow-y-scroll'
+          onScroll={internal_onScroll}
+          ref={ref_div}
+        >
           <div id='__resize_observer' className='w-full h-fit'
               ref={ref_resize_observer_div} >
             {
@@ -96,7 +99,8 @@ export const ChatMessagesView = forwardRef<
                   <ChatMessageView 
                     message_index={ix}
                     key={ix} message={m} 
-                    avatar_icon={undefined} />
+                    avatar_icon={undefined} 
+                  />
                 )
               )
             }

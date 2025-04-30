@@ -1,6 +1,8 @@
-import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
+import { 
+  type content_tool_result, type InferToolReturnSchema 
+} from "@storecraft/core/ai";
 import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { withDiv } from "../common.types.js";
+import { type withDiv } from "../common.types.js";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { ProductsBrowserView } from "./products-browser-view.js";
 import { Card, FlashCard } from "../card.js";
@@ -43,7 +45,7 @@ export const ToolResultContent_BrowseDiscountProducts = (
         chat={
           {
             products_resource_endpoint: `discounts/${discount_handle}/products`,
-            tags_fetcher: () => sdk.discounts.list_all_discount_products_tags(discount_handle)
+            tags_fetcher: () => sdk.discounts.list_used_discount_products_tags(discount_handle)
           }
         }
       />

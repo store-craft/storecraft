@@ -16,6 +16,7 @@ import { OpenAI } from "@storecraft/core/ai/models/chat/openai";
 import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare";
 import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize";
 import { Pinecone } from "@storecraft/core/ai/models/vector-stores/pinecone";
+import { MongoVectorStore } from "@storecraft/database-mongodb";
 import { PineconeEmbedder } from "@storecraft/core/ai/models/embedders/pinecone";
 import { VoyageAIEmbedder } from "@storecraft/core/ai/models/embedders/voyage-ai";
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
@@ -66,6 +67,7 @@ export const app = new App(
   new LibSQLVectorStore(
     {
       embedder: new OpenAIEmbedder(),
+      
     }
   )
 )
@@ -81,5 +83,13 @@ export const app = new App(
   'templates/get',
   e => {
     e.payload.current
+  }
+)
+
+new MongoVectorStore(
+  {
+    embedder: new OpenAIEmbedder(),
+    dimensions: 1536,
+    similarity: 'cosine',
   }
 )

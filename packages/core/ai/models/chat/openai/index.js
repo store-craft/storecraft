@@ -210,7 +210,6 @@ export class OpenAI {
           content: chunk.choices[0].delta.content
         }
       }
-
     }
 
     let current = builder.done();
@@ -332,10 +331,7 @@ export class OpenAI {
     }
   }
   
-  /**
-   * 
-   * @type {Impl["generateText"]} 
-   */
+  /** @type {Impl["generateText"]} */
   generateText = async (params) => {
     let delta_messages = [];
     const { stream } = await this.streamText(

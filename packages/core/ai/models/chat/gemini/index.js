@@ -20,6 +20,7 @@ export class Gemini extends OpenAI {
         ...config,
         api_key: config.api_key,
         endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+        // @ts-ignore
         model: config.model ?? 'gemini-2.0-flash',
         api_version: ''
       }

@@ -247,15 +247,38 @@ export class MongoVectorStore {
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (disconnect_after_finish=true, delete_index_if_exists_before=false) => {
+  createVectorIndex = async (
+    disconnect_after_finish=true, 
+    delete_index_if_exists_before=false
+  ) => {
     if(delete_index_if_exists_before) {
       await this.deleteVectorIndex();
     }
-
+    
     const db = this.client.db(this.config.db_name);
     const collection_name = this.config.index_name;
+
+    { // skip if index already exists
+      const indices = await db
+      .collection(collection_name)
+      .listSearchIndexes()
+      .toArray();
+
+      if(indices?.length) {
+        const index = indices.find(
+          (index) => index.name === this.config.index_name
+        );
+        if(index) {
+          console.log('MongoVectorStore::createVectorIndex - index already exists, skipping');
+          return true;
+        }
+      }
+    }
+
     // collection name will have the same name as the index
     await db.createCollection(collection_name);
+
+
     const index_result = await db.collection(collection_name).createSearchIndex(
       {
         name: this.config.index_name,

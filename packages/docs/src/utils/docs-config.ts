@@ -246,6 +246,33 @@ export default {
           ]
         },                    
         {
+          title: '🤖 AI',
+          route: 'backend/ai',
+          empty: true,
+          groups: [
+            {
+              title: 'Chat Providers',
+              route: 'backend/ai/chat-providers',
+              path: 'content/docs/backend/ai/chat-providers.mdx'
+            },
+            {
+              title: 'Embedding Providers',
+              route: 'backend/ai/embedding-providers',
+              path: 'content/docs/backend/ai/embedding-providers.mdx'
+            },
+            {
+              title: 'Vector Store Providers',
+              route: 'backend/ai/vector-store-providers',
+              path: 'content/docs/backend/ai/vector-store-providers.mdx'
+            },
+            {
+              title: 'Store AI Agent',
+              route: 'backend/ai/agent-store',
+              path: 'content/docs/backend/ai/agent-store.mdx'
+            },
+          ]
+        },   
+        {
           title: '📧 Email',
           route: 'backend/email',
           empty: true,

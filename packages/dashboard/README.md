@@ -11,9 +11,10 @@
 </div><hr/><br/>
 
 The Official `storecraft` Dashboard 🏆,
+
 - Leveraging `static rendering` / `client side rendering` / `swr`
 - Can be deployed into cost effective **CDN**
-- Also available at `jsDelivr` **CDN**
+- Also available at **CDN** like `unpkg` for consuming as a component.
 
 Effectively, **TWO** Build Targets
 1. A `library` with
@@ -22,7 +23,6 @@ Effectively, **TWO** Build Targets
 2. A website, with configurable backend endpoint.
 
 Build is handled by `Vite`
-
 
 ```bash
 npm i @storecraft/dashboard
@@ -35,8 +35,6 @@ First, run the development server:
 ```bash
 npm run dashboard:dev
 # or
-yarn dashboard:dev
-# or
 npm start
 ```
 
@@ -48,18 +46,16 @@ Simply, run any of the following command
 
 ```bash
 npm run dashboard:build
-# or
-yarn dashboard:build
 ```
 
 Artifacts are in the `dist` folder
 ```txt
 dist
-├── lib
-│   ├── index.js      // ES module
-│   ├── index.cjs     // common js
-│   └── index.umd.cjs // UMD
-├── website
+├── /lib
+├───┼── /src
+│   │   ├── index.js      // ES module
+│   │   └── index.umd.cjs // UMD
+├── /website
 │   ├── index.html
 │   └── assets
 
@@ -75,33 +71,77 @@ npm i @storecraft/dashboard
 
 Then, 
 
-```jsx
+```tsx
 import { Dashboard } from '@storecraft/dashboard'
 
 export const Root = () => {
 
   return (
     <div className='w-screen h-screen'>
-      <Dashboard />
+      <Dashboard is_backend_endpoint_editable={true} />
     </div>
   )
 } 
 
 ```
 
-## Consuming via `jsDelivr`
+## Consuming via `unpkg` as **UMD** (smaller bundle)
 
 ```html
-<script id='_storecraft_script_' type="module">
-  
-  import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@latest/dist/lib/index.min.js';
-  
-  mountStorecraftDashboard(
-    document.getElementById('root'), false
-  );
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      type="application/javascript"
+      src="https://www.unpkg.com/@storecraft/dashboard@latest/dist/lib/src/index.umd.cjs">
+    </script>
 
-</script>
+    <script>
+      console.log({StorecraftDashboard});
 
+      const show_configurable_endpoint = true;
+
+      StorecraftDashboard.mountStorecraftDashboard(
+        document.getElementById('root'), 
+        show_configurable_endpoint
+      );
+    </script>
+  </body>
+</html>
+```
+
+## Consuming via `unpkg` as **ESM** (bigger bundle)
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft - Next Gen Commerce-As-Code</title>
+    <script type="module">
+      import { mountStorecraftDashboard } from 'https://www.unpkg.com/@storecraft/dashboard@latest/dist/lib/src/index.js';
+
+      const show_configurable_endpoint = true;
+
+      mountStorecraftDashboard(
+        document.getElementById('root'), 
+        show_configurable_endpoint
+      );
+    </script>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+  </body>
+</html>
 ```
 
 

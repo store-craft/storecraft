@@ -1224,6 +1224,11 @@ export const storecraftConfigSchema = z.object({
     .optional()
     .describe("The `storecraft` dashboard default version")
     .default("`latest`"),
+  chat_version: z
+    .string()
+    .optional()
+    .describe("The `storecraft` AI Chat default version")
+    .default("`latest`"),
   general_store_name: z
     .string()
     .optional()

@@ -16,6 +16,12 @@ export interface StorecraftConfig  {
   dashboard_version?: string;
 
   /**
+   * @description The `storecraft` AI Chat default version
+   * @default `latest`
+   */
+  chat_version?: string;
+
+  /**
    * @description The store name
    * `platform.env.SC_GENERAL_STORE_NAME` environment
    */

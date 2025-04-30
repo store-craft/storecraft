@@ -7,6 +7,6 @@ await app.init(false);
 http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(app.print_banner('http://localhost:8000'));
+    app.print_banner('http://localhost:8000');
   }
 ); 

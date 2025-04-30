@@ -11,7 +11,10 @@
  * } from "./platform/types.public.js";
  * @import { mailer } from "./mailer/types.public.js";
  * @import { tax_provider } from "./tax/types.public.js";
- * @import { PayloadForUpsert } from "./pubsub/types.public.js";
+ * @import { 
+ *  events, PayloadForUpsert, PubSubEvent, 
+ *  PubSubSubscriber 
+ * } from "./pubsub/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
  * @import { Agent } from "./ai/agents/types.js";
  * @import { AuthProvider } from "./auth/types.js";
@@ -309,6 +312,7 @@ export class App {
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
       dashboard_version: 'latest',
+      chat_version: 'latest',
       ...this.config,
     }
 
@@ -348,11 +352,12 @@ export class App {
     final += banner3;
     final += `${c.red}\nv${version}`
     final += `\n
-  ${c.red}Dashboard:      ${c.reset + host}/api/dashboard    
-  ${c.red}API Reference:  ${c.reset + host}/api/reference    
-  ${c.red}Website:        ${c.reset}https://storecraft.app
-  ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
-  ${c.yellow}Statistics:     ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms
+${c.reset + c.yellow}⟡ ${c.reset + c.red}Dashboard       ${c.reset + host}/dashboard    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}AI Chat ✨      ${c.reset + host}/chat    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}API Reference   ${c.reset + host}/api/reference    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}Website         ${c.reset}https://storecraft.app
+${c.reset + c.yellow}⟡ ${c.reset + c.red}GitHub          ${c.reset}https://github.com/store-craft/storecraft ⭐
+${c.yellow}⭑ ${c.reset + c.yellow}Statistics      ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms
       `;
 
     console.log(final);
@@ -817,16 +822,15 @@ export class App {
     return response;
   }
 
-
   /**
-   * @description Quickly attach an `event` subscriber. 
-   * This is just a quick way to interface into {@link PubSub}
-   * @type {PubSub["on"]}
+   * @description Subscribe to a `storecraft` event
+   * @template {PubSubEvent | string} [E=PubSubEvent]
+   * @param {E} event
+   * @param {E extends PubSubEvent ? PubSubSubscriber<events[E]> : PubSubSubscriber<any>} callback
    */
   on = (event, callback) => {
     this.pubsub.on(event, callback);
 
-    // @ts-ignore
     return this;
   }
 

@@ -1,15 +1,12 @@
 /** 
  * @import { 
- *  EventPayload, PubSubEvent, PubSubSubscriber,
+ *  EventPayload, PubSubEvent, PubSubSubscriber, UnsubscribeFunction,
  *  events 
  * } from "./types.public.js" */
-
 import { App } from "../index.js";
-
 
 /**
  * @description `pubsub` controller for `storecraft` events
- * 
  * @template {App} [AppType=App]
  */
 export class PubSub {
@@ -32,7 +29,6 @@ export class PubSub {
 
   /**
    * @description Does a `storecraft` `event` has handlers ?
-   * 
    * @template {PubSubEvent | string} [E=PubSubEvent]
    * @param {E} event 
    */
@@ -49,12 +45,9 @@ export class PubSub {
    * - The last subscriber, has the highest priority and gets notified first.
    * - Also, you can use `stopPropagation()` method to stop the event from propagating
    * to other subscribers.
-   * 
    * @template {PubSubEvent | string} [E=PubSubEvent]
-   * 
    * @param {E} event a `storecraft` event type
    * @param {E extends PubSubEvent ? events[E] : any} [payload] extra payload to dispatch
-   * 
    * @see {@link PubSubEvent}
    */
   async dispatch(event, payload) {
@@ -95,7 +88,6 @@ export class PubSub {
 
   /**
    * @description fetch subscribers list of event
-   * 
    * @param {string} event 
    */
   #subscribersOf(event) {
@@ -103,14 +95,12 @@ export class PubSub {
   }
 
   /**
-   * 
    * @description Subscribe to a `storecraft` event
-   * 
    * @param {PubSubEvent | string} event An event identifier
    * @param {PubSubSubscriber} callback a `callback` 
    * event handler to invoke, can be a `promise`
-   * 
    * @return {Function} A self invoking function that will unsubscribe the callback
+   * @returns {UnsubscribeFunction}
    */
   #on(event, callback) {
     this.#subscribersOf(event).push(callback);

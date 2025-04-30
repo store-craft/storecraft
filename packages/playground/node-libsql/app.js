@@ -78,7 +78,7 @@ export const app = new App(
   }
 )
 .on(
-  'posts/list',
+  'templates/get',
   e => {
     e.payload.current
   }

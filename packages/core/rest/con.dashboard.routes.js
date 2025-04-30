@@ -50,7 +50,7 @@ const html_esm = (version='latest') => `
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@${version}/dist/lib/src/index.min.js';
+    import { mountStorecraftDashboard } from 'https://www.unpkg.com/@storecraft/dashboard@${version}/dist/lib/src/index.js';
     mountStorecraftDashboard(
       document.getElementById('root'), false
     );
@@ -127,7 +127,6 @@ const favicon = `
 
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -138,7 +137,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html_umd('latest'));
+      res.sendHtml(html_umd(app.config.dashboard_version ?? 'latest'));
     }
   );
 

@@ -55,7 +55,7 @@ export const create_rest_api = (app, config) => {
 
   const lazy_creator = new class {
     #factory = {}
-    #controllers = {}
+    #routes = {}
 
     constructor() {
       this.#factory['/api/auth'] = create_auth_route;
@@ -78,11 +78,12 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/statistics'] = create_statistics_route;
       this.#factory['/api/extensions'] = create_extensions_route;
       this.#factory['/api/search'] = create_search_route;
-      this.#factory['/api/dashboard'] = create_dashboard_route;
-      this.#factory['/api/chat'] = create_chat_route;
       this.#factory['/api/ai'] = create_ai_route;
       this.#factory['/api/similarity-search'] = create_similarity_search_route;
       this.#factory['/api/emails'] = create_emails_route;
+      this.#factory['/api/dashboard'] = create_dashboard_route;
+      this.#factory['/dashboard'] = create_dashboard_route;
+      this.#factory['/chat'] = create_chat_route;
     }
 
     /** 
@@ -94,28 +95,29 @@ export const create_rest_api = (app, config) => {
      */
     load_route_lazily(path) {
 
-      const key = path?.split('/').slice(0, 3).join('/');
+      const match = Object
+      .keys(this.#factory)
+      .find(
+        (k) => path.startsWith(k)
+      );
 
-      // console.log(
-      //   path.split('/').slice(0,3)
-      // );
+      if(!match)
+        return undefined;
 
-      const con = this.#controllers[key];
+      if(!this.#routes[match]) {
+        const route_creator = this.#factory[match];
 
-      if(!con) {
-        const f = this.#factory[key];
+        if(route_creator) {
+          const new_route = route_creator(app);
 
-        if(f) {
-          const con_new = f(app);
-          polka.use(key, con_new);
-          this.#controllers[key] = con_new;
-          return con_new;
+          polka.use(match, new_route);
+
+          this.#routes[match] = new_route;
+
+          return new_route;
         }
       } 
-
-      return undefined;
     }
-
   }
 
   return {
@@ -151,7 +153,7 @@ export const create_rest_api = (app, config) => {
         }
       );
 
-      log_request(request, start_millis);
+      log_request(request, response, start_millis);
 
       return response;
     }
@@ -165,6 +167,10 @@ const c = {
   magenta: `\x1b[1;35m`,
   yellow: `\x1b[33m`,
   reset: `\x1b[0m`,
+}
+
+const error_format = (text='') => {
+  return `🚫 \x1b[1;41;37m${text}\x1b[0m`;
 }
 
 const method_to_color = {
@@ -185,20 +191,26 @@ const method_to_color = {
 /**
  * log request
  * @param {Partial<Request>} request 
+ * @param {Partial<Response>} response 
  * @param {number} start_millis 
  */
-const log_request = (request, start_millis) => {
+const log_request = (request, response, start_millis) => {
   const delta = Date.now() - start_millis;
   const url = new URL(decodeURIComponent(request.url));
-  const line = method_to_color[request.method] + 
+  const method = response.ok ? 
+    method_to_color[request.method] : 
+    error_format(request.method);
+
+  const line = method + 
     ' \x1b[33m' + 
     url.pathname.slice(0, 250) + 
     '\x1b[0m' + 
     ` (${delta}ms)`;
-  const query = url.search;
+    
   console.log(line);
-  if(query)
-    console.log(c.cyan, query);
+
+  if(url.search)
+    console.log(c.cyan, url.search, c.reset);
 }
 
 

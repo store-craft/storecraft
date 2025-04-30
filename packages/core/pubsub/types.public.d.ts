@@ -169,14 +169,13 @@ export type PayloadForGet<T=any> = { current: T };
 export type PayloadForUpsert<T=any> = { previous: T, current: T };
 export type PayloadForRemove<T=any> = { previous: T };
 
+export type UnsubscribeFunction = Function;
 
 /**
- * 
  * @description Subscriber method spec
- * 
  */
 export type PubSubSubscriber<T=any, AppType=App> = ((value: EventPayload<T, AppType>) => any) | 
-      ((value: EventPayload<T, AppType>) => Promise<any>);
+  ((value: EventPayload<T, AppType>) => Promise<any>);
 
 export type PubSubSubscriberForGet<T=any, AppType=App> = PubSubSubscriber<PayloadForGet<T>, AppType>;
 export type PubSubSubscriberForUpsert<T=any, AppType=App> = PubSubSubscriber<PayloadForUpsert<T>, AppType>;

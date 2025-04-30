@@ -381,7 +381,6 @@ const create_all = () => {
 
   // register routes
   register_reference(registry);
-  register_dashboard(registry);
   register_ai(registry);
   register_similarity_search(registry);
   register_auth(registry);
@@ -1425,60 +1424,6 @@ const register_reference = (registry) => {
   });  
 }
 
-/**
- * @param {OpenAPIRegistry} registry 
- */
-const register_dashboard = (registry) => {
-  registry.register('storecraftConfigSchema', storecraftConfigSchema);
-
-  registry.registerPath({
-    method: 'get',
-    path: `/dashboard`,
-    summary: `Get Default Dashboard`,
-    description: `Get the default (usually latest) dashboard. This default be set from the storecraft app config`,
-    tags: ['dashboard'],
-    responses: {
-      200: {
-        description: `Dashboard HTML`,
-        content: {
-          'text/html': {
-            schema: z.string(),
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-  registry.registerPath({
-    method: 'get',
-    path: `/dashboard/{version}`,
-    summary: `Get Dashboard By version`,
-    description: `Get the Dashboard by a specific version, see https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions`,
-    tags: ['dashboard'],
-    request: {
-      params: z.object({
-        version: z.string().openapi(
-          { 
-            examples: ['1.0.35', 'latest'],
-            description: 'The version of the dashboard to get, or `latest` for the latest version'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `Dashboard HTML`,
-        content: {
-          'text/html': {
-            schema: z.string(),
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-}
 
 /**
  * @param {OpenAPIRegistry} registry 

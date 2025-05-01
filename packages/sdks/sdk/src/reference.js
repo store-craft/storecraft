@@ -24,7 +24,7 @@ export default class Reference {
     /** @type {StorecraftConfig} */
     const json = await fetchApiWithAuth(
       this.sdk,
-      'reference/settings',
+      'settings',
       { method: 'get' },
     );
     return json;
@@ -37,7 +37,7 @@ export default class Reference {
     /** @type {StorecraftAppPublicInfo} */
     const json = await fetchApiWithAuth(
       this.sdk,
-      'reference/info',
+      'info',
       { method: 'get' },
     );
     return json;

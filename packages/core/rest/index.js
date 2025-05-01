@@ -74,7 +74,7 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/storage'] = create_storage_route;
       this.#factory['/api/checkout'] = create_checkout_route;
       this.#factory['/api/payments'] = create_payment_gateways_route;
-      // this.#factory['/api/reference'] = create_others_route;
+      this.#factory['/api/reference'] = create_others_route;
       this.#factory['/api/statistics'] = create_statistics_route;
       this.#factory['/api/extensions'] = create_extensions_route;
       this.#factory['/api/search'] = create_search_route;

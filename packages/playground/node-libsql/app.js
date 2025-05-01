@@ -28,56 +28,46 @@ import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
 import { XAuth } from "@storecraft/core/auth/providers/x";
 import { DummyAuth } from "@storecraft/core/auth/providers/dummy";
 
-export const app = new App(
-  {
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token',
-    auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
-    auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
-    auth_admins_emails: ['tomer.shalev@gmail.com'],
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    general_store_support_email: 'support@storecraft.app',
-    general_confirm_email_base_url: 'https://wush.games/api/auth/confirm-email',
-    general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
-  }
-)
+export const app = new App({
+  auth_secret_access_token: 'auth_secret_access_token',
+  auth_secret_refresh_token: 'auth_secret_refresh_token',
+  auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+  auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  general_store_description: 'We sell cool retro video games',
+  general_store_website: 'https://wush.games',
+  general_store_support_email: 'support@storecraft.app',
+  general_confirm_email_base_url: 'https://wush.games/api/auth/confirm-email',
+  general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
+})
 .withPlatform(new NodePlatform())
 .withDatabase(new LibSQL())
 .withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
-.withPaymentGateways(
-  {
-    paypal: new Paypal({ env: 'test' }),
-    stripe: new Stripe({}),
-    dummy_payments: new DummyPayments(),
-  }
-)
-.withExtensions(
-  {
-    postman: new PostmanExtension(),
-  }
-)
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
 .withAI(
   // new XAI(),
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
-.withAuthProviders(
-  {
-    google: new GoogleAuth(),
-    github: new GithubAuth(),
-    facebook: new FacebookAuth(),
-    x: new XAuth(),
-  }
-)
+.withAuthProviders({
+  google: new GoogleAuth(),
+  github: new GithubAuth(),
+  facebook: new FacebookAuth(),
+  x: new XAuth(),
+})
 .on(
   'templates/get',
   e => {
@@ -85,17 +75,3 @@ export const app = new App(
   }
 )
 
-
-// const { 
-//   thread_id, contents 
-// } = await app.api.ai.speakWithAgentSync(
-//   'store',
-//   {
-//     prompt : [
-//       {
-//         content : 'Hi, I am looking for super mario games',
-//         type : 'text'
-//       }
-//     ]
-//   }
-// )

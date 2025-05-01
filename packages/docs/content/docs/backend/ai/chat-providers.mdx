@@ -28,11 +28,9 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```
 
@@ -53,11 +51,9 @@ new App()
   new Anthropic({ model: 'claude-3-5'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```
 
@@ -72,11 +68,9 @@ new App()
   new Mistral({ model: 'mistral-large-latest'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```
 
@@ -91,11 +85,9 @@ new App()
   new Gemini({ model: 'gemini-2.0-flash'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```
 
@@ -112,11 +104,9 @@ new App()
   new Groq({ model: 'llama-3.3-70b-versatile'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```
 
@@ -131,10 +121,8 @@ new App()
   new XAI({ model: 'grok-3'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 )
 ```

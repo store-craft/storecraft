@@ -28,13 +28,11 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new MongoVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-      dimensions: 1536,
-      similarity: 'cosine',
-    }
-  )
+  new MongoVectorStore({
+    embedder: new OpenAIEmbedder(),
+    dimensions: 1536,
+    similarity: 'cosine',
+  })
 )
 ```
 
@@ -63,13 +61,11 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-      dimensions: 1536,
-      similarity: 'cosine',
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+    dimensions: 1536,
+    similarity: 'cosine',
+  })
 )
 ```
 
@@ -87,11 +83,9 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new Vectorize(
-    {
-      embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5'}),
-    }
-  )
+  new Vectorize({
+    embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5'}),
+  })
 )
 ```
 
@@ -109,10 +103,8 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new Pinecone(
-    {
-      embedder: new PineconeEmbedder(),
-    }
-  )
+  new Pinecone({
+    embedder: new PineconeEmbedder(),
+  })
 )
 ```

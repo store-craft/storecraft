@@ -22,11 +22,9 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new Vectorize(
-    {
-      embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5'}),
-    }
-  )
+  new Vectorize({
+    embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5'}),
+  })
 )
 ```
 
@@ -41,11 +39,9 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new GeminiEmbedder({ model: 'text-embedding-004'}),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new GeminiEmbedder({ model: 'text-embedding-004'}),
+  })
 )
 ```
 
@@ -60,11 +56,9 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder({ model: 'text-embedding-3-large'}),
-    }
-  )
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder({ model: 'text-embedding-3-large'}),
+  })
 )
 ```
 
@@ -75,17 +69,14 @@ import { App } from '@storecraft/core';
 import { PineconeEmbedder } from '@storecraft/core/ai/models/embedders/pinecone';
 import { Pinecone } from '@storecraft/core/ai/models/vector-stores/pinecone';
 
-
 new App()
 .withAI(
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new Pinecone(
-    {
-      embedder: new PineconeEmbedder(),
-    }
-  )
+  new Pinecone({
+    embedder: new PineconeEmbedder(),
+  })
 )
 ```
 
@@ -102,10 +93,8 @@ new App()
   new OpenAI({ model: 'gpt-4o-mini'})
 )
 .withVectorStore(
-  new Pinecone(
-    {
-      embedder: new VoyageAIEmbedder({model: 'voyage-3-large-1024'}),
-    }
-  )
+  new Pinecone({
+    embedder: new VoyageAIEmbedder({model: 'voyage-3-large-1024'}),
+  })
 )
 ```

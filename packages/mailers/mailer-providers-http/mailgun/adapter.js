@@ -17,7 +17,7 @@ import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.
 export class Mailgun {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     apikey: 'MAILGUN_API_KEY'
   });
 

@@ -36,7 +36,7 @@ const infer_content_type = (name) => {
 export class S3CompatibleStorage {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
     bucket: 'S3_BUCKET',
@@ -284,7 +284,7 @@ export class S3CompatibleStorage {
 export class R2 extends S3CompatibleStorage {
 
   /** @satisfies {ENV<R2Config>} */
-  static R2EnvConfig = /** @type{const} */ ({
+  static R2EnvConfig = /** @type {const} */ ({
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
     bucket: 'S3_BUCKET',
@@ -327,8 +327,11 @@ export class R2 extends S3CompatibleStorage {
 export class S3 extends S3CompatibleStorage {
 
   /** @satisfies {ENV<AwsS3Config>} */
-  static AWSS3EnvConfig = /** @type{const} */ ({
-    ...S3CompatibleStorage.EnvConfig
+  static AWSS3EnvConfig = /** @type {const} */ ({
+    accessKeyId: S3CompatibleStorage.EnvConfig.accessKeyId,
+    secretAccessKey: S3CompatibleStorage.EnvConfig.secretAccessKey,
+    bucket: S3CompatibleStorage.EnvConfig.bucket,
+    region: S3CompatibleStorage.EnvConfig.region,
   });
 
   /**

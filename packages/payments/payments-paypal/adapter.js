@@ -26,13 +26,13 @@ import html_buy_ui from './adapter.html.js';
 export class Paypal {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfigProd = /** @type{const} */ ({
+  static EnvConfigProd = /** @type {const} */ ({
     client_id: `PAYPAL_CLIENT_ID_PROD`,
     secret: 'PAYPAL_SECRET_PROD',
   });
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfigTest = /** @type{const} */ ({
+  static EnvConfigTest = /** @type {const} */ ({
     client_id: `PAYPAL_CLIENT_ID_TEST`,
     secret: 'PAYPAL_SECRET_TEST',
   });

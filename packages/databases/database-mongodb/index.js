@@ -28,7 +28,7 @@ export { MongoVectorStore } from './vector-store/index.js';
 export class MongoDB {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     db_name: 'MONGODB_NAME',
     url: 'MONGODB_URL',
   });

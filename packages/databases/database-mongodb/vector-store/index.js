@@ -35,7 +35,7 @@ export const DEFAULT_INDEX_NAME = 'vector_store';
 export class MongoVectorStore {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     db_name: 'MONGODB_VECTOR_STORE_DB_NAME',
     url: 'MONGODB_VECTOR_STORE_URL'
   });

@@ -14,7 +14,7 @@ export { LibSQLVectorStore } from './vector-store/index.js'
 export class Turso extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     authToken: 'LIBSQL_AUTH_TOKEN',
     url: 'LIBSQL_URL'
   });

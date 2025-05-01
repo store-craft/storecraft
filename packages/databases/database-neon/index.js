@@ -24,7 +24,7 @@ const assert = (b, msg) => {
 export class NeonServerless extends SQL {
 
   /** @satisfies {ENV<NeonServerlessConfig>} */
-  static NeonServerlessEnvConfig = /** @type{const} */ ({
+  static NeonServerlessEnvConfig = /** @type {const} */ ({
     poolConfig: {
       connectionString: 'NEON_CONNECTION_URL',
     }

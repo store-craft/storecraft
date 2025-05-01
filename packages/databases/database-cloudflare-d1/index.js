@@ -24,7 +24,7 @@ const assert = (b, msg) => {
 export class D1_HTTP extends SQL {
 
   /** @satisfies {ENV<D1ConfigHTTP>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     account_id: 'CF_ACCOUNT_ID',
     api_token: 'D1_API_TOKEN',
     database_id: 'D1_DATABASE_ID',

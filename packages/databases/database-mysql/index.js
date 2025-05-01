@@ -15,7 +15,7 @@ import { createPool } from 'mysql2'
 export class MySQL extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     pool_options: {
       database: 'MYSQL_DATABASE',
       host: 'MYSQL_HOST',

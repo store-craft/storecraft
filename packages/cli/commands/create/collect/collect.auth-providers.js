@@ -35,7 +35,7 @@ export const collect_auth_providers = async () => {
   const start = await withCancel(
     confirm(
       {
-        message: 'Would you like to add Social 👥 Login Auth Provider ? (like google / facebook / github / x)',
+        message: 'Add Social 👥 Login ? (google / facebook / github / x)',
         active: 'Yes',
         inactive: 'No',
         initialValue: true

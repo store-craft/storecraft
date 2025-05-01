@@ -37,7 +37,7 @@ const infer_content_type = (name) => {
 export class GoogleStorage {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     bucket: 'GS_BUCKET',
     client_email: 'GS_CLIENT_EMAIL',
     private_key: 'GS_PRIVATE_KEY',

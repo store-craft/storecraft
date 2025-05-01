@@ -1,12 +1,15 @@
 /**
- * @import { JWTClaims } from './jwt.types.js'
+ * @import { JWTClaims as JWTClaimsImport } from './jwt.types.js'
  */
 import { fromUint8Array as bEnc, toUint8Array as bDec, 
   toUint8Array, encode, fromUint8Array } from './base64.js'
 import { base64 } from './public.js';
 
 /**
- * 
+ * @typedef {JWTClaimsImport} JWTClaims
+ */
+
+/**
  * @param {string} d 
  * @returns 
  */

@@ -15,7 +15,7 @@ import BetterSQLite from 'better-sqlite3';
 export class SQLite extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ (
+  static EnvConfig = /** @type {const} */ (
     {
       filepath: 'SQLITE_FILEPATH',
     }

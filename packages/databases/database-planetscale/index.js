@@ -22,7 +22,7 @@ const assert = (b, msg) => {
 export class PlanetScale extends SQL {
 
   /** @satisfies {ENV<PlanetScaleDialectConfig>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     url: 'PLANETSCALE_CONNECTION_URL'
   });
 

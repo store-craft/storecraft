@@ -15,12 +15,12 @@ const app = new App({
 .withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
 .withPaymentGateways({
-  'paypal': new Paypal({ env: 'test' }),
-  'stripe': new Stripe(),
-  'dummy_payments': new DummyPayments(),
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
 })
 .withExtensions({
-  'postman': new PostmanExtension(),
+  postman: new PostmanExtension(),
 })
 .withAI(
   new OpenAI({ model: 'gpt-4o-mini'})
@@ -50,9 +50,9 @@ This, in turn, will generate a full commerce solution backend for you, with all 
 - Serverless
 - Serverfull
 - Node.js, Deno, Bun
-- AWS API Gateway
 - Cloudflare Workers 
 - Google Functions
+- AWS API Gateway
 - More will follow
 
 ## **Storecraft** can work with any Database 

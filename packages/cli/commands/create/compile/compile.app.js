@@ -72,8 +72,14 @@ import { collect_storage } from '../collect/collect.storage.js'
 import { collect_ai_chat } from '../collect/collect.ai.chat.js'
 import { collect_ai_vector_store } from '../collect/collect.ai.vector-store.js'
 import { collect_ai_embedder } from '../collect/collect.ai.embedder.js'
+import { 
+  collect_vector_store_and_embedder 
+} from '../collect/collect.ai.vector-store-and-embedder.js'
 import { collect_auth_providers } from '../collect/collect.auth-providers.js'
-import { dedup_object_array, dedup_value_array, extract_env_variables } from './compile.utils.js'
+import { 
+  dedup_object_array, dedup_value_array, 
+  extract_env_variables 
+} from './compile.utils.js'
 
 
 /**
@@ -85,11 +91,12 @@ import { dedup_object_array, dedup_value_array, extract_env_variables } from './
  * @prop {Awaited<ReturnType<typeof collect_platform>>} platform
  * @prop {Awaited<ReturnType<typeof collect_storage>>} storage
  * @prop {Awaited<ReturnType<typeof collect_ai_chat>>} ai_chat
- * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
- * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
+ * @prop {Awaited<ReturnType<typeof collect_vector_store_and_embedder>>} ai_vector_store_and_embedder
  * @prop {Awaited<ReturnType<typeof collect_auth_providers>>} auth_providers
- */
+*/
 
+// * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
+// * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
 
 /**
  * @param {Awaited<ReturnType<collect_platform>>} platform 
@@ -448,6 +455,7 @@ export const infer_storage = info => {
           info.config, 
           /** @satisfies {typeof S3CompatibleStorage.EnvConfig} */ (
             {
+              endpoint: 'S3_ENDPOINT',
               accessKeyId: 'S3_ACCESS_KEY_ID',
               bucket: 'S3_BUCKET',
               region: 'S3_REGION',
@@ -908,7 +916,7 @@ export const infer_ai_vector_store = (info) => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_payments>>} info 
+ * @param {Awaited<ReturnType<typeof collect_payments>>} info 
  */
 export const infer_payments = info => {
   return info.map(
@@ -970,6 +978,18 @@ export const infer_payments = info => {
                 }
               )
             )
+          }
+        }
+
+        case 'dummy': {
+          return {
+            cls: `DummyPayments`,
+            imports: [
+              `import { DummyPayments } from '@storecraft/core/payments/dummy'`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
           }
         }
       }
@@ -1125,8 +1145,8 @@ export const compile_app = (meta) => {
   const mailer = infer_mailer(meta.mailer);
   const payments = infer_payments(meta.payments);
   const ai_chat = infer_ai_chat(meta.ai_chat);
-  const ai_embedder = infer_ai_embedder(meta.ai_embedder);
-  const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store);
+  const ai_embedder = infer_ai_embedder(meta.ai_vector_store_and_embedder?.ai_embedder);
+  const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store_and_embedder?.ai_vector_store);
   const auth_providers = infer_auth_providers(meta.auth_providers);
 
   let code = `new App(
@@ -1168,13 +1188,16 @@ ${compose_instance_with_config(ai_chat.cls, meta.ai_chat.config)}
 
   if(ai_embedder && ai_vector_store) {
     const embedder_inst = compose_instance_with_config(
-      ai_embedder.cls, meta.ai_embedder.config
+      ai_embedder.cls, 
+      meta.ai_vector_store_and_embedder.ai_embedder.config
     );
 
     code += `
 .withVectorStore(
 ${compose_instance_with_config(
-  ai_vector_store.cls, meta.ai_vector_store.config, {embedder: embedder_inst}
+  ai_vector_store.cls, 
+  meta.ai_vector_store_and_embedder.ai_vector_store.config, 
+  { embedder: embedder_inst }
 )}
 )`;    
   }

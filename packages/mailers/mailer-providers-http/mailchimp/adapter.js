@@ -18,7 +18,7 @@ import { convert_to_base64 } from "./adapter.utils.js";
 export class MailChimp {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     apikey: 'MAILCHIMP_API_KEY'
   });
 

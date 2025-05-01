@@ -23,6 +23,10 @@ export const choices = /** @type {const} */ ([
     name: 'PayPal',
     value: 'paypal'
   },
+  {
+    name: 'Dummy Payments (For testing)',
+    value: 'dummy'
+  },
 ])
 
 
@@ -58,7 +62,7 @@ export const collect_payments = async () => {
     more = await withCancel(
       confirm(
         {
-          message: 'Add another payment gateway or config ?',
+          message: 'Add another payment gateway ?',
           active: 'Yes',
           inactive: 'No',
           initialValue: false
@@ -176,6 +180,10 @@ const collect_general_config = async (
         }
       }
       return config;
+    }
+
+    case 'dummy': {
+      return {}
     }
 
   }

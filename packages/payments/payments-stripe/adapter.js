@@ -33,7 +33,7 @@ export const metadata_storecraft_order_id = 'storecraft_order_id'
 export class Stripe {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     publishable_key: 'STRIPE_PUBLISHABLE_KEY',
     secret_key: 'STRIPE_SECRET_KEY',
     webhook_endpoint_secret: 'STRIPE_WEBHOOK_SECRET',

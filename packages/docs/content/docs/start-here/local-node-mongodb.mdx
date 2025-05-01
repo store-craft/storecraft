@@ -39,10 +39,10 @@ const app = new App({
 .withStorage(new NodeLocalStorage())
 .withMailer(new SendGrid({ apikey: process.env.SEND_GRID_SECRET }))
 .withPaymentGateways({
-  'dummy_payments': new DummyPayments()
+  dummy_payments: new DummyPayments()
 })
 .withExtensions({
-  'postman': new PostmanExtension(),
+  postman: new PostmanExtension(),
 })
 .withAI(
   new OpenAI({ model: 'gpt-4o-mini'})

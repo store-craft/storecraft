@@ -15,7 +15,7 @@ import pg from 'pg';
 export class Postgres extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     pool_config: {
       host: 'POSTGRES_HOST',
       port: 'POSTGRES_PORT',

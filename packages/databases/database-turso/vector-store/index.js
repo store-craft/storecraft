@@ -47,7 +47,7 @@ const parse_json_safely = json => {
 export class LibSQLVectorStore {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     authToken: 'LIBSQL_VECTOR_AUTH_TOKEN',
     url: 'LIBSQL_VECTOR_URL',
   });

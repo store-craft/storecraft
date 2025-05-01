@@ -10,7 +10,7 @@ export const Hero = () => {
       <LogoGradient className='w-[300px] sm:w-[500px] md:w-[600px] ' />
       <div children={`
 Next Generation 
-Commerce As Code 
+Commerce As Code_ 🤖 Ai 
       `}
         className='text-4xl sm:text-5xl font-normal 
         whitespace-pre-line left-2 xs:left-4 bottom-8 

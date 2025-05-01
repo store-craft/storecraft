@@ -2,7 +2,7 @@ import { CopyableView } from "./copyable-view";
 import { FaTerminal } from "react-icons/fa6";
 
 
-export const code = `
+export const code2 = `
 const app = new App({
   general_store_name: "my-storecraft-app",
   auth_admins_emails: ["john@doe.com"],
@@ -23,7 +23,43 @@ await app.init();
 await migrateToLatest(app.db, false);
 
 http.createServer(app.handler).listen();
-`
+`;
+
+export const code = `
+const app = new App({
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
+})
+.withPlatform(new NodePlatform())
+.withDatabase(new LibSQL())
+.withStorage(new NodeLocalStorage())
+.withMailer(new Resend())
+.withPaymentGateways({
+  paypal: new Paypal(),
+  stripe: new Stripe(),
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
+.on(
+  'order/checkout/complete',
+  async (event) => {
+    // send a team slack message
+  }
+)
+`;
 
 export const code_payment = `
 const app = new App(config)

@@ -10,7 +10,7 @@ import { MdHttp } from "react-icons/md";
 import { TbHttpGet } from "react-icons/tb";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { FaLaptopCode } from "react-icons/fa";
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
@@ -18,6 +18,8 @@ import Drawer from './drawer'
 import pkg from '@/../package.json' with { type: "json" };
 import { DocGroup } from '@/utils/docs-config'
 import { IconBaseProps } from 'react-icons'
+import ClientOnly from './client-only'
+import { usePathname } from 'next/navigation'
 
 export type HeaderParams = {
     group: DocGroup;
@@ -228,6 +230,14 @@ const SideGroup = (
     }, [onClickMenuItem, group, isLeaf]
   );
 
+  useEffect(
+    () => {
+
+    }
+  );
+
+  const pathname = usePathname();
+
   const href = (isLeaf) ? find_next_route(group) : window.location.pathname;
 
   return (
@@ -258,7 +268,8 @@ const SideGroup = (
 
 const SideBar = (
   { 
-    className, onClickMenuItem, link_prefix, selectedSlug, groups=[], 
+    className, onClickMenuItem, 
+    link_prefix, selectedSlug, groups=[], 
     ...rest 
   }: SideBarParams
 ) => {
@@ -289,7 +300,7 @@ const SideBar = (
               href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group))} 
               title={group.title}
               target={group.external ? '_blank' : ''}
-                >
+            >
               <Header 
                 group={group} 
                 selected={selected_group==index}
@@ -332,11 +343,9 @@ export const SideBarSmall = (
                 ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
               }>
     <SideBar 
-      className={`absolute left-0 p-6 w-full 
-                  h-full overflow-y-auto  text-sm
-                  bg-white dark:bg-gray-900
-                  `
-                }
+      className='absolute left-0 p-6 w-full 
+        h-full overflow-y-auto  text-sm
+      bg-white dark:bg-gray-900'
       link_prefix={link_prefix}
       onClickMenuItem={onClickMenuItem}
       selectedSlug={selectedSlug}

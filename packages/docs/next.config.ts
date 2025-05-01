@@ -31,7 +31,8 @@ const config: NextConfig = withBundleAnalyzer(
       trailingSlash: false,
       sassOptions: {
         includePaths: [
-          path.join(__dirname, './src')
+          path.join(__dirname, './src'),
+          path.join(__dirname, './pages'),
         ]
       },
       eslint: {

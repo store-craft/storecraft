@@ -8,6 +8,7 @@ import { useRef } from 'react'
 import { GradStroke, GradStrokeV2 } from './grad-stroke'
 import TOC from './toc'
 import { type PostPageProps } from '../../pages/docs/[[...slug]]'
+import ClientOnly from './client-only'
 
 export type LayoutParams = {
       data: PostPageProps["data"] & {
@@ -67,6 +68,7 @@ const Layout = (
 
       <main className='flex flex-row w-full h-full --pt-[80px]'>
 
+      <ClientOnly>
         <SideBar 
           className='hidden md:block w-60 h-full overflow-auto text-xs
                       flex-shrink-0 px-3 pt-[80px] pb-10 pl-2
@@ -74,6 +76,7 @@ const Layout = (
           selectedSlug={slug}
           groups={groups} 
         />
+      </ClientOnly>
 
         <div 
           ref={main_ref} 
@@ -84,13 +87,6 @@ const Layout = (
             className='w-full h-[550px] fixed right-0 top-0 
               opacity-20 dark:opacity-10 --z-50 pointer-events-none'
           />
-
-          {/* <GradStroke className=' w-[200px] h-[200px] absolute right-10 top-10 
-                      opacity-10 md:opacity-10 md:dark:opacity-0  pointer-events-none'
-                      via='via-kf-400' blur='blur-lg' />
-          <GradStroke className='w-[650px] h-[150px] absolute right-20 top-0 
-                      opacity-10 md:opacity-10 md:dark:opacity-0 pointer-events-none'
-                      via='via-pink-400' /> */}
 
           <div className={`relative w-full ${slug==='rest-api/api' ? 'w-full' : 'max-w-[692px]'} h-fit mx-auto flex flex-col`}>
             <div 
@@ -120,18 +116,19 @@ const Layout = (
                 hidden xl:flex flex-none top-0 right-0 fixed 
                 border-l border-gray-400/20 dark:border-gray-400/10'
             />
-            
           }
 
         </div>
 
       </main>
 
-      <SideBarSmall 
-        groups={groups}
-        selectedSlug={slug}
-        onClickMenuItem={() => toggleMenu()}
-        showMenu={menu}/>
+      <ClientOnly>
+        <SideBarSmall 
+          groups={groups}
+          selectedSlug={slug}
+          onClickMenuItem={() => toggleMenu()}
+          showMenu={menu}/>
+      </ClientOnly>
 
     </div>
   </div>

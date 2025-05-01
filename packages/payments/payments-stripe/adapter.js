@@ -276,7 +276,6 @@ export class Stripe {
 
   /**
    * @description [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
-   * 
    * @type {Impl["webhook"]}
    */
   async webhook(request, response) {
@@ -288,10 +287,9 @@ export class Stripe {
       request.rawBody, sig, this.config.webhook_endpoint_secret, undefined,
       StripeCls.createSubtleCryptoProvider()
     );
-  
-    let order_id;
-    /** @type {StripeCls.PaymentIntent} */
-    let payment_intent;
+
+    /** @type {string} */
+    let order_id = undefined;
 
     /** @type {PaymentOptionsEnum[keyof PaymentOptionsEnum]} */
     let payment_status = PaymentOptionsEnum.unpaid;
@@ -302,8 +300,8 @@ export class Stripe {
       case 'payment_intent.payment_failed':
       case 'payment_intent.requires_action':
       case 'payment_intent.amount_capturable_updated':
-      case 'payment_intent.canceled':
-        payment_intent = event.data.object;
+      case 'payment_intent.canceled': {
+        const payment_intent = event.data.object;
         order_id = payment_intent.metadata[metadata_storecraft_order_id];
 
         if(payment_intent.status==='requires_capture')
@@ -316,19 +314,25 @@ export class Stripe {
           payment_status = PaymentOptionsEnum.unpaid;
         else if(payment_intent.status==='succeeded')
           payment_status = PaymentOptionsEnum.captured;
-        
         break;
+      }
       case 'charge.refunded':
       case 'charge.refund.updated':
+        const payment_intent = event.data.object;
+        order_id = payment_intent.metadata[metadata_storecraft_order_id];
         payment_status = PaymentOptionsEnum.refunded;
         break;
       default: {
-        console.log(`Unhandled event type ${event.type}`);
-
-
+        console.log(`Stripe:: We don't handle event of type ${event.type}`);
 
         return undefined;
       }
+    }
+
+    if(!order_id) {
+      throw new Error(
+        `No 'storecraft' 'order_id' found in metadata for event type ${event.type}`
+      )
     }
   
     // Return a response to acknowledge receipt of the event

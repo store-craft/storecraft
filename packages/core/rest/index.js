@@ -74,7 +74,7 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/storage'] = create_storage_route;
       this.#factory['/api/checkout'] = create_checkout_route;
       this.#factory['/api/payments'] = create_payment_gateways_route;
-      this.#factory['/api/reference'] = create_others_route;
+      // this.#factory['/api/reference'] = create_others_route;
       this.#factory['/api/statistics'] = create_statistics_route;
       this.#factory['/api/extensions'] = create_extensions_route;
       this.#factory['/api/search'] = create_search_route;
@@ -82,6 +82,7 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api/similarity-search'] = create_similarity_search_route;
       this.#factory['/api/emails'] = create_emails_route;
       this.#factory['/api/dashboard'] = create_dashboard_route;
+      this.#factory['/api'] = create_others_route;
       this.#factory['/dashboard'] = create_dashboard_route;
       this.#factory['/chat'] = create_chat_route;
     }
@@ -101,6 +102,19 @@ export const create_rest_api = (app, config) => {
         (k) => path.startsWith(k)
       );
 
+      { // because we lazy load routes, we cannot control the order
+        // of the routes. So we need to remove the `/api` route
+        // because it will steal the request from the other routes
+        // that were registered after.
+        if(this.#routes['/api']) {
+          polka.remove_route_by_original_registered_route('/api');
+          this.#routes['/api'] = undefined;
+        }
+      }
+
+      // console.log(Object.keys(this.#factory));
+      // console.log({path, match, routes: this.#routes});
+      
       if(!match)
         return undefined;
 

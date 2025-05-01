@@ -1,34 +1,50 @@
 # Well**come**
 
-**Storecraft** is a next generation Commerce As Code Backend Platform.
+**Storecraft** is a next generation Agentic Commerce As Code Backend Platform.
 
-You code your perfect commerce solution behaviour
-
-Like this,
+You code your perfect commerce solution behaviour like this,
 
 ```ts
-export const app = new App({
-  general_store_name: "my-storecraft-app",
-  auth_admins_emails: ["a@a.com"],
-  auth_secret_access_token: process.env.auth_secret_access_token,
-  auth_secret_refresh_token: process.env.auth_secret_refresh_token
+const app = new App({
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
 })
 .withPlatform(new NodePlatform())
-.withDatabase(new SQLite())
-.withStorage(new NodeLocalStorage())
-.withMailer(new SendGrid({ apikey: process.env.SENDGRID_APIKEY }))
-.withPaymentGateways(
-  {
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-  }
+.withDatabase(new LibSQL())
+.withStorage(new NodeLocalStorage('storage'))
+.withMailer(new Resend())
+.withPaymentGateways({
+  'paypal': new Paypal({ env: 'test' }),
+  'stripe': new Stripe(),
+  'dummy_payments': new DummyPayments(),
+})
+.withExtensions({
+  'postman': new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
 )
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
 .on(
-  'orders/checkout/created',
-  async (evt) => {
-
+  'order/checkout/complete',
+  async (event) => {
+    // send a team slack message
   }
 )
 ```
+
+This, in turn, will generate a full commerce solution backend for you, with all the bells and whistles.
+
+<Image src={`/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>
 
 ## **Storecraft** is built to run on any Platform
 - Serverless
@@ -40,9 +56,9 @@ export const app = new App({
 - More will follow
 
 ## **Storecraft** can work with any Database 
-- SQLite, MySQL, Postgres 
+- libSQL, SQLite, MySQL, Postgres 
 - MongoDB
-- `Turso` Cloud sqlite database
+- `Turso` Cloud libsql sqlite database
 - `Cloudflare D1` Cloud sqlite database
 - `Neon` Cloud postgres database
 - `Planetscale` Cloud mysql database
@@ -64,3 +80,12 @@ export const app = new App({
   - MailGun
 - SMTP on Node.js / Bun / Deno
 
+## **Storecraft** can work with many AI providers
+- Chat providers: OpenAI, Anthropic, Groq cloud, xAI, Mistral
+- Embedding providers: OpenAI, Cloudflare AI, Voyage AI, Pinecone
+- Vector Store providers: LibSQL, MongoDB, Cloudflare Vectorize, Pinecone, 
+
+## **Storecraft** can work with any payment provider
+- Stripe
+- Paypal
+- you can roll your own integration

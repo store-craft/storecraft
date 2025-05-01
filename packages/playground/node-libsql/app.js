@@ -1,5 +1,5 @@
 import { PostmanExtension } from "@storecraft/core/extensions/postman";
-import { LibSQLVectorStore, Turso } from '@storecraft/database-turso'
+import { LibSQLVectorStore, LibSQL } from '@storecraft/database-turso'
 import { Paypal } from '@storecraft/payments-paypal'
 import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { Stripe } from '@storecraft/payments-stripe'
@@ -44,19 +44,19 @@ export const app = new App(
   }
 )
 .withPlatform(new NodePlatform())
-.withDatabase(new Turso())
+.withDatabase(new LibSQL())
 .withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
 .withPaymentGateways(
   {
-    'paypal': new Paypal({ env: 'test' }),
-    'stripe': new Stripe(),
-    'dummy_payments': new DummyPayments(),
+    paypal: new Paypal({ env: 'test' }),
+    stripe: new Stripe({}),
+    dummy_payments: new DummyPayments(),
   }
 )
 .withExtensions(
   {
-    'postman': new PostmanExtension(),
+    postman: new PostmanExtension(),
   }
 )
 .withAI(
@@ -67,7 +67,6 @@ export const app = new App(
   new LibSQLVectorStore(
     {
       embedder: new OpenAIEmbedder(),
-
     }
   )
 )
@@ -87,16 +86,16 @@ export const app = new App(
 )
 
 
-const { 
-  thread_id, contents 
-} = await app.api.ai.speakWithAgentSync(
-  'store',
-  {
-    prompt : [
-      {
-        content : 'Hi, I am looking for super mario games',
-        type : 'text'
-      }
-    ]
-  }
-)
+// const { 
+//   thread_id, contents 
+// } = await app.api.ai.speakWithAgentSync(
+//   'store',
+//   {
+//     prompt : [
+//       {
+//         content : 'Hi, I am looking for super mario games',
+//         type : 'text'
+//       }
+//     ]
+//   }
+// )

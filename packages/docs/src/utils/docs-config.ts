@@ -42,17 +42,22 @@ export default {
           path: `content/docs/start-here/installation.mdx`
         },
         {
-          title: "Example Nodejs & SQLite",
+          title: "Nodejs + LibSQL + AI",
           route: `setup/local-sqlite`,
           path: `content/docs/start-here/local-node-sqlite.mdx`
         },
         {
-          title: "Example Nodejs & MongoDB",
+          title: "Cloudflare D1 + R2 + AI + Workers",
+          route: `setup/cloudflare-stack`,
+          path: `content/docs/start-here/cloudflare-stack.mdx`
+        },
+        {
+          title: "Nodejs + MongoDB",
           route: `setup/local-node-mongodb`,
           path: `content/docs/start-here/local-node-mongodb.mdx`
         },
         {
-          title: "Example Google Functions & MongoDB",
+          title: "Google Functions + MongoDB",
           route: `setup/google-functions-mongo`,
           path: `content/docs/start-here/google-functions-mongo.mdx`
         },
@@ -188,11 +193,6 @@ export default {
               path: 'content/docs/backend/platforms/deno.mdx'
             },
             {
-              title: 'AWS API Gateway',
-              route: 'backend/platforms/aws-api-gateway',
-              path: 'content/docs/backend/platforms/aws-api-gateway.mdx'
-            },
-            {
               title: 'Cloudflare Workers',
               route: 'backend/platforms/cloudflare-workers',
               path: 'content/docs/backend/platforms/cloudflare-workers.mdx'
@@ -201,6 +201,11 @@ export default {
               title: 'Google Functions',
               route: 'backend/platforms/google-functions',
               path: 'content/docs/backend/platforms/google-functions.mdx'
+            },
+            {
+              title: 'AWS API Gateway',
+              route: 'backend/platforms/aws-api-gateway',
+              path: 'content/docs/backend/platforms/aws-api-gateway.mdx'
             },
             {
               title: 'Roll Your Own',

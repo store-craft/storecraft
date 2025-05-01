@@ -20,7 +20,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
-import { Turso, LibSQLVectorStore } from '@storecraft/database-turso'
+import { LibSQL, LibSQLVectorStore } from '@storecraft/database-turso'
 import { migrateToLatest } from '@storecraft/database-turso/migrate.js'
 
 const app = new App(
@@ -30,7 +30,7 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(
-  new Turso(
+  new LibSQL(
     { 
       url: 'file:local.db',
     }

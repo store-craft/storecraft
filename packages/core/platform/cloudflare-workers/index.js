@@ -1,12 +1,12 @@
 /**
  * @import { PlatformAdapter } from '../types.public.js';
  * @import { Config } from './types.public.js';
- * @import { type Request, type Response } from "@cloudflare/workers-types"
+ * @import { IncomingRequestCfProperties, type Request, type Response } from "@cloudflare/workers-types"
  */
 import { pbkdf2 } from '../../crypto/public.js';
 
 /**
- * @typedef {PlatformAdapter<Request, any, Response>} CloudflareWorkersPlatformAdapter
+ * @typedef {PlatformAdapter<Request<unknown, IncomingRequestCfProperties<unknown>>, any, Response>} CloudflareWorkersPlatformAdapter
  * 
  * @implements {CloudflareWorkersPlatformAdapter}
  */

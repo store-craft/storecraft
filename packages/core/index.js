@@ -352,7 +352,7 @@ export class App {
     final += `\n
 ${c.reset + c.yellow}⟡ ${c.reset + c.red}Dashboard       ${c.reset + host}/dashboard    
 ${c.reset + c.yellow}⟡ ${c.reset + c.red}AI Chat ✨      ${c.reset + host}/chat    
-${c.reset + c.yellow}⟡ ${c.reset + c.red}API Reference   ${c.reset + host}/api/reference    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}API Reference   ${c.reset + host}/api    
 ${c.reset + c.yellow}⟡ ${c.reset + c.red}Website         ${c.reset}https://storecraft.app
 ${c.reset + c.yellow}⟡ ${c.reset + c.red}GitHub          ${c.reset}https://github.com/store-craft/storecraft ⭐
 ${c.yellow}⭑ ${c.reset + c.yellow}Statistics      ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms

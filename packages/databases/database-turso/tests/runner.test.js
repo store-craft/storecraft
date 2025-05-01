@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner'
-import { Turso } from '../index.js';
+import { Turso, LibSQL } from '../index.js';
 import { migrateToLatest } from '../migrate.js';
 
 export const create_app = async () => {
@@ -18,7 +18,7 @@ export const create_app = async () => {
   )
   .withPlatform(new NodePlatform())
   .withDatabase(
-    new Turso(
+    new LibSQL(
       { 
         url: ':memory:',
         prefers_batch_over_transactions: true,

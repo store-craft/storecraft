@@ -10,7 +10,8 @@ First install the following packages
 
 ```bash
 npm i @storecraft/core 
-npm i @storecraft/database-sqlite
+npm i @storecraft/database-turso
+npm i @storecraft/mailer-providers-http
 npm i -D dotenv
 ```
 
@@ -21,37 +22,56 @@ A very simple code
 Now, create a new file `index.js`
 
 ```ts
-
 import 'dotenv/config';
 import http from "node:http";
 import { DummyPayments } from '@storecraft/core/payments/dummy'
-import { migrateToLatest } from '@storecraft/database-sqlite/migrate.js';
+import { migrateToLatest } from '@storecraft/database-turso/migrate.js';
+import { LibSQL, LibSQLVectorStore } from "@storecraft/database-turso"
 import { NodePlatform } from "@storecraft/core/platform/node"
-import { SQLite } from "@storecraft/database-sqlite"
 import { NodeLocalStorage } from "@storecraft/core/storage/node"
 import { SendGrid } from "@storecraft/mailer-providers-http/sendgrid"
+import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 import { App } from "@storecraft/core"
 
 export const app = new App({
-  general_store_name: "my-storecraft-app",
-  auth_admins_emails: ["a@a.com"],
-  auth_secret_access_token: process.env.auth_secret_access_token,
-  auth_secret_refresh_token: process.env.auth_secret_refresh_token
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
 })
 .withPlatform(new NodePlatform())
-.withDatabase(new SQLite())
+.withDatabase(new LibSQL())
 .withStorage(new NodeLocalStorage())
 .withMailer(new SendGrid({ apikey: process.env.SEND_GRID_SECRET }))
-.withPaymentGateways(
-  {
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+.withPaymentGateways({
+  'dummy_payments': new DummyPayments()
+})
+.withExtensions({
+  'postman': new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore(
+    { embedder: new OpenAIEmbedder() }
+  )
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
+.on(
+  'order/checkout/complete',
+  async (event) => {
+    // send a team slack message
   }
-);
+)
 
 await app.init();
 await migrateToLatest(app.db, false);
 
-http.createServer(app.handler).listen(
+http
+.createServer(app.handler)
+.listen(
   8000,
   () => {
     console.log(`Server is running on http://localhost:8000`);
@@ -68,5 +88,5 @@ npm start
 
 Viola, You should see the following,
 
-<Image src={`/docs/main/storecraft-terminal.png`} className='w-full' 
+<Image src={`/storecraft-terminal.png`} className='w-full' 
        label={undefined}/>

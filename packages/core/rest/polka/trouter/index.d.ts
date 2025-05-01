@@ -22,4 +22,14 @@ export class Trouter<T = Function> {
   trace(pattern: Pattern, ...handlers: T[]): this;
   post(pattern: Pattern, ...handlers: T[]): this;
   put(pattern: Pattern, ...handlers: T[]): this;
+  remove_route_by_original_registered_route(original_registered_route: string): void;
+}
+
+export type Route = {
+  keys: string[] | false, 
+  pattern: RegExp, 
+  method: Methods, 
+  handlers: Function[], 
+  midx: number,
+  original_registered_route?: Pattern
 }

@@ -6,7 +6,6 @@ import openapi_html from './docs.openapi.scalar.html.js'
 import openapi_json from './openapi.json' with { type: 'json' }
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {

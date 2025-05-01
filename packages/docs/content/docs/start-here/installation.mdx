@@ -60,18 +60,15 @@ import { App } from "@storecraft/core"
 export const app = new App({
   general_store_name: "my-storecraft-app",
   auth_admins_emails: ["a@a.com"],
-  auth_secret_access_token: process.env.auth_secret_access_token,
-  auth_secret_refresh_token: process.env.auth_secret_refresh_token
+  // ... MORE Mandatory CONFIG
 })
 .withPlatform(new NodePlatform({}))
 .withDatabase(new SQLite())
 .withStorage(new NodeLocalStorage())
 .withMailer(new SendGrid({ apikey: process.env.SENDGRID_APIKEY }))
-.withPaymentGateways(
-  {
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-  }
-);
+.withPaymentGateways({
+  'dummy_payments': new DummyPayments()
+});
 
 await app.init();
 await migrateToLatest(app.db, false);

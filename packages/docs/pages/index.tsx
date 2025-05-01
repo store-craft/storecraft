@@ -86,15 +86,16 @@ export default () => {
               <CommonGradientText 
                         className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
                         children='Official Dashboard' />
-              <Bling stroke='border-[6px]' 
-                    className='w-fit mx-auto       shadow-[0px_0px_6px] shadow-pink-500/90
-'
-                    rounded='rounded-2xl'
-                    from='from-pink-500 dark:from-pink-500/90'
-                    to='to-kf-500 dark:to-kf-500/90'>
-                <img src='/landing/main.webp' 
-                      className='border border-gray-600 object-contain 
-                              mx-auto rounded-2xl w-full max-w-[1000px]' />
+              <Bling 
+                stroke='border-[6px]' 
+                className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
+                rounded='rounded-2xl'
+                from='from-pink-500 dark:from-pink-500/90'
+                to='to-kf-500 dark:to-kf-500/90'>
+                <img 
+                  src='/landing/main.png' 
+                  className='border border-gray-600 --object-contain 
+                    mx-auto rounded-2xl w-full max-w-[1000px]' />
               </Bling>
             </div>
 
@@ -110,12 +111,14 @@ export default () => {
                       className='text-5xl w-fit font-mono max-w-[705px] text-center md:text-left ' 
                       children='storecraft create' />
               </div>
-              <Bling stroke='border-[6px]' 
-                    className='w-fit mx-auto'
-                    from='from-pink-500 dark:from-pink-500/90'
-                    to='to-kf-500 dark:to-kf-500/90'>
-                <img src='/cli.gif' 
-                    className='border border-gray-600 object-contain mx-auto rounded-md' />
+              <Bling 
+                stroke='border-[6px]' 
+                className='w-fit mx-auto'
+                from='from-pink-500 dark:from-pink-500/90'
+                to='to-kf-500 dark:to-kf-500/90'>
+                <img 
+                  src='/cli.gif' 
+                  className='border border-gray-600 --object-contain mx-auto rounded-md' />
               </Bling>
             </Segment>
 
@@ -123,17 +126,18 @@ export default () => {
             {/* detailed opan-api docs */}
             <div className='flex flex-col w-full gap-10 items-center justify-between '>
               <CommonGradientText 
-                  className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
-                  children='Detailed OpenAPI docs' />
-              <Bling stroke='border-[6px]' 
-                    className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90
-'
-                    rounded='rounded-2xl'
-                    from='from-pink-500 dark:from-pink-500/90'
-                    to='to-kf-500 dark:to-kf-500/90'>
-                <img src='/landing/reference_api.webp' 
-                      className='border border-gray-600 w-full max-w-[1000px] object-contain 
-                              mx-auto rounded-2xl' />
+                className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                children='Detailed OpenAPI docs' />
+              <Bling 
+                stroke='border-[6px]' 
+                className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
+                rounded='rounded-2xl'
+                from='from-pink-500 dark:from-pink-500/90'
+                to='to-kf-500 dark:to-kf-500/90'>
+                <img 
+                  src='/landing/reference_api.png' 
+                  className='border border-gray-600 w-full max-w-[1000px] --object-contain 
+                    mx-auto rounded-2xl' />
               </Bling>
             </div>
           </div> 

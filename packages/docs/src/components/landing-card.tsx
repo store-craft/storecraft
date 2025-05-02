@@ -17,12 +17,19 @@ export const Card = (
 <div {...rest}>
   <div 
     className='rounded-xl w-full h-full dark:bg-gray-800/50 
-      bg-gray-100/50 border border-pink-700/10 
-        relative overflow-clip flex flex-col justify-between p-5 gap-3 pb-2'
+    bg-slate-50 border 
+      border-gray-400/20 dark:border-gray-400/10 
+      relative overflow-clip flex flex-col justify-between p-5 gap-3 pb-2'
       >
     <div className={'absolute -top-0 left-2  ' + '--translate-x-8 --translate-y-12 '}>
-      <div className='w-1 h-[100px]  -rotate-90  origin-center bg-pink-500/80 absolute  shadow-[0px_0px_20px] shadow-pink-500/50 dark:shadow-pink-500/90' />                  
-      <div className='w-1 h-[300px]  --rotate-45  origin-center bg-kf-500/80 absolute shadow-[0px_0px_20px] shadow-kf-500/50 dark:shadow-kf-500/90' />                  
+      <div 
+        className='w-1 h-[100px]  -rotate-90  origin-center absolute
+          bg-pink-500/80 shadow-[0px_0px_10px] 
+          shadow-pink-500/50 dark:shadow-pink-500/90' />                  
+      <div 
+        className='w-[3px] h-[300px]  --rotate-45  origin-center absolute
+          bg-kf-500/80 shadow-[0px_0px_0px] dark:shadow-[0px_0px_20px] 
+          shadow-kf-500/50 dark:shadow-kf-500/90' />                  
     </div>        
     <div className=''>
       <div children={header} 

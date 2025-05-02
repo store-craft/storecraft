@@ -26,7 +26,7 @@ export default () => {
           opacity-20 dark:opacity-20 z-50 pointer-events-none' />
 
       <div className='w-full h-full transition-colors overflow-y-auto
-        bg-slate-200 dark:bg-gray-900 relative
+        bg-slate-100 dark:bg-gray-900 relative
         text-gray-800 dark:text-gray-300
         px-3 md:px-10'>
 
@@ -46,8 +46,8 @@ export default () => {
             subpixel-antialiased z-10 pb-40
             text-slate-600 dark:text-slate-300'>
           <div 
-            className='w-full relative flex flex-col gap-5 md:gap-10 
-              overflow-y-auto '>
+            className='w-full relative flex flex-col gap-5 
+              md:gap-10 overflow-y-auto '>
 
             {/* hero */}
             <div className='h-fit relative'>
@@ -68,7 +68,8 @@ export default () => {
               {/* code sample 1 */}
               <Segment className='w-full'>
                 <CommonGradientText 
-                  className='text-5xl sm:text-7xl w-fit max-w-[705px] text-center md:text-left  '>
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center md:text-left  '>
                     <div>
                       Craft the perfect commerce backend in 30 
                       <span children='loc' className=' font-mono'/>
@@ -78,14 +79,16 @@ export default () => {
                 <CodeBlock 
                   children={code} 
                   showLinesNumbers={false} 
-                  outerClassName='w-full md:w-fit flex-shrink md:flex-shrink-0' />
+                  outerClassName='w-full md:w-fit flex-shrink 
+                    md:flex-shrink-0' />
               </Segment>
 
               
               {/* code sample 2 */}
               <Segment className='w-full' reverse={true}>
                 <CommonGradientText 
-                  className='text-5xl sm:text-7xl w-fit text-center md:text-right max-w-[705px]' 
+                  className='text-5xl sm:text-7xl w-fit text-center 
+                    md:text-right max-w-[705px]' 
                   children='Use your favorite Payment Gateways'/>
                 <CodeBlock 
                   children={code_payment} 
@@ -95,9 +98,11 @@ export default () => {
               
 
               {/* dashboard */}
-              <div className='flex flex-col w-full gap-10 items-center justify-between '>
+              <div className='flex flex-col w-full gap-10 
+                items-center justify-between '>
                 <CommonGradientText 
-                  className='text-5xl sm:text-7xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center md:text-left ' 
                   children='Official Dashboard' />
                 <Bling 
                   stroke='border-[1px]' 
@@ -121,7 +126,8 @@ export default () => {
                     <span children='npx' className='text-5xl w-fit font-mono' />
                   </div>
                   <CommonGradientText 
-                    className='text-5xl w-fit font-mono max-w-[705px] text-center md:text-left ' 
+                    className='text-5xl w-fit font-mono max-w-[705px] 
+                      text-center md:text-left ' 
                     children='storecraft create' />
                 </div>
                 <Bling 
@@ -131,7 +137,7 @@ export default () => {
                   to='to-kf-500 dark:to-kf-500/90'>
                   <img 
                     src='/cli.gif' 
-                    className='border border-gray-600 --object-contain mx-auto rounded-md' />
+                    className='border border-gray-600 mx-auto rounded-md' />
                 </Bling>
               </Segment>
 
@@ -139,7 +145,8 @@ export default () => {
               {/* detailed opan-api docs */}
               <div className='flex flex-col w-full gap-10 items-center justify-between '>
                 <CommonGradientText 
-                  className='text-5xl sm:text-7xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center md:text-left ' 
                   children='Detailed API docs' />
                 <Bling 
                   stroke='border-[1px]' 
@@ -149,7 +156,7 @@ export default () => {
                   to='to-kf-500 dark:to-kf-500/90'>
                   <img 
                     src='/landing/reference_api.png' 
-                    className='border border-gray-600 w-full max-w-[1000px] --object-contain 
+                    className='border border-gray-600 w-full max-w-[1000px] 
                       mx-auto rounded-2xl' />
                 </Bling>
               </div>

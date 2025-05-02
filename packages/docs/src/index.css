@@ -111,7 +111,7 @@
 
   .graph {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0px, rgb(210, 51, 225) 0%, rgba(54, 226, 248, 0.5) 3px, rgba(0, 0, 0, 0) 0px), linear-gradient(90deg, rgba(0, 0, 0, 0) 0px, rgba(248, 54, 219, 0.5) 0%, rgba(248, 54, 216, 0.5) 3px, rgba(0, 0, 0, 0) 0px); 
-    background-size: 5% 5%;
+    background-size: 10% 10%;
     /* background-size: 70px 20px; */
     /* clip-path: circle(40%); */
     clip-path: xywh(0 45% 100% 75% round 15% 0);
@@ -122,9 +122,13 @@
     /* transform: perspective(400px) rotateX(65deg) scale(2); */
     /* transform: perspective(200px) rotateX(65deg) scale(2); */
     animation-name: MOVE-BG;
-    animation-duration: 35s;
+    animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+    @variant sm {
+      background-size: 5% 7%;
+      animation-duration: 28s;
+    }
 }
 
 @keyframes MOVE-BG {

@@ -12,7 +12,11 @@ export const Segment = (
 
   return (
 <div {...rest}>
-  <div className={'flex w-full gap-10 items-center justify-between ' + (reverse ? 'flex-col md:flex-row-reverse ' : 'flex-col md:flex-row')}>
+  <div 
+    className={
+      'flex w-full gap-10 items-center justify-between ' + 
+      (reverse ? 'flex-col md:flex-row-reverse ' : 'flex-col md:flex-row')
+    }>
     {
       children
     }

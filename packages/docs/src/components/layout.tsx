@@ -61,7 +61,7 @@ const Layout = (
         className='absolute inset-0 px-3
         bg-white/10 dark:bg-transparent backdrop-blur-sm 
           shadow-sm md:px-4 flex-shrink-0 
-          w-full z-40 ' 
+          w-full h-fit z-40 ' 
         slug={slug} 
         onMenuClick={toggleMenu as Function} 
       />
@@ -71,8 +71,8 @@ const Layout = (
       <ClientOnly>
         <SideBar 
           className='hidden md:block w-60 h-full overflow-auto text-xs
-                      flex-shrink-0 px-3 pt-[80px] pb-10 pl-2
-                      border-r border-gray-400/20 dark:border-gray-400/10'
+            flex-shrink-0 px-3 pt-[80px] pb-10 pl-2
+            border-r border-gray-400/20 dark:border-gray-400/10'
           selectedSlug={slug}
           groups={groups} 
         />
@@ -90,20 +90,20 @@ const Layout = (
 
           <div className={`relative w-full ${slug==='rest-api/api' ? 'w-full' : 'max-w-[692px]'} h-fit mx-auto flex flex-col`}>
             <div 
-                className={
-                  `--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
-                    --pt-[130px] --md:pt-[60px] prose prose-base
-                    prose-slate text-[16px] font-light
-                    prose-h1:text-3xl prose-h1:font-thin prose-h1:mb-12
-                    prose-h2:text-xl prose-h2:font-thin
-                    prose-h3:text-lg prose-h3:font-thin
-                    prose-code:before:hidden prose-code:after:hidden
-                    text-base max-w-none h-full
-                    dark:prose-invert decoration-from-font 
-                    subpixel-antialiased z-10 
-                    text-slate-800 dark:text-gray-400`
-                }
-                children={content_hydrated} 
+              className={
+                `--w-full block ${slug==='rest-api/api' ? 'px-0 md:px-0' : 'px-5 md:px-5'} --h-fit pb-20
+                --pt-[130px] --md:pt-[60px] prose prose-base
+                prose-slate text-[16px] font-light
+                prose-h1:text-3xl prose-h1:font-thin prose-h1:mb-12
+                prose-h2:text-xl prose-h2:font-thin
+                prose-h3:text-lg prose-h3:font-thin
+                prose-code:before:hidden prose-code:after:hidden
+                text-base max-w-none h-full
+                dark:prose-invert decoration-from-font 
+                subpixel-antialiased z-10 
+                text-slate-800 dark:text-gray-400`
+              }
+              children={content_hydrated} 
             />
             <Copyright />               
           </div>

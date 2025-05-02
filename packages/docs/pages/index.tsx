@@ -32,7 +32,7 @@ export default () => {
 
         <Header 
           className='bg-white/10 dark:bg-transparent backdrop-blur-sm 
-            shadow-sm  flex-shrink-0 w-full z-40 ' 
+            shadow-none dark:shadow-sm flex-shrink-0 w-full z-40 ' 
           slug={undefined} 
           show_docs_decoration={false}
           show_start_here={true}
@@ -40,7 +40,7 @@ export default () => {
         />
 
         <div 
-          className='--w-full block  h-fit 
+          className='--w-full block mt-5  h-fit 
             relative text-[17px] max-w-[1300px] mx-auto
             decoration-from-font 
             subpixel-antialiased z-10 pb-40
@@ -97,10 +97,10 @@ export default () => {
               {/* dashboard */}
               <div className='flex flex-col w-full gap-10 items-center justify-between '>
                 <CommonGradientText 
-                  className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                  className='text-5xl sm:text-7xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
                   children='Official Dashboard' />
                 <Bling 
-                  stroke='border-[6px]' 
+                  stroke='border-[1px]' 
                   className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
                   rounded='rounded-2xl'
                   from='from-pink-500 dark:from-pink-500/90'
@@ -139,10 +139,10 @@ export default () => {
               {/* detailed opan-api docs */}
               <div className='flex flex-col w-full gap-10 items-center justify-between '>
                 <CommonGradientText 
-                  className='text-5xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
-                  children='Detailed OpenAPI docs' />
+                  className='text-5xl sm:text-7xl w-fit --font-mono max-w-[705px] text-center md:text-left ' 
+                  children='Detailed API docs' />
                 <Bling 
-                  stroke='border-[6px]' 
+                  stroke='border-[1px]' 
                   className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
                   rounded='rounded-2xl'
                   from='from-pink-500 dark:from-pink-500/90'

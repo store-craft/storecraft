@@ -352,10 +352,10 @@ export const SideBarSmall = (
       groups={groups} 
     />
 
-    <div children={`(v${pkg.version})`} 
-          className='absolute bottom-0 font-mono right-0 text-sm
-              text-gray-500/70' />
-
+    <div 
+      children={`(v${pkg.version})`} 
+      className='absolute bottom-0 font-mono right-0 text-sm
+      text-gray-500/70' />
 
     {
       showMenu && 
@@ -367,8 +367,7 @@ export const SideBarSmall = (
   </div>
   <div 
     onClick={_ => onClickMenuItem?.(undefined)}
-    className={
-      `
+    className={`
       fixed w-full h-screen top-0 left-0 z-40 cursor-pointer block md:hidden
       ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
       `

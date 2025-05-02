@@ -68,7 +68,7 @@ const app = new App(config)
 .withStorage(new GoogleStorage())
 .withPaymentGateways(
   {
-    'stripe': new Stripe(
+    stripe: new Stripe(
       { 
         publishable_key: '****', 
         secret_key: '****', 

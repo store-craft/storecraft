@@ -88,16 +88,16 @@ export const NPX = (
 
   return (
 <div {...rest}>
-<CopyableView 
+  <CopyableView 
     value={
       <div className='flex flex-row gap-1 items-center'>
-        <FaTerminal className='text-base inline'/>npx storecraft create
+        <FaTerminal className=' inline'/>npx storecraft create
       </div>
     } 
     copyValue='npx storecraft create'
     process_before_copy={undefined} 
     className={`
-      text-gray-200
+      text-gray-200 h-5 sm:h-fit
       shadow-[0px_0px_6px] shadow-pink-500/90
       from-black/60 bg-gradient-to-br to-black 
       rounded-lg flex flex-row justify-between items-center w-fit font-mono`

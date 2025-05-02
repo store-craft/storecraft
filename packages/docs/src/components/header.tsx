@@ -144,7 +144,7 @@ const Header = (
               <FaTerminal />
               <GradientText 
                 className='bg-gradient-to-r from-black dark:from-white  
-                to-pink-500 dark:to-pink-500' 
+                to-kf-500 dark:to-pink-500' 
                 children='start_here_' />
             </div>
           </Link>

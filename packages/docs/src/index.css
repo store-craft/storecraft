@@ -6,10 +6,16 @@
 
 @theme {
   --font-inter: Inter, sans-serif;
-  --font-display: "Oswald", "sans-serif";
+  --font-display: Inter, sans-serif;
+  --font-open-sans: open-sans, sans-serif;
   --font-display--font-feature-settings: "cv02", "cv03", "cv04", "cv11"; 
   --font-display--font-variation-settings: "opsz" 32; 
-  
+
+  --text-tiny: 0.625rem;
+  --text-tiny--line-height: 1.5rem; 
+  --text-tiny--letter-spacing: 0.125rem; 
+  --text-tiny--font-weight: 500; 
+
   --breakpoint-xs: 480px;
   --breakpoint-sm: 580px;
   --breakpoint-md: 768px;
@@ -129,21 +135,21 @@
       background-size: 5% 7%;
       animation-duration: 28s;
     }
-}
-
-@keyframes MOVE-BG {
-  0% {
-    transform: perspective(200px) rotateX(65deg) scale(2);
-    background-position-y: 0%;
   }
-  50% { 
-    /* transform: perspective(400px) rotateX(65deg) scale(2); */
+  
+  @keyframes MOVE-BG {
+    0% {
+      transform: perspective(200px) rotateX(65deg) scale(2);
+      background-position-y: 0%;
+    }
+    50% { 
+      /* transform: perspective(400px) rotateX(65deg) scale(2); */
+    }
+    100% { 
+      background-position-y: 100%;
+      transform: perspective(200px) rotateX(65deg) scale(2);
+    }
   }
-  100% { 
-    background-position-y: 100%;
-    transform: perspective(200px) rotateX(65deg) scale(2);
-  }
-}
 
   .shelf-media-source {
     @apply bg-slate-50 dark:bg-slate-50/10 

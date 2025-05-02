@@ -47,7 +47,7 @@ export default () => {
             text-slate-600 dark:text-slate-300'>
           <div 
             className='w-full relative flex flex-col gap-5 
-              md:gap-10 overflow-y-auto '>
+              --md:gap-10 overflow-y-auto '>
 
             {/* hero */}
             <div className='h-fit relative'>
@@ -56,7 +56,7 @@ export default () => {
                 rounded='rounded-lg' 
                 className='absolute bottom-0 lg:top-4 right-0 
                   z-50 text-xs sm:text-base w-fit h-fit' >
-                <NPX />
+                <NPX className='text-tiny sm:text-sm md:text-base' />
               </Bling>
             </div>
 
@@ -71,7 +71,7 @@ export default () => {
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
                     text-center md:text-left  '>
                     <div>
-                      Craft the perfect commerce backend in 30 
+                      Craft the perfect commerce backend with 30 
                       <span children='loc' className=' font-mono'/>
                     </div>
                 </CommonGradientText>

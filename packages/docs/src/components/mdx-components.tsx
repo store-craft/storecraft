@@ -58,7 +58,7 @@ const components = {
   // pre: props => <CodeBlock {...props} />,
   pre: props => <CodeBlock {...props?.children?.props} />,
   code: props => <code 
-    className='inline --bg-white border dark:border-none 
+    className='inline --bg-white border border-none 
       text-pink-600 dark:text-gray-400 font-mono
       bg-pink-600/5 dark:bg-gray-400/10
       p-1 rounded-md' 

@@ -9,8 +9,7 @@ import BetterSQLite from 'better-sqlite3';
 
 
 /**
- * @description `better-sqlite` driver for `storecraft`
- * 
+ * @description `better-sqlite3` driver for `storecraft`
  */
 export class SQLite extends SQL {
 

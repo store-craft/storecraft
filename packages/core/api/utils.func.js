@@ -19,8 +19,15 @@ export class StorecraftError extends Error {
       this.#message_string = ':('
     }
 
-    if(this.message!==undefined || this.message!==null)
-    this.message.toString = () => this.#message_string;
+    if(
+      (typeof this.message!== 'string') &&
+      (
+        this.message!==undefined || 
+        this.message!==null
+      )
+    ) {
+      this.message.toString = () => this.#message_string;
+    }
     
     // console.log(JSON.stringify(message, null, 2));
   }

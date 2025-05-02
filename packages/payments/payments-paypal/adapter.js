@@ -68,7 +68,7 @@ export class Paypal {
 
     if(!is_valid) {
       throw new StorecraftError(
-        `Payment gateway ${this.info.name ?? 'unknown'} has invalid config !!! 
+        `Payment gateway ${this.info?.name ?? 'unknown'} has invalid config !!! 
         Missing client_id or secret`
       )
     }

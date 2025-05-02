@@ -60,10 +60,10 @@ export default () => {
               </Bling>
             </div>
 
-            <div className='w-full h-fit flex flex-col gap-40 md:gap-52'>
+            {/* landing cards */}
+            <LandingCards />
 
-              {/* landing cards */}
-              <LandingCards />
+            <div className='w-full h-fit flex flex-col gap-40 md:gap-52 mt-10'>
 
               {/* code sample 1 */}
               <Segment className='w-full'>

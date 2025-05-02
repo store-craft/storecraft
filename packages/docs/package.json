@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@next/bundle-analyzer": "^15.3.1",
+    "@stackblitz/sdk": "^1.11.0",
     "@storecraft/core": "^1.0.0",
     "gray-matter": "^4.0.3",
     "marked": "^5.0.2",

@@ -29,7 +29,6 @@ export const DEFAULT_INDEX_NAME = 'vector_store';
 /**
  * @description MongoDB Atlas Vector Store
  * {@link https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-type/#:~:text=You%20can%20use%20the%20vectorSearch,to%20pre%2Dfilter%20your%20data.}
- * 
  * @implements {VectorStore}
  */
 export class MongoVectorStore {
@@ -163,6 +162,13 @@ export class MongoVectorStore {
         )
       }
     );
+
+    if(!result) {
+      console.warn(
+        'MongoVectoreStore::upsertDocuments() - no result from embedder'
+      );
+      return;
+    }
 
     const vectors = result.content;
 

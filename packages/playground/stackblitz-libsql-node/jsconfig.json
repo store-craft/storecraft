@@ -1,0 +1,18 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true,
+    "maxNodeModuleJsDepth": 100,
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true,
+  },
+  "include": ["*", "*/*"],
+  "exclude": [
+    "*.json"
+  ]
+}

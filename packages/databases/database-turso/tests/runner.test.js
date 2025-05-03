@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner'
-import { Turso, LibSQL } from '../index.js';
+import { LibSQL } from '../index.js';
 import { migrateToLatest } from '../migrate.js';
 
 export const create_app = async () => {

@@ -181,6 +181,13 @@ export class LibSQLVectorStore {
       }
     );
 
+    if(!result) {
+      console.warn(
+        'LibSQLVectorStore::upsertDocuments() - no result from embedder'
+      );
+      return;
+    }
+
     const vectors = result.content;
 
     // console.log(vectors)

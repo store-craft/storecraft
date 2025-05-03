@@ -75,6 +75,14 @@ export class OpenAIEmbedder {
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
 
+    if(this.config.api_key === undefined) {
+      console.warn(
+        'OpenAI API key is missing. Please set the OPENAI_API_KEY environment variable \
+        or programatically in the constructor config.'
+      );
+      return undefined;
+    }
+
     const body = (/** @type {RequestBody} */ (
       {
         input: params.content.filter(c => c.type==='text').map(c => c.content),

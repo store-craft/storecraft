@@ -34,7 +34,6 @@ import {
 export const table_name = 'products'
 
 /**
- * 
  * @param {db_col["$type_upsert"]} item 
  */
 const is_variant = item => {
@@ -54,8 +53,6 @@ const is_variant = item => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {

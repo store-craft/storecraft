@@ -22,12 +22,12 @@ export default () => {
   const [menu, toggleMenu] = useToggle(false);
 
   useEffect(
-    () => {
+    () => { 
       const iframe = document.getElementById('embed') as HTMLIFrameElement;
       if (iframe) {
         sdk.embedGithubProject(
           'embed', 
-          'store-craft/storecraft/tree/release_first_chat/packages/playground/node-sqlite', {
+          'store-craft/storecraft/tree/release_first_chat/packages/playground/stackblitz-libsql-node', {
           height: '50%',
           width: '50%',
           view: 'preview',

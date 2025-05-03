@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-turso",
-  "version": "1.0.21",
+  "version": "1.0.23",
   "description": "`Storecraft` database driver for `Turso` (cloud sqlite)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -36,7 +36,7 @@
     "database-turso:test": "node ./tests/runner.test.js",
     "test": "npm run database-turso:test",
     "prepublishOnly": "npm version patch --force",
-    "sc-publish": "npm publish --access public"
+    "sc-publish": "npm test && npm publish --access public"
   },
   "dependencies": {
     "@libsql/client": "^0.15.4",

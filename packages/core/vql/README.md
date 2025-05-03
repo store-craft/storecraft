@@ -1,11 +1,11 @@
 # VQL - Virtual Query Language
 
-**VQL** helps you transform this:
+**VQL** helps you transform between this:
 
 ```js
 ((tag:subscribed & age>=18 & age<35) | active=true)
 ```
-Into this:
+and this (and then back):
 
 ```js
 {
@@ -67,7 +67,7 @@ type Data = {
 }
 
 const query: VQL<Data> = {
-  search: 'tag:subscribed',
+  $search: 'tag:subscribed',
   $and: [
     {
       age: {

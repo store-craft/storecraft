@@ -16,7 +16,7 @@ export const Card = (
   return (
 <div {...rest}>
   <div 
-    className='rounded-xl w-full h-full dark:bg-gray-800/50 
+    className='rounded-xl w-full h-full dark:bg-gray-800/20 
     bg-slate-50 border 
       border-gray-400/20 dark:border-gray-400/10 
       relative overflow-clip flex flex-col justify-between p-5 gap-3 pb-2'

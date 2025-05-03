@@ -106,7 +106,7 @@ export class LibSQLVectorStore {
         ?? app.platform.env['LIBSQL_AUTH_TOKEN'];
 
     this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url] 
-        ?? app.platform.env['LIBSQL_URL'];
+        ?? app.platform.env['LIBSQL_URL'] ?? 'file:data.db';
   }
 
   /** @type {VectorStore["embedder"]} */

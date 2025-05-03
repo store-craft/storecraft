@@ -10,7 +10,8 @@ export type Config = Partial<Omit<LibSqlConfig, 'url' | 'authToken'>> & {
    *
    * https://github.com/libsql/libsql-client-ts#supported-urls
    * 
-   * If missing, it will be inferred by env variable `LIBSQL_URL`
+   * If missing, it will be inferred by env variable `LIBSQL_URL` or
+   * will settle to `file:data.db` if `LIBSQL_URL` is not set.
    */
   url?: string;
   /** 

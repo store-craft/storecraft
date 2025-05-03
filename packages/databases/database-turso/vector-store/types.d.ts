@@ -11,7 +11,8 @@ export type Config = {
    *
    * https://github.com/libsql/libsql-client-ts#supported-urls
    * 
-   * If missing, it will be inferred by env variable `LIBSQL_VECTOR_URL` or `LIBSQL_URL`
+   * If missing, it will be inferred by env variable `LIBSQL_VECTOR_URL` or `LIBSQL_URL`,
+   * or will settle to `file:data.db` if none are set.
    */
   url?: string;
   /** 

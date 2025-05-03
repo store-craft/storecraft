@@ -58,40 +58,26 @@ export const Hero = () => {
             font-normal xs:font-light sm:font-light
              -hidden --z-50' />     
         <span 
+          children={` x `} 
+          className='text-2xl/tight sm:text-2xl  
+            text-kf-900 dark:text-white/80
+            whitespace-pre-line 
+            left-3 xs:left-5 sm:left-6 
+            bottom-7 sm:bottom-8 
+            font-mono --italic
+            --font-bold
+             -hidden --z-50' />     
+        <span 
           children={` AI`} 
           className='text-2xl/tight sm:text-5xl  
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
             left-3 xs:left-5 sm:left-6 
             bottom-7 sm:bottom-8 
-            font-mono --italic
+            font-mono italic
             font-bold
-             -hidden --z-50' />     
-</div>
-      {/* <span 
-        children={`Next`}
-        className='text-2xl/tight sm:text-5xl  
-          text-kf-900 dark:text-white/80
-          whitespace-pre-line 
-          left-3 xs:left-5 sm:left-6 
-          bottom-7 sm:bottom-8 
-          font-inter --italic
-          font-normal xs:font-normal sm:font-light
-          absolute -hidden --z-50' /> */}
-    
-      {/* <span 
-        children={`
-Next Generation 
-Commerce As Code Ai
-       `}
-        className='text-2xl/tight sm:text-5xl  
-          text-kf-900 dark:text-white/80
-          whitespace-pre-line 
-          left-3 xs:left-5 sm:left-6 
-          bottom-7 sm:bottom-8 
-          font-inter --italic
-          font-normal xs:font-normal sm:font-light
-          absolute -hidden --z-50' /> */}
+             -hidden --z-50' />                  
+      </div>
     </div>
     <div 
       className='absolute bottom-0 left-0 w-full 

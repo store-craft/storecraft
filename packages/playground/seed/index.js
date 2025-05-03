@@ -1,5 +1,5 @@
 /**
- * @import { SeedData } from "./index.js";
+ * @import { SeedData } from "./types.js";
  */ 
 import { App } from "@storecraft/core";
 
@@ -7,36 +7,36 @@ import { App } from "@storecraft/core";
 /**
  * @description Seeds the database with the provided data.
  * @param {App} app 
- * @param {SeedData} data 
+ * @param {any} data 
  */
 export const seed = async (app, data) => {
   await app.init();
 
-  for (const v of data.collections ?? []) {
+  for (const v of data?.collections ?? []) {
     await app.api?.collections.upsert(v);
   }
 
-  for (const v of data.posts ?? []) {
+  for (const v of data?.posts ?? []) {
     await app.api?.posts.upsert(v);
   }
 
-  for (const v of data.shipping ?? []) {
+  for (const v of data?.shipping ?? []) {
     await app.api?.shipping_methods.upsert(v);
   }
 
-  for (const v of data.tags ?? []) {
+  for (const v of data?.tags ?? []) {
     await app.api?.tags.upsert(v);
   }
 
-  for (const v of data.products ?? []) {
+  for (const v of data?.products ?? []) {
     await app.api?.products.upsert(v);
   }
 
-  for (const v of data.discounts ?? []) {
+  for (const v of data?.discounts ?? []) {
     await app.api?.discounts.upsert(v);
   }
 
-  for (const v of data.storefronts ?? []) {
+  for (const v of data?.storefronts ?? []) {
     await app.api?.storefronts.upsert(v);
   }
  

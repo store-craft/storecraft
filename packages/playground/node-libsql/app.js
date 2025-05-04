@@ -51,7 +51,7 @@ export const app = new App({
   dummy_payments: new DummyPayments(),
 })
 .withExtensions({
-  postman: new PostmanExtension(),
+  postman: new PostmanExtension()
 })
 .withAI(
   // new XAI(),

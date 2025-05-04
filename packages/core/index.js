@@ -59,12 +59,12 @@ let ms_init_start = 0;
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {Record<string, extension>} [ExtensionsMap=BaseExtensions]
+ * @template {Record<string, extension<any>>} [ExtensionsMap=(Record<string, extension<any>> & BaseExtensions)]
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
- * @template {Record<string, Agent>} [AgentsMap=(BaseAgents)]
+ * @template {Record<string, Agent>} [AgentsMap=(Record<string, Agent> & BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {

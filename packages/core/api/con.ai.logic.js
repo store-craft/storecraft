@@ -43,11 +43,14 @@ export const speakWithAgentStream = (app) =>
    * @returns {Promise<AgentRunStreamResponse>}
    */
   async (agent_handle, params) => {
+    
     const agent = app.agents?.[String(agent_handle)];
+
     assert(
       agent,
       `Agent ${String(agent_handle)} not found !`
     );
+
     return agent.runStream(
       params
     );

@@ -24,12 +24,11 @@ export type ExtensionActionHandler<PayloadType> =
  * @description Payment Gateway interface. pay attention to:
  * 1. `actions`, which specifies a list eligible `rpc` methods for 
  * invocation on this backend (through `rest-api`)
- * 
- * 
  * @template {any} Config The config type
- * 
  */
-export declare interface extension<Config extends any=any, AppType extends any = App> {
+export declare interface extension<
+  Config extends any=any
+  > {
 
   /** 
    * 
@@ -49,7 +48,7 @@ export declare interface extension<Config extends any=any, AppType extends any =
    * like the `app` instance, where you can attach event handlers inside
    * the `pubsub` module, or use the `api` module to manipulate resources.
    */
-  onInit: (app: AppType) => void;
+  onInit: (app: App) => void;
 
   /**
    * 

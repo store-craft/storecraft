@@ -4,6 +4,11 @@ export default
   <head>
     <title>API Reference</title>
     <meta charset="utf-8" />
+    <link 
+      rel="icon" 
+      sizes="any" 
+      type="image/svg+xml" 
+      href="/api/dashboard/favicon.svg" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1" />

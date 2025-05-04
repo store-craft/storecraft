@@ -385,6 +385,7 @@ ${c.yellow}⭑ ${c.reset + c.yellow}Statistics      ${c.reset}initialized in ${(
       // settle programmatic API
       // we do not cast the app here, because we need to pass the original
       // object to the API for some typescript tricks later.
+      // @ts-ignore
       this.api = create_api(this);
 
       // settle REST-API

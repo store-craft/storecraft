@@ -1,14 +1,11 @@
 /**
- * 
  * @import { LLMHistoryProvider, LLMHistory } from './types.private.js'
  */
-
 import { App } from '../../index.js';
 
 
 /**
  * @template {any} [LLMMessageType=any]
- * 
  * @implements {LLMHistoryProvider}
  */
 export class StorageHistoryProvider {

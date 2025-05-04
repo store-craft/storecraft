@@ -3,9 +3,8 @@
  */
 
 /**
- * @description Given a stream of {@link content}, accumulate it for the purpose
- * of `non-streamable` response.
- * 
+ * @description Given a stream of {@link content}, 
+ * accumulate it for the purpose of `non-streamable` response.
  * @param {ReadableStream<content>} stream
  */
 export const stream_accumulate = async (stream) => {

@@ -1,7 +1,6 @@
 /**
  * @import { Tool } from './types.private.js'
  */
-
 import { z } from 'zod';
 
 const c = {

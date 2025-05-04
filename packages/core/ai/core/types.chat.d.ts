@@ -1,9 +1,14 @@
 import { z } from 'zod';
-import { tool } from './index.js';
+import { tool } from './tools.js';
 import { App } from '../../types.public.js';
 
-export type InferToolInputSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? z.infer<I> : never;
-export type InferToolReturnSchema<TOOL extends Tool> = TOOL extends Tool<infer I, infer O> ? (O extends z.ZodTypeAny ? z.infer<O> : O) : never;
+export type InferToolInputSchema<TOOL extends Tool> = 
+  TOOL extends Tool<infer I, infer O> ? z.infer<I> : never;
+
+export type InferToolReturnSchema<TOOL extends Tool> = 
+  TOOL extends Tool<infer I, infer O> ? 
+    (O extends z.ZodTypeAny ? z.infer<O> : O) : 
+    never;
 
 /**
  * @description General Tool specification
@@ -32,8 +37,9 @@ export type Tool<
     schema: ToolInput,
 
     /**
-     * @description Optional result type of tool in `zod` schema to confine
-     * and guide the output of {@link use} method
+     * @description Optional result type of tool in `zod` 
+     * schema to confine and guide the output of {@link use} 
+     * method
      */
     schema_result_zod?: ToolResult,
 
@@ -43,7 +49,11 @@ export type Tool<
      * @param input `zod` schema
      * @returns 
      */
-    use: (input: z.infer<ToolInput>) => Promise<ToolResult extends z.ZodTypeAny ? z.infer<ToolResult> : ToolResult>;
+    use: (input: z.infer<ToolInput>) => Promise<
+      ToolResult extends z.ZodTypeAny ? 
+        z.infer<ToolResult> : 
+        ToolResult
+    >;
   }
 
 
@@ -65,9 +75,8 @@ export type content_error = { type: 'error', content: { code?: string, message?:
 
 /** @description A general content type from and to user */
 export type content = | content_text | content_delta_text 
-                      | content_tool_use | content_tool_result 
-                      | content_image | content_json | content_object
-                      | content_error;
+  | content_tool_use | content_tool_result | content_image
+  | content_json | content_object | content_error;
 
 /**
  * @description Unified message type translatable to and from LLM native message
@@ -95,7 +104,8 @@ export type GenerateTextParams<MessageType extends any = any> = {
    */
   history: MessageType[],
   /**
-   * @description A user prompt in generic form, later will be translated into LLM specific message
+   * @description A user prompt in generic form, later will be 
+   * translated into LLM specific message
    */
   prompt: content[],
   /**
@@ -113,12 +123,14 @@ export type GenerateTextParams<MessageType extends any = any> = {
  */
 export type GenerateTextResponse<LLMMessageType extends any = any> = {
   /**
-   * @description Formatted response contents, including text, tool usage etc..
+   * @description Formatted response contents, including 
+   * text, tool usage etc..
    */
   contents?: content[],
   /**
-   * @description Native LLM messages, that were generated during the generation process,
-   * we report it for saving purposes of the history
+   * @description Native LLM messages, that were generated 
+   * during the generation process, we report it for saving purposes 
+   * of the history
    */
   delta_messages?: LLMMessageType[]
 }
@@ -135,8 +147,8 @@ export type StreamTextResponse = {
  */
 export type StreamTextCallbacks<LLMMessageType extends any = any> = {
   /**
-   * 
-   * @param delta_messages **LLM** messages, that were generated during the generation
+   * @param delta_messages **LLM** messages, that were generated 
+   * during the generation
    */
   onDone?: (delta_messages: LLMMessageType[]) => Promise<any> | void
 }

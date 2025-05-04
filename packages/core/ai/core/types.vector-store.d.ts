@@ -76,7 +76,7 @@ export interface VectorStore<
    * @returns A promise resolving to an array of document IDs or void, based on implementation.
    * @abstract
    */
-  abstract upsertVectors(
+  upsertVectors(
     vectors: number[][],
     documents: VectorStoreDocumentInterface[],
     options?: VectorStoreAddDocumentOptions
@@ -91,7 +91,7 @@ export interface VectorStore<
    * @returns A promise resolving to an array of document IDs or void, based on implementation.
    * @abstract
    */
-  abstract upsertDocuments(
+  upsertDocuments(
     documents: VectorStoreDocumentInterface[],
     options?: VectorStoreAddDocumentOptions
   ): Promise<string[] | void>;
@@ -102,7 +102,7 @@ export interface VectorStore<
    * @param ids - array of ids.
    * @returns A promise that resolves once the deletion is complete.
    */
-  async delete(ids: string[]): Promise<void>;
+  delete(ids: string[]): Promise<void>;
 
   /**
    * Searches for documents similar to a text query by embedding the query and
@@ -114,11 +114,11 @@ export interface VectorStore<
    * @returns A promise resolving to an array of 
    * `DocumentInterface` instances representing similar documents.
    */
-  async similaritySearch<
+  similaritySearch<
     Metadata extends Record<string, RegularValue> = Record<string, RegularValue>
   >(
     query: string,
-    k = 4,
+    k:number,
     namespaces?: string[],
   ): Promise<VectorStoreSimilaritySearchQueryResult<Metadata>[]>;
 
@@ -127,7 +127,7 @@ export interface VectorStore<
    * @param params input
    * @param delete_index_if_exists_before 
    */
-  async createVectorIndex(
-    params: any, delete_index_if_exists_before?: boolean = false
+  createVectorIndex(
+    params: any, delete_index_if_exists_before?: boolean
   ): Promise<any>
 }

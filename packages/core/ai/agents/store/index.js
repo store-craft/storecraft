@@ -1,11 +1,9 @@
 /**
  * @import { 
- *  Agent, AgentConfig, AgentRunParameters, AgentRunResponse, 
- *  AgentRunStreamResponse 
+ *  Agent, AgentConfig, 
  * } from '../types.js'
  * @import { ChatAI } from '../../core/types.private.js'
  */
-
 import { App } from "../../../index.js";
 import { StorageHistoryProvider } from "../../core/history.js";
 import { SYSTEM } from './agent.system.js';
@@ -25,7 +23,6 @@ export class StoreAgent {
   config;
 
   /**
-   * 
    * @param {AgentConfig<AI_PROVIDER>} [config] 
    */
   constructor(config={}) {
@@ -64,6 +61,7 @@ export class StoreAgent {
       );
 
       const sf = await this.#app.api.storefronts.get_default_auto_generated_storefront();
+      
       const kvs = {
         store_info: store_info(this.#app),
         storefront_collections: sf.collections && sf.collections.map(c => ({title: c.title, handle: c.handle, description: c.description})),
@@ -148,7 +146,6 @@ export class StoreAgent {
 }
 
 /**
- * 
  * @param {App} app 
  */
 const store_info = (app) => {

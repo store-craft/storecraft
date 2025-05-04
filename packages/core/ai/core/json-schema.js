@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
 /**
- * 
  * @param {Object} o 
  * @param {z.ZodTypeAny} zod 
  */

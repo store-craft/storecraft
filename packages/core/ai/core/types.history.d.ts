@@ -1,6 +1,7 @@
+import { type App } from "../../types.public.js";
+
 /**
  * @template LLMMessageType Native **LLM** message type
- * 
  * @description **LLM** history / memory
  */
 export interface LLMHistory<LLMMessageType extends any = any> {
@@ -13,7 +14,6 @@ export interface LLMHistory<LLMMessageType extends any = any> {
 
 /**
  * @template LLMMessageType Native **LLM** message type
- * 
  * @description **LLM** history / memory provider
  */
 export interface LLMHistoryProvider<LLMMessageType extends any = any> {

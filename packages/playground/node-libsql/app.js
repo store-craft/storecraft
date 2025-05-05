@@ -54,8 +54,9 @@ export const app = new App({
   postman: new PostmanExtension()
 })
 .withAI(
-  // new XAI(),
+  // new XAI({model: 'grok-3'}),
   new OpenAI({ model: 'gpt-4o-mini'})
+  // new Anthropic({ model: 'claude-3-5-haiku-20241022' }),
 )
 .withVectorStore(
   new LibSQLVectorStore({

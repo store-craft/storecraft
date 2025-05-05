@@ -1,7 +1,7 @@
 /**
  * @import { 
  *  claude_completion_response, stream_event, 
- *  text_content, tool_use_content
+ *  claude_message_text_content, claude_message_tool_use_content
  * } from "./types.private.js";
  */
 
@@ -21,19 +21,25 @@ export const stream_message_builder = () => {
       } else if(chunk.type==='message_delta') {
         final = {...final, ...chunk.delta};
       } else if(chunk.type==='error') {
-        console.log('Anthropic::add_delta ', chunk);
+        // console.log('Anthropic::add_delta ', chunk);
         throw chunk.error;
       } else if(chunk.type==='content_block_start') {
         final.content[chunk.index] = chunk.content_block;
       } else if(chunk.type==='content_block_delta') {
         if(chunk.delta.type==='text_delta') {
-          const c = (/** @type {text_content} */ (final.content[chunk.index]));
+          const c = /** @type {claude_message_text_content} */ (
+            final.content[chunk.index]
+          );
+
           final.content[chunk.index] = {
             ...c,
             text: c.text + chunk.delta.text
-          } ;
+          }
         } else if(chunk.delta.type==='input_json_delta') {
-          const c = (/** @type {tool_use_content} */ (final.content[chunk.index]));
+          const c = /** @type {claude_message_tool_use_content} */ (
+            final.content[chunk.index]
+          );
+          
           final.content[chunk.index] = {
             ...c,
             __partial_json: (c.__partial_json ?? '') + chunk.delta.partial_json,

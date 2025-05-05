@@ -2,18 +2,18 @@
  * @import { config } from "./types.js";
  * @import { 
  *  chat_completion_input, claude_message, stream_event, 
- *  text_content, image_content,
+ *  claude_message_text_content, claude_message_image_content, 
+ *  claude_message_tool_use_content, claude_message_tool_result_content,
  * } from "./types.private.js";
  * @import { 
- *  ChatAI, content, GenerateTextParams, StreamTextCallbacks 
+ *  ChatAI, content, GenerateTextParams, 
  * } from "../../../core/types.private.js";
  * @import { ENV } from '../../../../types.public.js';
  */
-
 import { invoke_tool_safely } from "../../../core/tools.js";
 import { zod_to_json_schema } from "../../../core/json-schema.js";
 import { SSEGenerator } from "../../../core/sse.js";
-import { stream_accumulate } from "../../../core/stream-accumulate.js";
+import { content_stream_accumulate } from "../../../core/content-utils.js";
 import { stream_message_builder } from "./stream-message-builder.js";
 
 /**
@@ -59,11 +59,11 @@ export class Anthropic {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[Anthropic.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.platform.env[Anthropic.EnvConfig.api_key]; 
   }
 
   /**
-   * 
    * @param {Impl["__gen_text_params_type"]["tools"]} tools 
    * @return {chat_completion_input["tools"]}
    */
@@ -81,14 +81,15 @@ export class Anthropic {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
+   * @param {claude_message[]} messages
    * @param {boolean} [stream=false]
    */
-  #text_complete = async (params, stream) => {
+  #text_complete = async (params, messages, stream) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: params.history,
+        messages: messages,
         system: params.system,
         tools: this.#to_native_tools(params.tools),
         stream: stream,
@@ -128,11 +129,12 @@ export class Anthropic {
 
   /**
    * @param {Impl["__gen_text_params_type"]} params
+   * @param {claude_message[]} messages
    * @return {AsyncGenerator<stream_event>}
    */
-  async * #text_complete_stream(params) {
+  async * #text_complete_stream(params, messages) {
 
-    const stream = await this.#text_complete(params, true);
+    const stream = await this.#text_complete(params, messages, true);
   
     for await (const frame of SSEGenerator(stream.body)) {
       // console.log(frame);
@@ -141,21 +143,27 @@ export class Anthropic {
   }
 
   /**
-   * 
-   * @param {GenerateTextParams<claude_message>} params
-   * @param {StreamTextCallbacks<claude_message>} [callbacks]
+   * @param {GenerateTextParams} params
    * @returns {AsyncGenerator<content>} 
    */
-  async * #_gen_text_generator(params, callbacks) {
+  async * generator_completion(params) {
     let max_steps = params.maxSteps ?? 6;
     const base_history_length = params.history.length;
 
-    params.history = [
-      ...(params.history ?? []),
-      this.user_content_to_native_llm_user_message(params.prompt)
+    /** @type {claude_message[]} */
+    const messages = [
+      // map history to claude format
+      ...(params.history ?? []).map(
+        this.history_message_to_native_llm_messages
+      ).flat(),
+
+      // map current prompt to claude format
+      this.user_content_to_native_llm_user_message(
+        params.prompt
+      )
     ];
 
-    let current_stream = this.#text_complete_stream(params);
+    let current_stream = this.#text_complete_stream(params, messages);
 
     const builder = stream_message_builder();
     
@@ -171,7 +179,6 @@ export class Anthropic {
           content: chunk.delta.text
         }
       }
-
     }
 
     let current = builder.done();
@@ -199,7 +206,7 @@ export class Anthropic {
       max_steps -= 1;
 
       // push `assistant` message into history
-      params.history.push(
+      messages.push(
         {
           role: current.role,
           content: current.content
@@ -215,7 +222,7 @@ export class Anthropic {
           tool_call.input
         );
 
-        params.history.push(
+        messages.push(
           {
             role: 'user',
             content: [
@@ -239,7 +246,7 @@ export class Anthropic {
       }
 
       // again
-      current_stream = this.#text_complete_stream(params);
+      current_stream = this.#text_complete_stream(params, messages);
       
       const builder = stream_message_builder();
     
@@ -264,18 +271,10 @@ export class Anthropic {
     }
 
     // push `assistant` message into history
-    params.history.push(
-      {
-        role: 'assistant',
-        content: current.content
-      }
-    );
-
-    if(callbacks?.onDone) {
-      await callbacks.onDone(
-        params.history.slice(1 + base_history_length)
-      );
-    }
+    messages.push({
+      role: 'assistant',
+      content: current.content
+    });
 
   }
   
@@ -288,9 +287,22 @@ export class Anthropic {
       {
         start: async (controller) => {
           try {
-            for await (const m of this.#_gen_text_generator(params, callbacks)) {
+            /** @type {content[]} */
+            const contents = [];
+            for await (const m of this.generator_completion(params)) {
+              if(callbacks?.onDone) {
+                contents.push(m);
+              }
+
               controller.enqueue(m);
             }
+
+            if(callbacks?.onDone) {
+              await callbacks.onDone(
+                contents
+              );
+            }
+
           } catch(e) {
             controller.enqueue(
               {
@@ -315,24 +327,104 @@ export class Anthropic {
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {
-    let delta_messages = [];
     const { stream } = await this.streamText(
       params,
-      {
-        onDone: async (messages) => {
-          delta_messages = messages;
-        }
-      }
     );
 
-    const contents = await stream_accumulate(stream);
+    const contents = await content_stream_accumulate(stream);
 
     return {
-      contents,
-      delta_messages
+      contents
     };
   }
 
+  /** @type {Impl["history_message_to_native_llm_messages"]} */
+  history_message_to_native_llm_messages = (message) => {
+
+    const contents = message.contents;
+
+    if(message.role==='user') {
+      return [{
+        role: 'user',
+        content: contents.map(
+          (c) => {
+            switch(c.type) {
+              case 'text':
+                return /** @type {claude_message_text_content} */ ({
+                  type: 'text',
+                  text: c.content
+                })
+              case 'image':
+                return /** @type {claude_message_image_content} */ ({
+                  type: 'image',
+                  source: {
+                    data: c.content,
+                    media_type: 'image/png',
+                    type: 'base64'
+                  }
+                })
+              default:
+                console.log(
+                  `unsupported user content type ${c.type}`
+                );
+                return undefined;
+            }
+          }
+        ).filter(Boolean)
+      }]
+    }
+
+    if(message.role==='assistant') {
+      // we will convert each content to OpenAI message format
+
+      return contents.map(
+        (content) => {
+          switch(content.type) {
+            case 'text':
+              return /** @type {claude_message} */ ({
+                role: 'assistant',
+                content: [
+                  {
+                    type: 'text',
+                    text: content.content
+                  }
+                ]
+              })
+            case 'tool_use': {
+              return /** @type {claude_message} */ ({
+                role: 'assistant',
+                content: content.content.map(
+                  (tc) => /** @type {claude_message_tool_use_content} */ ({
+                    type: 'tool_use',
+                    id: tc.id,
+                    name: tc.name,
+                    input: tc.arguments,
+                  })
+                )
+              })
+            }
+            case 'tool_result': {
+              return /** @type {claude_message} */ ({
+                role: 'user',
+                content: [/** @type {claude_message_tool_result_content} */ ({
+                  type: 'tool_result',
+                  tool_use_id: content.content.id,
+                  content: JSON.stringify(content.content.data)
+                })]
+              })
+            }
+            default: {
+              console.log(
+                `unsupported assistant content type ${content.type}`
+              );
+              return undefined;
+            }
+          }
+        }
+      ).filter(Boolean)
+    }
+  }
+      
 
   /** @type {Impl["user_content_to_native_llm_user_message"]} */
   user_content_to_native_llm_user_message = (prompts) => {
@@ -345,14 +437,14 @@ export class Anthropic {
       content: prompts_filtered.map(
         (pr) => {
           if(pr.type==='text') {
-            return (/** @satisfies {text_content} */({
+            return (/** @satisfies {claude_message_text_content} */({
               type: 'text',
               text: pr.content
             }))
           }
           
           if(pr.type==='image') {
-            return (/** @satisfies {image_content} */({
+            return (/** @satisfies {claude_message_image_content} */({
               type: 'image',
               source: {
                 data: pr.content, 

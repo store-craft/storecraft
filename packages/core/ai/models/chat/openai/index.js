@@ -180,7 +180,7 @@ export class OpenAI {
             description: tool.description,
             name: name,
             parameters: tool.schema && zod_to_json_schema(tool.schema),
-            strict: true
+            // strict: true
           } 
         }
       )
@@ -199,10 +199,14 @@ export class OpenAI {
         model: this.config.model,
         messages,
         tools: this.#to_native_tools(tools),
-        stream: stream,
+        stream,
         tool_choice: 'auto'
       })
     );
+
+    // console.dir({
+    //   messages: [...messages]
+    // }, {depth: 10});
 
     const result = await fetch(
       this.#chat_completion_url,
@@ -215,6 +219,10 @@ export class OpenAI {
         }
       }
     );
+
+    // console.dir(await result.json(), {
+    //   depth: 10
+    // });
 
     // for await (const c of result.body) {
     //   console.log(new TextDecoder().decode(c))
@@ -314,7 +322,7 @@ export class OpenAI {
           tc => ({
             name: tc.function.name,
             id: tc.id,
-            arguments: tc.function.arguments,
+            arguments: JSON.parse(tc.function.arguments),
             title: params.tools?.[tc.function.name].title
           })
         )
@@ -389,6 +397,7 @@ export class OpenAI {
       {
         start: async (controller) => {
           try {
+            /** @type {content[]} */
             const contents = [];
             for await (const m of this.#generator_completion(params)) {
               if(callbacks?.onDone)

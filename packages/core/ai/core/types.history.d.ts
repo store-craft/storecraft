@@ -17,6 +17,9 @@ export type ChatHistoryType = {
  */
 export interface History {
 
+  /**
+   * @description The thread id
+   */
   threadId: string;
   /**
    * @description The messages to add to the history

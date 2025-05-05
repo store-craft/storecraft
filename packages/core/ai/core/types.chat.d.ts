@@ -16,7 +16,6 @@ export type InferToolReturnSchema<TOOL extends Tool> =
 export type Tool<
   ToolInput extends z.ZodTypeAny = any,
   ToolResult extends any = any,
-  // ToolResult extends z.ZodTypeAny = any,
   > = {
     __TOOL_INPUT_SCHEMA_TYPE?: ToolInput,
     __TOOL_RESULT_SCHEMA_TYPE?: ToolResult,
@@ -69,7 +68,7 @@ export type content_tool_use = {
   type: 'tool_use', 
   content: { 
     name?: string, title?: string, id?: string, 
-    arguments?: any 
+    arguments?: Record<string, any>, 
   }[] 
 };
 export type content_tool_result<T extends any = any> = { 
@@ -145,12 +144,6 @@ export type GenerateTextResponse = {
    * text, tool usage etc..
    */
   contents?: content[],
-  // /**
-  //  * @description Native LLM messages, that were generated 
-  //  * during the generation process, we report it for saving purposes 
-  //  * of the history
-  //  */
-  // delta_messages?: LLMMessageType[]
 }
 
 /**
@@ -172,7 +165,9 @@ export type StreamTextCallbacks = {
 }
 
 /**
- * @description **AI** Provider interface for text completion
+ * @description **AI** Provider interface for text completion.
+ * This is a generic interface for all LLMs,
+ * such as OpenAI, Anthropic, etc.
  * @template Config config type
  * @template LLMMessageType Native LLM message type
  */
@@ -196,8 +191,14 @@ export interface ChatAI<
    * @description The purpose of this method is to generate new {@link content} 
    * array based on,
    *  
-   * #### 1. LLM history
-   * Which Array of native LLM specific messages
+   * #### 1. history
+   * An Array of unified messages {@link Message} of role `user` and `assistant`
+   * and {@link content} array.
+   * 
+   * such as:
+   * ```js
+   * [{ role:'user', contents: [{ type:'text', content: 'user prompt'}] }]
+   * ```
    * 
    * #### 2. User prompt
    * Which is a simple array of {@link content}, such as
@@ -227,16 +228,11 @@ export interface ChatAI<
   ) => Promise<StreamTextResponse>
 
   /**
-   * @description Translate a generic user prompt into an LLM `user` message
+   * @description (Optional helper) Translate a generic user prompt into an 
+   * LLM `user` message
    * @param prompt user prompt
    */
-  user_content_to_native_llm_user_message: (prompt: content[]) => LLMMessageType;
-
-  // /**
-  //  * @description Translate an assistant message into a native LLM `assistant` message
-  //  * @param prompt user prompt
-  //  */
-  // assistant_content_to_llm_assistant_message: (content: content) => LLMMessageType;
+  user_content_to_native_llm_user_message?: (prompt: content[]) => LLMMessageType;
 
   /**
    * @description A helper function to translate a unified content {@link Message} 

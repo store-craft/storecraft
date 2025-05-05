@@ -1,7 +1,6 @@
 /**
  * @import { 
- *  HistoryProvider, History, Message, 
- ChatHistoryType
+ *  HistoryProvider, History, Message, ChatHistoryType
  * } from './types.private.js'
  */
 import { App } from '../../index.js';

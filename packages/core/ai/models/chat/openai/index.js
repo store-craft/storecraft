@@ -3,10 +3,10 @@
  * @import { assistant_message,
  *  chat_completion_chunk_result, chat_completion_input, 
  *  chat_message, tool_message, user_message, 
- * user_message_content_image_part, user_message_content_text_part
+ *  user_message_content_image_part, user_message_content_text_part
  * } from "./types.private.js";
  * @import { 
- *  content, content_text, GenerateTextParams, StreamTextCallbacks, ChatAI
+ *  content, GenerateTextParams, ChatAI
  * } from "../../../core/types.private.js";
  * @import { ENV } from '../../../../types.public.js';
  */
@@ -41,7 +41,8 @@ export class OpenAI {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[OpenAI.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.platform.env[OpenAI.EnvConfig.api_key]; 
   }
 
   /**
@@ -83,7 +84,7 @@ export class OpenAI {
     const contents = message.contents;
 
     if(message.role==='user') {
-      return [{
+      return [/** @type {user_message} */ ({
         role: 'user',
         content: contents.map(
           (c) => {
@@ -109,7 +110,7 @@ export class OpenAI {
             }
           }
         ).filter(Boolean)
-      }]
+      })]
     }
 
     if(message.role==='assistant') {

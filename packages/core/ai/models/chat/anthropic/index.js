@@ -323,7 +323,6 @@ export class Anthropic {
   }
   
   /**
-   * 
    * @type {Impl["generateText"]} 
    */
   generateText = async (params) => {

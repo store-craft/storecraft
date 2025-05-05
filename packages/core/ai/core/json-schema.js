@@ -46,7 +46,7 @@ export const zod_to_json_schema = (schema) => {
         entries.map(
           ([key, value]) => {
             // get nested keys
-            const nested = zod_to_json_schema(value);
+            // const nested = zod_to_json_schema(value);
             return [key, zod_to_json_schema(value)];
           }
         )

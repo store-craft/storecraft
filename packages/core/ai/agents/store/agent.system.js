@@ -6,6 +6,7 @@ export const SYSTEM = (kvs) => `
 You are the best shopping assistant.
 </who_are_you>
 
+<storefront>
 ${
 kvs &&
 Object.entries(kvs).filter(([k, v]) => Boolean(v)).map(
@@ -16,6 +17,8 @@ ${typeof value==='string' ? value : JSON.stringify(value)}
 `
 ).join('\n')
 }
+</storefront>
+
 
 <important_info>
 - DONT INVOKE a tool unless you have all the parameters

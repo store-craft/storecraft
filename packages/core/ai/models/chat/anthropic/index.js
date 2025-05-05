@@ -152,7 +152,7 @@ export class Anthropic {
 
     params.history = [
       ...(params.history ?? []),
-      this.user_content_to_llm_user_message(params.prompt)
+      this.user_content_to_native_llm_user_message(params.prompt)
     ];
 
     let current_stream = this.#text_complete_stream(params);
@@ -334,8 +334,8 @@ export class Anthropic {
   }
 
 
-  /** @type {Impl["user_content_to_llm_user_message"]} */
-  user_content_to_llm_user_message = (prompts) => {
+  /** @type {Impl["user_content_to_native_llm_user_message"]} */
+  user_content_to_native_llm_user_message = (prompts) => {
     const prompts_filtered = prompts.filter(
       p => (p.type==='text' || p.type==='image')
     );

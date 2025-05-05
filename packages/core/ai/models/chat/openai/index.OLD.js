@@ -66,49 +66,6 @@ export class OpenAI {
   }
 
 
-  /** @type {Impl["assistant_content_to_llm_assistant_message"]} */
-  assistant_content_to_llm_assistant_message = (content) => {
-    switch(content.type) {
-      case 'text':
-        return {
-          role: 'assistant',
-          content: [
-            {
-              type: 'text',
-              text: content.content
-            }
-          ]
-        }
-      case 'tool_use': {
-        return {
-          role: 'assistant',
-          tool_calls: content.content.map(
-            (tc) => ({
-              id: tc.id,
-              type: 'function',
-              function: {
-                name: tc.name,
-                arguments: JSON.stringify(tc.arguments),
-              }
-            })
-          )
-        }
-      }
-      case 'tool_result': {
-        return {
-          role: 'tool',
-          tool_call_id: content.content.id,
-          content: JSON.stringify(content.content?.data ?? null)
-        }
-      }      
-      default: {
-        console.log(`unsupported content type ${content.type}`);
-        return undefined;
-      }
-    }
-  }
-
-
   /** @type {Impl["user_content_to_native_llm_user_message"]} */
   user_content_to_native_llm_user_message = (prompts) => {
     const prompts_filtered = prompts.filter(
@@ -135,7 +92,6 @@ export class OpenAI {
   };
 
 
-
   /**
    * @description Transform our tools specification in to **OpenAI**
    * tools spec.
@@ -150,7 +106,8 @@ export class OpenAI {
           function: {
             description: tool.description,
             name: name,
-            parameters: zod_to_json_schema(tool.schema)
+            parameters: tool.schema && zod_to_json_schema(tool.schema),
+            strict: true
           } 
         }
       )
@@ -244,6 +201,7 @@ export class OpenAI {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
+      // console.log({chunk: JSON.stringify(chunk, null, 2)});
       builder.add_chunk(chunk);
 
       if(chunk?.choices?.[0].delta.content) {
@@ -252,7 +210,6 @@ export class OpenAI {
           content: chunk.choices[0].delta.content
         }
       }
-
     }
 
     let current = builder.done();
@@ -374,10 +331,7 @@ export class OpenAI {
     }
   }
   
-  /**
-   * 
-   * @type {Impl["generateText"]} 
-   */
+  /** @type {Impl["generateText"]} */
   generateText = async (params) => {
     let delta_messages = [];
     const { stream } = await this.streamText(

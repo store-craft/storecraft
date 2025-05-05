@@ -57,9 +57,21 @@ export type Tool<
   }
 
 
-export type content_text = { type: 'text', content: string };
-export type content_delta_text = { type: 'delta_text' | 'delta_text', content: string };
-export type content_tool_use = { type: 'tool_use', content: { name?: string, title?: string, id?: string, arguments?: any }[] };
+export type content_text = { 
+  type: 'text', 
+  content: string 
+};
+export type content_delta_text = { 
+  type: 'delta_text', 
+  content: string 
+};
+export type content_tool_use = { 
+  type: 'tool_use', 
+  content: { 
+    name?: string, title?: string, id?: string, 
+    arguments?: any 
+  }[] 
+};
 export type content_tool_result<T extends any = any> = { 
   type: 'tool_result', 
   content: { 
@@ -71,7 +83,12 @@ export type content_tool_result<T extends any = any> = {
 export type content_image = { type: 'image', content: string };
 export type content_json = { type: 'json', content: string };
 export type content_object = { type: 'object', content: Object };
-export type content_error = { type: 'error', content: { code?: string, message?: string} | string};
+export type content_error = { 
+  type: 'error', 
+  content: { 
+    code?: string, message?: string
+  } | string
+};
 
 /** @description A general content type from and to user */
 export type content = | content_text | content_delta_text 
@@ -79,18 +96,19 @@ export type content = | content_text | content_delta_text
   | content_json | content_object | content_error;
 
 /**
- * @description Unified message type translatable to and from LLM native message
+ * @description Unified message type translatable to and 
+ * from LLM native message
  */                      
-export type UnifiedMessage = {
-  role: 'user' | 'assistant' | string,
-  content: content[];
+export type Message = {
+  role: ('user' | 'assistant') & string,
+  contents: content[];
 }
 
 
 /**
  * @description Text generation parameters
  */
-export type GenerateTextParams<MessageType extends any = any> = {
+export type GenerateTextParams = {
   /**
    * @description tools
    */
@@ -102,7 +120,7 @@ export type GenerateTextParams<MessageType extends any = any> = {
   /**
    * @description history native messages specific to the LLM
    */
-  history: MessageType[],
+  history?: Message[],
   /**
    * @description A user prompt in generic form, later will be 
    * translated into LLM specific message
@@ -121,18 +139,18 @@ export type GenerateTextParams<MessageType extends any = any> = {
 /**
  * @description Content response from the LLM in a unified structure
  */
-export type GenerateTextResponse<LLMMessageType extends any = any> = {
+export type GenerateTextResponse = {
   /**
    * @description Formatted response contents, including 
    * text, tool usage etc..
    */
   contents?: content[],
-  /**
-   * @description Native LLM messages, that were generated 
-   * during the generation process, we report it for saving purposes 
-   * of the history
-   */
-  delta_messages?: LLMMessageType[]
+  // /**
+  //  * @description Native LLM messages, that were generated 
+  //  * during the generation process, we report it for saving purposes 
+  //  * of the history
+  //  */
+  // delta_messages?: LLMMessageType[]
 }
 
 /**
@@ -145,12 +163,12 @@ export type StreamTextResponse = {
 /**
  * @description Callbacks related to streaming async nature
  */
-export type StreamTextCallbacks<LLMMessageType extends any = any> = {
+export type StreamTextCallbacks = {
   /**
-   * @param delta_messages **LLM** messages, that were generated 
-   * during the generation
+   * @param delta_contents messages, that were generated.
+   * Not including the user prompt
    */
-  onDone?: (delta_messages: LLMMessageType[]) => Promise<any> | void
+  onDone?: (delta_contents: content[]) => Promise<any> | void
 }
 
 /**
@@ -164,7 +182,7 @@ export interface ChatAI<
   > {
   
   __message_type?: LLMMessageType;
-  __gen_text_params_type?: GenerateTextParams<LLMMessageType>;
+  __gen_text_params_type?: GenerateTextParams;
 
   config?: Config;
 
@@ -201,24 +219,33 @@ export interface ChatAI<
    * @param params params
    */
   generateText: (
-    params: GenerateTextParams<LLMMessageType>
-  ) => Promise<GenerateTextResponse<LLMMessageType>>;
+    params: GenerateTextParams
+  ) => Promise<GenerateTextResponse>;
   streamText?: (
-    params: GenerateTextParams<LLMMessageType>,
-    callbacks?: StreamTextCallbacks<LLMMessageType>
+    params: GenerateTextParams,
+    callbacks?: StreamTextCallbacks
   ) => Promise<StreamTextResponse>
 
   /**
    * @description Translate a generic user prompt into an LLM `user` message
    * @param prompt user prompt
    */
-  user_content_to_llm_user_message: (prompt: content[]) => LLMMessageType;
+  user_content_to_native_llm_user_message: (prompt: content[]) => LLMMessageType;
+
+  // /**
+  //  * @description Translate an assistant message into a native LLM `assistant` message
+  //  * @param prompt user prompt
+  //  */
+  // assistant_content_to_llm_assistant_message: (content: content) => LLMMessageType;
 
   /**
-   * @description Translate a generic user prompt into an LLM `user` message
-   * @param prompt user prompt
+   * @description A helper function to translate a unified content {@link Message} 
+   * into a native **LLM** message. All chat providers recieve unified messages,
+   * and should know how to translate them into their own native messages.
+   * This is optional method but recommended to implement.
+   * @param message a unified message
    */
-  assistant_content_to_llm_assistant_message?: (content: content) => LLMMessageType;
+  history_message_to_native_llm_messages?: (message: Message) => LLMMessageType[];
 
 }
 

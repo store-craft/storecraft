@@ -222,7 +222,9 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           
           setMessages(
             (ms) => {
-              const base = ms.at(-1)?.role==='assistant' ? ms.slice(0, -1) : ms;
+              const base = ms.at(-1)?.role==='assistant' ? 
+                ms.slice(0, -1) : ms;
+                
               return [
                 ...base,
                 {

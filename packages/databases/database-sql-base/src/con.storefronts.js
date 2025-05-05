@@ -345,7 +345,8 @@ const get_default_auto_generated_storefront = (driver) => {
         ).as('posts'),
   
         stringArrayFrom(
-          eb.selectFrom('products')
+          eb
+          .selectFrom('products')
           .innerJoin(
             'entity_to_tags_projections', 
             'entity_to_tags_projections.entity_id', 

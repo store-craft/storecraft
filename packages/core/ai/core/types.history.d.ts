@@ -1,28 +1,53 @@
 import { type App } from "../../types.public.js";
+import { Message } from "./types.chat.js";
 
 /**
- * @template LLMMessageType Native **LLM** message type
- * @description **LLM** history / memory
+ * @description The type being saved in the history
  */
-export interface LLMHistory<LLMMessageType extends any = any> {
-
-  threadId: string;
-  add: (...messages: LLMMessageType[]) => this;
-  commit?: () => Promise<this>;
-  toArray?: () => LLMMessageType[];
+export type ChatHistoryType = {
+  metadata: {
+    created_at?: string;
+    thread_id?: string;
+  },
+  messages: Message[];
 }
 
 /**
- * @template LLMMessageType Native **LLM** message type
- * @description **LLM** history / memory provider
+ * @description chat history
  */
-export interface LLMHistoryProvider<LLMMessageType extends any = any> {
+export interface History {
+
+  threadId: string;
+  /**
+   * @description The messages to add to the history
+   * @param messages messages to add
+   */
+  add: (...messages: Message[]) => this;
+  /**
+   * @description save current history
+   * @param metadata metadata to save
+   */
+  commit?: (metadata?: Record<string, any>) => Promise<this>;
+  /**
+   * @description get the history messages
+   */
+  toArray?: () => Message[];
+  /**
+   * @description get the history metadata
+   */
+  metadata?: () => ChatHistoryType['metadata'];
+}
+
+/**
+ * @description Chat history provider
+ */
+export interface HistoryProvider {
 
   /**
    * @description Load the **LLM** messages history for a conversation/thread `id`
    * @param threadId Conversation `id`
    * @param app `storecraft` app instance for context
    */
-  load: (threadId: string, app: App) => Promise<LLMHistory<LLMMessageType>>;
+  load: (threadId: string, app: App) => Promise<History>;
 
 }

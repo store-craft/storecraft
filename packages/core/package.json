@@ -173,9 +173,9 @@
       "import": "./ai/models/chat/mistral/index.js",
       "types": "./ai/models/chat/mistral/types.d.ts"
     },
-    "./ai/models/chat/groq": {
-      "import": "./ai/models/chat/groq/index.js",
-      "types": "./ai/models/chat/groq/types.d.ts"
+    "./ai/models/chat/groq-cloud": {
+      "import": "./ai/models/chat/groq-cloud/index.js",
+      "types": "./ai/models/chat/groq-cloud/types.d.ts"
     },
     "./ai/models/chat/xai": {
       "import": "./ai/models/chat/xai/index.js",

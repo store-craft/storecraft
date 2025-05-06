@@ -4,7 +4,7 @@ import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 import { z } from 'zod';
 import { OpenAI } from '../models/chat/openai/index.js';
-import { Groq } from '../models/chat/groq/index.js';
+import { GroqCloud } from '../models/chat/groq-cloud/index.js';
 import { Anthropic } from '../models/chat/anthropic/index.js';
 
 
@@ -51,7 +51,7 @@ test(
   'sanity', 
   async () => {
 
-    const ai_groq = new Groq(
+    const ai_groq = new GroqCloud(
       {
         api_key: process.env.GROQ,
         model: 'llama-3.3-70b-versatile'

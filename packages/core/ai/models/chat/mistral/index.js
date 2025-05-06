@@ -19,11 +19,10 @@ export class Mistral extends OpenAI {
   constructor(config) {
     super(
       {
+        model: 'mistral-large-latest',
+        api_version: 'v1',
         ...config,
-        api_key: config.api_key,
         endpoint: 'https://api.mistral.ai/',
-        model: config.model ?? 'mistral-large-latest',
-        api_version: config.api_version ?? 'v1'
       }
     )
   }

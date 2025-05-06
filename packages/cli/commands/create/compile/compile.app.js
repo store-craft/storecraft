@@ -36,7 +36,7 @@
  * 
  * @import { Anthropic } from '@storecraft/core/ai/models/chat/anthropic';
  * @import { Gemini } from '@storecraft/core/ai/models/chat/gemini';
- * @import { Groq } from '@storecraft/core/ai/models/chat/groq';
+ * @import { GroqCloud } from '@storecraft/core/ai/models/chat/groq-cloud';
  * @import { Mistral } from '@storecraft/core/ai/models/chat/mistral';
  * @import { OpenAI } from '@storecraft/core/ai/models/chat/openai';
  * @import { XAI } from '@storecraft/core/ai/models/chat/xai';
@@ -641,11 +641,11 @@ export const infer_ai_chat = (info) => {
         )
       }
     }
-    case 'groq': {
+    case 'groq-cloud': {
       return {
         cls: `Groq`,
         imports: [
-          `import { Groq } from '@storecraft/core/ai/models/chat/groq';`
+          `import { GroqCloud } from '@storecraft/core/ai/models/chat/groq-cloud';`
         ],
         deps: [
           '@storecraft/core'

@@ -49,12 +49,13 @@ export class OpenAI {
    * @param {config} [config] 
    */
   constructor(config={}) {
-    this.config = {
+
+    this.config = /** @type {config} */({
+      model: 'gpt-4o',
+      endpoint: 'https://api.openai.com/',
+      api_version: 'v1',
       ...config,
-      model: config.model ?? 'gpt-4o',
-      endpoint: config.endpoint ?? 'https://api.openai.com/',
-      api_version: config.api_version ?? 'v1'
-    }
+    });
 
     this.#chat_completion_url = new URL(
       strip_leading(this.config.api_version + '/chat/completions'), 
@@ -391,7 +392,7 @@ export class OpenAI {
   
   
   /** @type {Impl["streamText"]} */
-  streamText = async (params, callbacks) => {
+  async streamText(params, callbacks) {
     
     /** @type {ReadableStream<content>} */
     const stream = new ReadableStream(

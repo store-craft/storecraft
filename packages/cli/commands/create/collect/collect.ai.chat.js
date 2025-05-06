@@ -29,7 +29,7 @@ export const choices = /** @type {const} */ ([
   },
   {
     name: 'Groq Cloud',
-    value: 'groq'
+    value: 'groq-cloud'
   },
   {
     name: 'Mistral',
@@ -140,8 +140,8 @@ const collect_general_config = async (
       return config;
     }
 
-    case 'groq': {
-      /** @type {import('@storecraft/core/ai/models/chat/groq').config} */
+    case 'groq-cloud': {
+      /** @type {import('@storecraft/core/ai/models/chat/groq-cloud').config} */
       const config = {
         api_key: await withCancel(
           text(

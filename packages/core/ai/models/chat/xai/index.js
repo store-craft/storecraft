@@ -17,10 +17,19 @@ export class XAI extends OpenAI {
   constructor(config={}) {
     super(
       {
+        model: 'grok-3',
+        api_version: 'v1',
         ...config,
         endpoint: 'https://api.x.ai/',
-        model: config.model ?? 'grok-2',
-        api_version: config.api_version ?? 'v1'
+        __hooks: {
+          pre_request: (request) => {
+            // grok-3 does not support function strict mode.
+            for (const tool of (request?.tools ?? [])) {
+              tool.function.strict = false;
+            }
+            return request;
+          }
+        }
       }
     )
   }

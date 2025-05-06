@@ -110,11 +110,11 @@ Groq is a cloud-based AI model that provides a range of capabilities, including 
 
 ```ts
 import { App } from '@storecraft/core';
-import { Groq } from '@storecraft/core/ai/models/chat/groq';
+import { GroqCloud } from '@storecraft/core/ai/models/chat/groq-cloud';
 
 new App()
 .withAI(
-  new Groq({ model: 'llama-3.3-70b-versatile'})
+  new GroqCloud({ model: 'llama-3.3-70b-versatile'})
 )
 .withVectorStore(
   new LibSQLVectorStore(

@@ -39,12 +39,12 @@ export class Anthropic {
    * @param {config} config 
    */
   constructor(config) {
-    this.config = {
+    this.config = /** @type {config} */({
+      model: 'claude-3-5-sonnet-20241022',
+      api_version: 'v1',
+      anthropic_version: "2023-06-01",
       ...config,
-      model: config.model ?? 'claude-3-5-sonnet-20241022',
-      api_version: config.api_version ?? 'v1',
-      anthropic_version: config.anthropic_version ?? "2023-06-01"
-    }
+    })
 
     this.#chat_completion_url = new URL(
       this.config.api_version + '/messages', 

@@ -31,8 +31,14 @@ export class GroqCloud extends OpenAI {
           pre_request: (request) => {
             // groq-cloud requires all assistant contents are not
             // array of content parts but a simple string.
-            for (const tool of (request?.messages ?? [])) {
-              tool.function.strict = false;
+            for (const message of (request?.messages ?? [])) {
+              if(message.role==='assistant') {
+                if(Array.isArray(message.content)) {
+                  message.content = message.content.map(
+                    c => c.type === 'text' ? c.text : c.refusal
+                  ).join('\n');
+                }
+              }
             }
             return request;
           }

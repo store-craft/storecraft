@@ -605,7 +605,8 @@ export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptio
 // chats metadata
 
 /**
- * @description Chat thread type
+ * @description Chat metadata type, for observability
+ * and search. The chat data itself is stored in `storage`
  */
 export interface ChatType extends BaseType {
   /**

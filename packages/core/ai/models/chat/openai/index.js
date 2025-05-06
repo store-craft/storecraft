@@ -182,7 +182,7 @@ export class OpenAI {
             description: tool.description,
             name: name,
             parameters: tool.schema && zod_to_json_schema(tool.schema),
-            // strict: true
+            strict: true
           } 
         }
       )
@@ -210,11 +210,14 @@ export class OpenAI {
     //   messages: [...messages]
     // }, {depth: 10});
 
+    const body_post_hook = this.config?.__hooks?.pre_request?.(
+      body) ?? body;
+
     const result = await fetch(
       this.#chat_completion_url,
       {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify(body_post_hook),
         headers: {
           "Authorization" : `Bearer ${this.config.api_key}`,
           "Content-Type": "application/json"

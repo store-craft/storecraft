@@ -601,6 +601,35 @@ export interface TagType extends BaseType {
  */
 export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptionalHandleOrID {
 }
+
+// chats metadata
+
+/**
+ * @description Chat thread type
+ */
+export interface ChatType extends BaseType {
+  /**
+   * @description The customer `id`
+   * @example `cus_1234567890`
+   */
+  customer_id?: string;
+  /**
+   * @description The customer `email`
+   * @example `john@doe.com`
+   */
+  customer_email?: string;
+  /**
+   * @description Extra metadata coming from consumer.
+   */
+  extra?: Record<string, any>;  
+}
+
+/**
+ * @description Chat upsert type
+ */
+export interface ChatTypeUpsert extends Omit<ChatType, 'id' | 'handle'>, withOptionalHandleOrID {
+}
+
   
 // collections
 

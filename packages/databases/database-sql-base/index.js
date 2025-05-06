@@ -18,6 +18,7 @@ import { impl as products } from './src/con.products.js';
 import { impl as shipping } from './src/con.shipping.js';
 import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
+import { impl as chats } from './src/con.chats.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
@@ -101,6 +102,7 @@ export class SQL {
       products: products(this),
       storefronts: storefronts(this),
       tags: tags(this),
+      chats: chats(this),
       shipping_methods: shipping(this),
       templates: templates(this),
       search: search(this),

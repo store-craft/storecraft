@@ -56,7 +56,8 @@ export class StoreAgent {
     console.log(params);
 
     try {
-      params.maxLatestHistoryToUse ??= this.config.maxLatestHistoryToUse;
+      params.maxLatestHistoryToUse ??= 
+        this.config.maxLatestHistoryToUse;
       params.thread_id = params.thread_id ?? ('thread_' + id());
 
       // note: use promise.all to load the history and kvs

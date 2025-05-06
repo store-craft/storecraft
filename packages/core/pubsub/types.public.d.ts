@@ -1,7 +1,7 @@
 import { type App } from '../index.js';
 import type { 
   ApiAuthResult,
-  AuthUserType, CollectionType, CustomerType, DiscountType, 
+  AuthUserType, ChatType, CollectionType, CustomerType, DiscountType, 
   ImageType, OrderData, PostType, ProductType, ShippingMethodType, 
   StorefrontType, TagType, TemplateType 
 } from '../api/types.api.d.ts';
@@ -13,6 +13,11 @@ export { type PubSub } from './index.js';
  * @description `storecraft` events map, use {@link PubSubEvent} for name guidance
  */
 export type events = {
+  'chats/upsert': PayloadForUpsert<ChatType>, 
+  'chats/remove': PayloadForRemove<ChatType>,
+  'chats/get': PayloadForGet<ChatType>,
+  'chats/list': PayloadForGet<ChatType[]>,
+
   'storefronts/upsert': PayloadForUpsert<StorefrontType>, 
   'storefronts/remove': PayloadForRemove<StorefrontType>,
   'storefronts/get': PayloadForGet<StorefrontType>,

@@ -8,7 +8,7 @@ import { CreateTableBuilder, Kysely } from 'kysely'
  * @template {string} B
  * @param {CreateTableBuilder<TB, B>} tb 
  */
-const add_base_columns = tb => {
+export const add_base_columns = tb => {
   return tb
     .addColumn('id', 'text', (col) =>
       col.primaryKey()
@@ -25,7 +25,7 @@ const add_base_columns = tb => {
  * @param {Kysely<Database>} db
  * @param {keyof Database} table_name
  */
-const create_entity_to_value_table = (db, table_name) => {
+export const create_entity_to_value_table = (db, table_name) => {
   return db.schema
     .createTable(table_name).ifNotExists()
     .addColumn('id', 'integer', 
@@ -43,7 +43,7 @@ const create_entity_to_value_table = (db, table_name) => {
  * @param {Kysely<Database>} db 
  * @param {keyof Database} table_name 
  */
-const create_safe_table = (db, table_name) => {
+export const create_safe_table = (db, table_name) => {
   return db.schema.createTable(table_name).ifNotExists();
 }
 
@@ -51,7 +51,7 @@ const create_safe_table = (db, table_name) => {
  * @param {Kysely<Database>} db 
  * @param {keyof Database} table_name 
  */
-const drop_safe_table = (db, table_name) => {
+export const drop_safe_table = (db, table_name) => {
   return db.schema.dropTable(table_name).ifExists().execute();
 }
 
@@ -61,7 +61,7 @@ const drop_safe_table = (db, table_name) => {
  * @param {boolean} [include_id=true] 
  * @param {boolean} [include_handle=true] 
  */
-const create_base_indexes = async (db, table_name, include_id=true, include_handle=true) => {
+export const create_base_indexes = async (db, table_name, include_id=true, include_handle=true) => {
   if(include_id) {
     await db.schema.createIndex(`index_${table_name}_id_updated_at_asc`).ifNotExists()
             .on(table_name)
@@ -93,7 +93,7 @@ const create_base_indexes = async (db, table_name, include_id=true, include_hand
  * 'products_to_collections' | 'products_to_discounts' | 
  * 'products_to_variants' | 'products_to_related_products' | 'storefronts_to_other'>} table_name 
  */
-const create_entity_table_indexes = async (db, table_name) => {
+export const create_entity_table_indexes = async (db, table_name) => {
   await db.schema.createIndex(`index_${table_name}_entity_id`).ifNotExists()
            .on(table_name)
            .column('entity_id')

@@ -13,7 +13,7 @@ import { assert } from "./utils.func.js";
  */
 export const speakWithAgentSync = (app) => 
   /**
-   * @description speak with agent
+   * @description speak with agent synchronously.
    * @param {keyof T["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
@@ -36,7 +36,7 @@ export const speakWithAgentSync = (app) =>
  */
 export const speakWithAgentStream = (app) => 
   /**
-   * @description speak with agent
+   * @description speak with agent with streaming.
    * @param {keyof T["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunStreamResponse>}
@@ -61,7 +61,6 @@ export const speakWithAgentStream = (app) =>
  * @param {T} app
  */  
 export const inter = app => {
-
   return {
     speakWithAgentSync: speakWithAgentSync(app),
     speakWithAgentStream: speakWithAgentStream(app),

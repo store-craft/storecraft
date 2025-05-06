@@ -19,6 +19,7 @@ import {
 export interface Database {
   auth_users: AuthUserTypeTable,
   tags: TagsTable
+  chats: ChatsTable
   collections: CollectionsTable,
   shipping_methods: ShippingMethodsTable;
   posts: PostsTable;
@@ -182,6 +183,12 @@ export interface AuthUserTypeTable extends Base {
 
 export interface TagsTable extends Base {
   values: JSONColumnType<string[]>;
+}
+
+export interface ChatsTable extends Base {
+  customer_id: string;
+  customer_email: string;
+  extra: JSONColumnType<object>;
 }
 
 export interface CollectionsTable extends Base {

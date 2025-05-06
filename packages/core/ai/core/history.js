@@ -39,6 +39,7 @@ export class StorageHistoryProvider {
           metadata: {
             thread_id: threadId,
             created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
           }
         };
       }
@@ -107,7 +108,12 @@ export class StorageHistoryProvider {
           ((new TextEncoder()).encode(
             JSON.stringify(chat)
           ).buffer),
-          chat.metadata
+          undefined 
+          // we will not save the metadata here, 
+          // it might hold sensitive data
+          // and we don't want to save it in the storage.
+          // we will save it in the database
+          // chat.metadata
         );
         
         return history;

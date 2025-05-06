@@ -7,7 +7,22 @@ import { Message } from "./types.chat.js";
 export type ChatHistoryType = {
   metadata: {
     created_at?: string;
+    updated_at?: string;
     thread_id?: string;
+    /**
+     * @description The customer `id` or `email`
+     * @example `cus_1234567890`
+     * @example `john@doe.com`
+     */
+    user?: string;
+    /**
+     * @description Extra search terms to index in the database.
+     */
+    search?: string[];
+    /**
+     * @description Extra metadata coming from consumer.
+     */
+    extra?: Record<string, any>;
   },
   messages: Message[];
 }
@@ -16,7 +31,6 @@ export type ChatHistoryType = {
  * @description chat history
  */
 export interface History {
-
   /**
    * @description The thread id
    */
@@ -47,7 +61,8 @@ export interface History {
 export interface HistoryProvider {
 
   /**
-   * @description Load the **LLM** messages history for a conversation/thread `id`
+   * @description Load the **LLM** messages history for a 
+   * conversation/thread `id`
    * @param threadId Conversation `id`
    * @param app `storecraft` app instance for context
    */

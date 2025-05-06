@@ -222,6 +222,19 @@ export const tagTypeUpsertSchema = tagTypeSchema
   .omit({ id: true, handle: true })
   .extend(withOptionalHandleOrIDSchema.shape);
 
+export const chatTypeSchema = baseTypeSchema.extend({
+  customer_id: z.string().optional().describe("The customer `id`"),
+  customer_email: z.string().optional().describe("The customer `email`"),
+  extra: z
+    .record(z.any().describe("Extra metadata coming from consumer."))
+    .optional()
+    .describe("Extra metadata coming from consumer."),
+});
+
+export const chatTypeUpsertSchema = chatTypeSchema
+  .omit({ id: true, handle: true })
+  .extend(withOptionalHandleOrIDSchema.shape);
+
 export const collectionTypeSchema = baseTypeSchema.extend({
   title: z
     .string()

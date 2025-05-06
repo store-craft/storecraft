@@ -42,6 +42,12 @@ export type AgentRunParameters = {
    * @description The maximum amount of steps to iterate
    */
   maxSteps?: number
+
+  /**
+   * @description metadata to pass to the agent, advided to be saved
+   * for observability and debugging purposes.
+   */
+  metadata?: Record<string, any>;
 }
 
 /**

@@ -1,4 +1,7 @@
 export type config = {
+  /**
+   * @default 'grok-3'
+   */
   model?: "grok-2" | 
           "grok-2-vision" | 
           'grok-3',

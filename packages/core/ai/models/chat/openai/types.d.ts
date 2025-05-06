@@ -3,7 +3,10 @@ import { chat_completion_input } from './types.private.js';
 export { OpenAI } from './index.js';
 
 export type config = {
-  model?: ('o1-mini' | 'gpt-4o' | 'gpt-4' | 'gpt-4o-mini' | 'gpt-4-turbo') & string,
+  /**
+   * @default 'gpt-4.1-nano'
+   */
+  model?: ('gpt-4.1-nano' | 'gpt-4.1-mini' | 'gpt-4.1' | 'gpt-4o-mini-search-preview' | 'chatgpt-4o-latest' | 'o1-mini' | 'o3-mini' | 'o4-mini' | 'gpt-4o' | 'gpt-4o-mini') & string,
   endpoint?: string,
   api_version?: string;
 

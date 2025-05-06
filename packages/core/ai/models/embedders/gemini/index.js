@@ -34,12 +34,11 @@ export class GeminiEmbedder {
    * @param {config} [config={}] 
    */
   constructor(config={}) {
-    this.config = {
+    this.config = /** @type {config} */ ({
+      model: 'text-embedding-004',
+      api_version: 'v1beta',
       ...config,
-      model: config.model ?? 'text-embedding-004',
-      api_version: config.api_version ?? 'v1beta'
-    }
-
+    });
   }
 
   /** @type {Impl["tag"]} */

@@ -32,12 +32,12 @@ export const choices = /** @type {const} */ ([
     value: 'cloudflare-workers',
   },
   {
-    name: 'AWS Lambda (API Gateway)',
-    value: 'aws-lambda',
-  },
-  {
     name: 'Google Functions',
     value: 'google-functions',
+  },
+  {
+    name: 'AWS Lambda + Gateway (experimental)',
+    value: 'aws-lambda',
   },
 ]);
 

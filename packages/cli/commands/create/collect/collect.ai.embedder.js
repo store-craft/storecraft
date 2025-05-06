@@ -93,18 +93,18 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Cloudflare AI Model will you use ?',
-              options: [
-                { value: '@cf/baai/bge-large-en-v1.5'},
-                { value: '@cf/baai/bge-base-en-v1.5'},
-                { value: '@cf/baai/bge-small-en-v1.5'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Cloudflare AI Model will you use ?',
+        //       options: [
+        //         { value: '@cf/baai/bge-large-en-v1.5'},
+        //         { value: '@cf/baai/bge-base-en-v1.5'},
+        //         { value: '@cf/baai/bge-small-en-v1.5'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }
       return config;
     }
@@ -121,17 +121,17 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Gemini Embeding Model will you use ?',
-              options: [
-                { value: 'text-embedding-004'},
-                { value: 'text-embedding-001'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Gemini Embeding Model will you use ?',
+        //       options: [
+        //         { value: 'text-embedding-004'},
+        //         { value: 'text-embedding-001'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }   
       return config;
     }
@@ -148,18 +148,18 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which OpenAI Embeding Model will you use ?',
-              options: [
-                { value: 'text-embedding-3-large'},
-                { value: 'text-embedding-3-small'},
-                { value: 'text-embedding-ada-002'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which OpenAI Embeding Model will you use ?',
+        //       options: [
+        //         { value: 'text-embedding-3-large'},
+        //         { value: 'text-embedding-3-small'},
+        //         { value: 'text-embedding-ada-002'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }   
       return config;
     }
@@ -192,23 +192,23 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Voyage-AI Embeding Model will you use ?',
-              options: [
-                { value: 'voyage-3-1024'},
-                { value: 'voyage-3-large-1024'},
-                { value: 'voyage-3-large-2048'},
-                { value: 'voyage-3-large-256'},
-                { value: 'voyage-3-large-512'},
-                { value: 'voyage-3-lite-512'},
-                { value: 'voyage-code-2-1536'},
-                { value: 'voyage-code-3-1024'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Voyage-AI Embeding Model will you use ?',
+        //       options: [
+        //         { value: 'voyage-3-1024'},
+        //         { value: 'voyage-3-large-1024'},
+        //         { value: 'voyage-3-large-2048'},
+        //         { value: 'voyage-3-large-256'},
+        //         { value: 'voyage-3-large-512'},
+        //         { value: 'voyage-3-lite-512'},
+        //         { value: 'voyage-code-2-1536'},
+        //         { value: 'voyage-code-3-1024'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }   
       return config;
     }

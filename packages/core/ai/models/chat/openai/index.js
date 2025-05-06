@@ -51,7 +51,7 @@ export class OpenAI {
   constructor(config={}) {
 
     this.config = /** @type {config} */({
-      model: 'gpt-4o',
+      model: 'gpt-4.1-nano',
       endpoint: 'https://api.openai.com/',
       api_version: 'v1',
       ...config,

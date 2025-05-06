@@ -352,9 +352,9 @@ export const infer_database = info => {
 
     case 'libsql-local':
       return {
-        cls: `Turso`,
+        cls: `LibSQL`,
         imports: [
-          `import { Turso } from '@storecraft/database-turso';`
+          `import { LibSQL } from '@storecraft/database-turso';`
         ],
         deps: [
           '@storecraft/database-turso'
@@ -652,7 +652,7 @@ export const infer_ai_chat = (info) => {
         ],
         env: extract_env_variables(
           info.config, 
-          /** @satisfies {typeof Groq.GroqEnvConfig} */ (
+          /** @satisfies {typeof GroqCloud.GroqEnvConfig} */ (
             {
               api_key: 'GROQ_API_KEY'
             }

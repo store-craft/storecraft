@@ -43,12 +43,12 @@ export class OpenAIEmbedder {
    * @param {config} [config={}] 
    */
   constructor(config={}) {
-    this.config = {
+    this.config = /** @type {config} */({
+      model: 'text-embedding-3-large',
+      endpoint: 'https://api.openai.com/',
+      api_version: 'v1',
       ...config,
-      model: config.model ?? 'text-embedding-3-large',
-      endpoint: config.endpoint ?? 'https://api.openai.com/',
-      api_version: config.api_version ?? 'v1'
-    }
+    })
 
     this.#embeddings_url = new URL(
       strip_leading(this.config.api_version + '/embeddings'), 

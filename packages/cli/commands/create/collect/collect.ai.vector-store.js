@@ -12,7 +12,6 @@ import {
   text, 
 } from '@clack/prompts';
 import { required, withCancel } from './collect.utils.js';
-import { collect_ai_embedder } from './collect.ai.embedder.js';
 
 /** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([

@@ -16,12 +16,12 @@ import { required, withCancel } from "./collect.utils.js";
 /** @satisfies {Choice[]} */
 export const choices = /** @type {const} */ ([
   {
-    name: 'SendGrid',
-    value: 'sendgrid'
-  },
-  {
     name: 'Resend',
     value: 'resend'
+  },
+  {
+    name: 'SendGrid',
+    value: 'sendgrid'
   },
   {
     name: 'MailChimp',

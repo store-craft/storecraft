@@ -23,10 +23,8 @@ export default class Checkout {
 
   /**
    * @description Create a `checkout`
-   * 
    * @param {CheckoutCreateType} input 
    * @param {string} gateway_handle 
-   * 
    * @returns {Promise<Partial<OrderData>>}
    */
   create = async (input, gateway_handle) => {
@@ -48,9 +46,7 @@ export default class Checkout {
 
   /**
    * @description Complete a `checkout`
-   * 
    * @param {string} order_id 
-   * 
    * @returns {Promise<Partial<OrderData>>}
    */
   complete = async (order_id) => {

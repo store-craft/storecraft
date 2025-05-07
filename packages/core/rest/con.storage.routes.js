@@ -8,7 +8,6 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * @description prefer signed url get by default
- * 
  * @param {URLSearchParams} search_params
  */
 export const does_prefer_signed = search_params => {

@@ -5,7 +5,6 @@ export type StorageFeatures = {
   /**
    * @description Does `storage` supports `pre-signed` urls 
    * for `download` / `upload` 
-   * 
    */
   supports_signed_urls: boolean;
 
@@ -52,25 +51,21 @@ export type MetaData = {
 };
 
 /**
- * 
  * @description `storage` driver type
  */
 export declare interface storage_driver {
 
   /**
-   * 
    * @description Init the storage
    */
   init: (app?: App) => Promise<any>;
 
   /**
-   * 
    * @description Get the `storage` official **Features**
    */
   features: () => StorageFeatures;
 
   /**
-   * 
    * @description A human readable information about the `storage` in `markdown`
    */
   info?: () => string[];
@@ -88,8 +83,6 @@ export declare interface storage_driver {
 
   /**
    * Get a `blob` from the storage
-   * 
-   * 
    * @param key The retrival key
    */
   getBlob: (key: string) => Promise<Get<Blob>>;
@@ -99,8 +92,6 @@ export declare interface storage_driver {
 
   /**
    * Remove asset from the storage
-   * 
-   * 
    * @param key The retrival key
    */
   remove: (key: string) => Promise<boolean>;

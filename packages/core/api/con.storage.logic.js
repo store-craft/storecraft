@@ -1,3 +1,6 @@
+/**
+ * @import { Get } from "../storage/types.storage.js";
+ */
 import { App } from "../index.js";
 import { assert } from "./utils.func.js";
 
@@ -178,8 +181,10 @@ export const getSigned = (app) =>
 /** @param {App} app */
 export const getStream = (app) => 
   /**
+   * @template {any} [T=any]
    * @description Get a file stream for download
    * @param {string} file_key file path, example `/path/to/file.txt`
+   * @returns {Promise<Get<ReadableStream<T>>>}
    */
   async (file_key) => {
     assert(

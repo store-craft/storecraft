@@ -7,7 +7,6 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
  * @description Base `orders` **CRUD**
- * 
  * @extends {collection_base<OrderDataUpsert, OrderData>}
  */
 export default class Orders extends collection_base {

@@ -8,9 +8,9 @@ import { Polka } from './polka/index.js'
 import { assert } from '../api/utils.func.js'
 import { authorize_admin } from './con.auth.middle.js'
 import { parse_query } from '../api/query.js'
+import { does_prefer_signed, HEADER_PRESIGNED } from './con.storage.routes.js';
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -77,6 +77,60 @@ export const create_routes = (app) => {
     }
   );
 
+  // get file
+  polka.get(
+    '/download/:id',
+    async (req, res) => {
+      const chat_id = req?.params?.id;
+
+      assert(
+        chat_id, 
+        'Chat id is required'
+      );
+
+      const prefers_presigned_urls =
+        does_prefer_signed(req?.query);
+      
+      const result = await app.api.chats.download(
+        chat_id, 
+        prefers_presigned_urls
+      );
+
+      assert(
+        result, 
+        'something went wrong' 
+      );
+
+      if(result.type === 'presigned') {
+        res.headers.set(HEADER_PRESIGNED, 'true');
+        res.sendJson(
+          result.presigned
+        );
+      } else if(result.type === 'stream') {
+        assert(
+          result?.stream?.value && !result?.stream?.error, 
+          result.stream.message || 
+          'something went wrong with streaming chat history'
+        );
+
+        const stream = result.stream.value;
+
+        res.headers.set(
+          'Content-Type',
+          'application/json'
+        );
+        res.headers.set(HEADER_PRESIGNED, 'false');
+        res.sendReadableStream(stream);
+      }
+
+      assert(
+        false, 
+        `something went wrong, download type ${result.type} not supported` 
+      );
+
+    }
+  );
+  
   return polka;
 }
 

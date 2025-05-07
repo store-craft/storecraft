@@ -11,7 +11,6 @@ import {
 
 /**
  * @description Base `collections` **CRUD**
- * 
  * @extends {collection_base<CollectionTypeUpsert, CollectionType>}
  */
 export default class Collections extends collection_base {

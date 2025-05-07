@@ -22,7 +22,10 @@ export const upsert = (app) =>
  */
 (item) => regular_upsert(
   app, db(app), 'chat', chatTypeUpsertSchema, 
-  (before) => before,
+  (before) => {
+    before.handle = before.id;
+    return before;
+  },
   (final) => {
     
     return union(

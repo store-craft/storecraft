@@ -13,6 +13,8 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  chatTypeSchema,
+  chatTypeUpsertSchema,
   checkoutCreateTypeAfterValidationSchema,
   checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
@@ -382,6 +384,7 @@ const create_all = () => {
   // register routes
   register_reference(registry);
   register_ai(registry);
+  register_chats(registry);
   register_similarity_search(registry);
   register_auth(registry);
   register_storage(registry);
@@ -3138,6 +3141,24 @@ const register_posts = registry => {
   register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
 }
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_chats = registry => {
+  const name = 'chat metadata'
+  const slug_base = 'chats'
+  const tags = [slug_base];
+  const example_id = 'chat_65f2ae998bf30e6cd0ca9605';
+  const _typeSchema = registry.register(name, chatTypeSchema);
+  const _typeUpsertSchema = registry.register(`${name}Upsert`, chatTypeUpsertSchema);
+
+  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_post);
+  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_post);
+  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

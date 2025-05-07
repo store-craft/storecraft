@@ -79,6 +79,18 @@ const data = [
     ]
   },
   {
+    name: 'chats (metadata)',
+    properties: [
+      ...base_props,
+      ['customer_id', 'string'],
+      ['customer_email', 'string'],
+    ],
+    search: [
+      ['id', 'chat_123456789'],
+      ['customer id', 'cus_123456789, customer_id:cus_123456789'],
+      ['customer email', 'john@doe.com, customer_email:john@doe.com'],
+    ]
+  },  {
     name: 'customers',
     properties: [
       ...base_props,

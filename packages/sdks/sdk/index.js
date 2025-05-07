@@ -21,6 +21,7 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 import Search from './src/search.js'
+import Chats from './src/chats.js'
 import { 
   fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
 } from './src/utils.api.fetch.js'
@@ -68,6 +69,7 @@ export class StorecraftSDK {
     this.reference = new Reference(this);
     this.notifications = new Notifications(this);
     this.emails = new Email(this);
+    this.chats = new Chats(this);
   }
 
   get fetcher() {

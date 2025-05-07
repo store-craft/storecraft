@@ -22,7 +22,7 @@ import {
   PaymentGateways, PaymentGateway,
   Posts, Post,
   Extensions, Extension,
-  Settings
+  Settings, Chats
 } from './pages/index.jsx'
 
 import {
@@ -60,6 +60,13 @@ export default function Main(props) {
       <Route path=':id' element={<Storefront mode='edit' />} />
       <Route path=':id/view' element={<Storefront mode='view' />} />
       <Route path='create/:base?' element={<Storefront mode='create' /> } />
+    </Route>
+    <Route path='chats'>
+      <Route path='' element={<Chats />} />
+      <Route path='q/:query_params' element={<Chats />} />
+      {/* <Route path=':id' element={<Customer mode='edit' />} />
+      <Route path=':id/view' element={<Customer mode='view' />} />
+      <Route path='create' element={<Customer mode='create' /> } /> */}
     </Route>
     <Route path='customers'>
       <Route path='' element={<Customers />} />

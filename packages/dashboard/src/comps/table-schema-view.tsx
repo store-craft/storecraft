@@ -10,6 +10,7 @@ export type TableSchemaViewContext<T extends unknown> = {
   deleteDocument: (id: string) => Promise<void>;
   editDocumentUrl: (id: string) => string;
   viewDocumentUrl: (id: string) => string;
+  linkExternalUrl: (id: string) => string;
 };
 
 /**
@@ -101,10 +102,10 @@ const Table = <T,>(
             (field, ix) => (
               <td 
                 className={
-                  ix==0 ? 'text-start pl-3 overflow-x-scroll' : 
+                  ix==0 ? 'text-start px-3 overflow-x-scroll' : 
                   ix<fields.length-1 ? 
                   'text-center px-3 overflow-x-clip ' : 
-                  'text-end pr-3 right-0 bg-white/60 dark:bg-transparent \
+                  'text-end px-3 right-0 bg-white/60 dark:bg-transparent \
                   sticky z-10 w-0  --border-l-2 overflow-clip shelf-body-bg opacity-80'
                 } 
                 // width={'10px'}

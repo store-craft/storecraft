@@ -13,6 +13,9 @@ import { Link } from 'react-router-dom'
 import { MainPortal } from '@/layout'
 import { FieldLeafViewParams } from './fields-view'
 import { TableSchemaViewComponentParams } from './table-schema-view'
+import { LuExternalLink } from 'react-icons/lu'
+import { FiExternalLink } from 'react-icons/fi'
+import { HiOutlineExternalLink } from 'react-icons/hi'
 
 export type TextAreaParams = FieldLeafViewParams<string>
 export type TimeStampViewParams = TableSchemaViewComponentParams<string>;
@@ -250,9 +253,9 @@ export const InputWithClipboard = (
   <div className='w-full flex flex-row justify-end'>
     <p children='From Clipboard' 
       className='w-fit underline cursor-pointer 
-                 shelf-text-label-color
-                 dark:bg-kf-50/10 p-1 rounded-md
-                 text-sm font-medium tracking-wider' 
+        shelf-text-label-color
+        dark:bg-kf-50/10 p-1 rounded-md
+        text-sm font-medium tracking-wider' 
       onClick={onClick} />
   </div>
   <Bling className='w-full h-fit mt-2'>
@@ -285,15 +288,16 @@ export const Handle = (
   <div className='w-full flex flex-row justify-end'>
     <p children='Auto Suggest' 
       className='w-fit underline cursor-pointer 
-                  shelf-text-label-color
-                dark:bg-kf-50/10 p-1 rounded-md
-                 text-sm font-medium tracking-wider' 
+        shelf-text-label-color
+      dark:bg-kf-50/10 p-1 rounded-md
+        text-sm font-medium tracking-wider' 
       onClick={onClick} />
   </div>
   <Bling className='w-full h-fit mt-2'>
-    <MInput field={field} value={value} 
-            onChange={onChange} 
-            className='w-full h-10' />
+    <MInput 
+      field={field} value={value} 
+      onChange={onChange} 
+      className='w-full h-10' />
   </Bling>
 </div>    
   )
@@ -359,14 +363,14 @@ export const ClipBoardCopy = (
   return (
 <div className={`flex ${config==0 ? 'flex-row' : 'flex-row-reverse'} gap-1`}>
   <RxCopy 
-      className='text-lg cursor-pointer text-gray-500 
-                hover:text-gray-800 dark:hover:text-gray-400 inline' 
-      onClick={onClickCopy} />
+    className='text-lg cursor-pointer text-gray-500 
+    hover:text-gray-800 dark:hover:text-gray-400 inline' 
+    onClick={onClickCopy} />
   { 
     copied && 
     <span 
-        children='(copied)' 
-        className='text-xs' />      
+      children='(copied)' 
+      className='text-xs' />      
   }
 </div>        
   )
@@ -399,26 +403,26 @@ export const withCard = <P extends FieldLeafViewParams<any>,>(
     );
 
     return (
-<Card 
-    id='card' 
-    name={name} 
-    error={error} 
-    {...comp_params} 
-    border={border} 
-    desc={desc}
-    rightView={Copy} 
-    setError={setError}>
-  <Comp 
-    field={new_field} 
-    value={value} 
-    onChange={onChange} 
-    disabled={disabled} 
-    children={children} 
-    error={error} 
-    setError={setError} 
-    context={context} 
-    {...comp_params_inner} />
-</Card>
+    <Card 
+      id='card' 
+      name={name} 
+      error={error} 
+      {...comp_params} 
+      border={border} 
+      desc={desc}
+      rightView={Copy} 
+      setError={setError}>
+      <Comp 
+        field={new_field} 
+        value={value} 
+        onChange={onChange} 
+        disabled={disabled} 
+        children={children} 
+        error={error} 
+        setError={setError} 
+        context={context} 
+        {...comp_params_inner} />
+    </Card>
   )
   }
 }
@@ -449,9 +453,8 @@ export const RecordActions = <T,>(
   );
 
   const onApproveDelete = useCallback(
-    /** @param {string} data_id  */
-    (data_id) => {
-      console.log('data_id', data_id)
+    (data_id: string) => {
+      console.log('data_id', data_id);
       // return
       setLoadingDelete(true)
       context.deleteDocument(data_id)
@@ -460,25 +463,32 @@ export const RecordActions = <T,>(
   );
 
   return (
-<div className='flex flex-row items-center text-center flex-shrink-0
+<div className='flex flex-row gap-3 items-center text-center flex-shrink-0
                  justify-end text-base overflow-clip w-fit mx-auto '>
   { 
-  !context?.editDocumentUrl && context?.viewDocumentUrl &&
-  <Link to={context.viewDocumentUrl(id)}>
-    <BiShow className=' text-xl text-teal-600 stroke-[0.5px] hover:stroke-[1px]' />
-  </Link>
+    !context?.editDocumentUrl && context?.viewDocumentUrl &&
+    <Link to={context.viewDocumentUrl(id)}>
+      <BiShow className=' text-xl text-teal-600 --stroke-[0.5px] hover:stroke-[1px]' />
+    </Link>
+  }
+  { 
+    context?.linkExternalUrl &&
+    <a href={context?.linkExternalUrl(id) ?? ''} target='_blank'>
+      <HiOutlineExternalLink 
+        className=' text-xl' />
+    </a>
   }
   { 
   context?.editDocumentUrl && 
   <LinkWithState 
-      to={context.editDocumentUrl(id)} 
-      draggable='false' 
-      current_state={() => context?.getState && context?.getState()}
-      >
+    to={context.editDocumentUrl(id)} 
+    draggable='false' 
+    current_state={() => context?.getState && context?.getState()}
+    >
     <BiEditAlt 
       title='edit'
-      className='ml-3 text-2xl text-pink-500 cursor-pointer
-                 stroke-0 hover:stroke-1' />
+      className='text-2xl text-pink-500 cursor-pointer
+        --stroke-0 hover:stroke-1' />
   </LinkWithState>
   }
   { 
@@ -487,7 +497,7 @@ export const RecordActions = <T,>(
       title='delete'
       Icon={<AiOutlineDelete className='text-xl scale-125 text-kf-500 --outline-8'/>} 
       loading={loadingDelete} 
-      className='ml-3 px-0 py-0 border-0 cursor-pointer' 
+      className='px-0 py-0 border-0 cursor-pointer' 
       onClick={onClickDelete} />
   }
   <MainPortal.PortalChild>        

@@ -19,6 +19,7 @@ import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
+import { impl as chats } from './src/con.chats.js';
 export { migrateToLatest } from './migrate.js';
 export { MongoVectorStore } from './vector-store/index.js';
 
@@ -98,6 +99,7 @@ export class MongoDB {
       shipping_methods: shipping(this),
       templates: templates(this),
       search: search(this),
+      chats: chats(this),
     }
     
     this.#is_ready = true; 

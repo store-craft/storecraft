@@ -8,10 +8,11 @@ export type collections_resources = |
   "collections" | "products" | "tags" | "customers" | 
   "storefronts" | "images" | "posts" | "templates" | 
   "notifications" | "discounts" | "orders" | "shipping" | 
-  "auth/users";
+  "auth/users" | "chats";
 
 export type extra_non_collections_resources = 'payments/gateways' | 'extensions';
-export type queryable_resources = collections_resources | extra_non_collections_resources;
+export type queryable_resources = collections_resources | 
+  extra_non_collections_resources;
 
 export type InferLastSlug<T extends string> = 
   T extends `${string}/${infer Last}` ? 
@@ -24,8 +25,6 @@ type atest = {
 
 type cc = string
 export type ResourcesMap = {
-//   [K in collections_resources]: App["db"]["resources"][K]["$type_get"]
-// } & {
   'users': App["db"]["resources"]['auth_users']["$type_get"],
   'shipping': App["db"]["resources"]['shipping_methods']["$type_get"],
   'orders': App["db"]["resources"]['orders']["$type_get"],
@@ -39,6 +38,7 @@ export type ResourcesMap = {
   'collections': App["db"]["resources"]['collections']["$type_get"],
   'products': App["db"]["resources"]['products']["$type_get"],
   'tags': App["db"]["resources"]['tags']["$type_get"],
+  'chats': App["db"]["resources"]['chats']["$type_get"],
   'extensions': ExtensionItemGet,
   'gateways': PaymentGatewayItemGet,
 }

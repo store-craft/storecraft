@@ -112,7 +112,7 @@ const SideMenu = (
                           (
                             <div 
                               className='rounded-md border dark:border-none p-[3px] 
-                                        shelf-border-color-soft ' 
+                                shelf-border-color-soft ' 
                               children={item.icon} />
                           )
                         } 

@@ -16,6 +16,7 @@ import useDarkMode from './hooks/use-dark-mode'
 import { useScrollDelta } from '@/hooks/use-scroll-delta'
 import { CgTemplate } from "react-icons/cg";
 import { createPortal } from './comps/portal-creator'
+import { RiRobot2Line } from 'react-icons/ri'
 
 const menu: MenuType = {
   info: {
@@ -51,10 +52,6 @@ const menu: MenuType = {
         extra : { active: 'bg-pink-600 dark:bg-pink-600/90', hover: 'hover:bg-amber-200' } 
       },
       { 
-        name: 'Payment Gateways', icon: <MdPayment/>, 
-        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
-      },
-      { 
         name: 'Discounts', icon: <TbDiscount2 className='--text-lg'/>, 
         extra : { active: 'bg-pink-600', hover: 'hover:bg-teal-200' } 
       },
@@ -67,6 +64,15 @@ const menu: MenuType = {
         extra : { 
           active: 'bg-orange-400 dark:bg-orange-400/70', hover: 'hover:bg-teal-200',
         } 
+      },
+      { 
+        name: 'Payment Gateways', icon: <MdPayment/>, 
+        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
+      },
+      { 
+        name: 'AI Chats', slug: 'chats',
+        icon: <RiRobot2Line/>, 
+        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
       },
     ]
   },
@@ -135,8 +141,9 @@ const Layout = (
     <MainPortal.Portal />        
     <div 
       className={`fixed left-0 top-0 w-full h-full bg-teal-900/10 
-                  z-50 transition-all md:hidden
-                ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`} 
+        z-50 transition-all md:hidden
+        ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`
+      } 
       onClick={onCloseClick}/>
 
     {/* side menu   */}
@@ -161,11 +168,11 @@ const Layout = (
             }
           }
           className='bg-gradient-to-r 
-                    from-slate-100 to-white 
-                    dark:from-slate-800 dark:to-slate-800
-                    shadow-md 
-                    shadow-gray-800 h-full rounded-tr-3xl 
-                    rounded-br-3xl' 
+            from-slate-100 to-white 
+            dark:from-slate-800 dark:to-slate-800
+            shadow-md 
+            shadow-gray-800 h-full rounded-tr-3xl 
+            rounded-br-3xl' 
         />
       </Bling>
     </div>

@@ -31,6 +31,9 @@ export * as orders_list from './orders_list.js'
 export * as posts_crud from './posts_crud.js'
 export * as posts_list from './posts_list.js'
 
+export * as chats_crud from './chats_crud.js'
+export * as chats_list from './chats_list.js'
+
 export * as products_list from './products_list.js'
 export * as products_collections from './products_collections.js'
 export * as products_crud from './products_crud.js'

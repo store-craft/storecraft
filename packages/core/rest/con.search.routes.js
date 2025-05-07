@@ -28,6 +28,7 @@ export const create_routes = (app) => {
         delete items?.['orders'];
         delete items?.['customers'];
         delete items?.['auth_users'];
+        delete items?.['chats'];
       }
 
       res.sendJson(items);

@@ -15,7 +15,7 @@ import {
   api_query_to_searchparams, parse_query 
 } from '../../api/query.js';
 import { ID } from '../../api/utils.func.js';
-
+ 
 /**
  * @param {App} app `storecraft` app instance
  */

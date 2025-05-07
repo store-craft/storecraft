@@ -24,8 +24,9 @@ export type AgentRunParameters = {
    */
   thread_id?: string;
   /**
-   * @description Maximal amount of history messages to use during this run. This 
-   * can be beneficial for optimizaing usage cost and context window. This overrides
+   * @description Maximal amount of history messages to use 
+   * during this run. This can be beneficial for optimizaing 
+   * usage cost and context window. This overrides
    * the general {@link AgentConfig.maxLatestHistoryToUse}
    * @default 5
    */
@@ -42,12 +43,31 @@ export type AgentRunParameters = {
    * @description The maximum amount of steps to iterate
    */
   maxSteps?: number
-
   /**
-   * @description metadata to pass to the agent, advided to be saved
-   * for observability and debugging purposes.
+   * @description Extra metadata to pass to the agent, 
+   * advised to be saved for spicing it's behaviour, 
+   * observability and debugging purposes.
    */
-  metadata?: Record<string, any>;
+  metadata?: {
+    /**
+     * @description The customer `id`
+     * @example `cus_1234567890`
+     */ 
+    customer_id?: string,
+    /**
+     * @description The customer `email`
+     * @example `a@a.com`
+     */
+    customer_email?: string,
+    /**
+     * @description Extra search terms to index in the database.
+     */
+    search?: string[],
+    /**
+     * @description Extra metadata coming from consumer.
+     */
+    extra?: Record<string, any>,
+  };
 }
 
 /**

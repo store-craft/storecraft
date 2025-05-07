@@ -1,6 +1,6 @@
 /**
  * @import { 
- *  HistoryProvider, History, Message, ChatHistoryType
+ *  HistoryProvider, History, ChatHistoryType
  * } from './types.private.js'
  */
 import { App } from '../../index.js';
@@ -36,10 +36,8 @@ export class StorageHistoryProvider {
       if(!stream.value) {
         return {
           messages: [],
+          thread_id: threadId,
           metadata: {
-            thread_id: threadId,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
           }
         };
       }

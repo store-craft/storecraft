@@ -1,6 +1,7 @@
 /**
  * @import { 
- *  Agent, AgentConfig, 
+ *  Agent, AgentConfig,
+ AgentRunParameters, 
  * } from '../types.js'
  * @import { ChatAI } from '../../core/types.private.js'
  * @import { StorefrontType } from '../../../api/types.public.js';
@@ -11,6 +12,7 @@ import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
 import { id } from '../../../crypto/object-id.js'
 import { content_stream_accumulate } from "../../core/content-utils.js";
+import { ID } from "../../../api/utils.func.js";
 
 /**
  * @description The main customer facing `store` agent
@@ -58,19 +60,23 @@ export class StoreAgent {
     try {
       params.maxLatestHistoryToUse ??= 
         this.config.maxLatestHistoryToUse;
-      params.thread_id = params.thread_id ?? ('thread_' + id());
+      
+      const is_new_chat = !Boolean(params.thread_id);
 
-      // note: use promise.all to load the history and kvs
-      // in parallel
-      const history = await this.history_provider.load(
-        params.thread_id, this.#app
-      );
-      const kvs = await storefront_to_kvs(this.#app);
-      //
+      params.thread_id = params.thread_id ?? (ID('chat'));
+
+      const [history, kvs] = await Promise.all([
+        this.history_provider.load(
+          params.thread_id, this.#app
+        ),
+        storefront_to_kvs(this.#app),
+      ]);
 
       const { stream } = await this.provider.streamText(
         {
-          history: history?.toArray()?.slice(-params.maxLatestHistoryToUse) ?? [],
+          history: history?.toArray()?.slice(
+            -params.maxLatestHistoryToUse
+          ) ?? [],
           prompt: params.prompt,
           system: SYSTEM(kvs),
           tools: TOOLS({ app: this.#app}),
@@ -79,17 +85,38 @@ export class StoreAgent {
         },
         {
           onDone: async (contents=[]) => {
-            await history.add(
-              { // add user prompt
-                role: 'user',
-                contents: params.prompt
-              }
-            ).add(
-              { // add assistant generated contents
-                role: 'assistant',
-                contents: contents
-              }
-            ).commit();
+            { // OPTIMIZATION: perform a compare, if params.metadata contains
+              // new data, then we need to save it in 
+              // database
+              const saved_metadata = /** @type {AgentRunParameters["metadata"]} */(
+                history.metadata()
+              );
+              params.metadata
+            }
+
+            await Promise.all([
+              history.add(
+                { // add user prompt
+                  role: 'user',
+                  contents: params.prompt
+                }
+              ).add(
+                { // add assistant generated contents
+                  role: 'assistant',
+                  contents: contents
+                }
+              ).commit(params.metadata),
+              this.#app.api.chats.upsert(
+                {
+                  id: params.thread_id,
+                  extra: params.metadata?.extra,
+                  customer_email: params.metadata?.customer_email,
+                  customer_id: params.metadata?.customer_id,
+                  search: params.metadata?.search,
+                }
+              ),
+            ])
+
           }
         }
       );

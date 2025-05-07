@@ -262,10 +262,6 @@ const list = (driver) => {
       query, table_name
     ).execute();
 
-      // .orderBy(query_to_sort(query, table_name))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) 
       items.reverse();
 
@@ -309,9 +305,6 @@ const list_discount_products = (driver) => {
       .limit(query.limitToLast ?? query.limit ?? 10),
       query, 'products'
     ).execute();
-
-      // .orderBy(query_to_sort(query, 'products'))
-      // .execute();
 
     if(query.limitToLast) 
       items.reverse();

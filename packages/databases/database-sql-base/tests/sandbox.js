@@ -193,7 +193,7 @@ async function test2() {
           eb
           .selectFrom(table_name)
           .select(props)
-          .orderBy(['updated_at asc'])
+          .orderBy('updated_at', 'asc')
           .limit(0),
           app.db.dialectType
         ).as(table_name)

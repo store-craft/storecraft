@@ -22,7 +22,7 @@ export const SpanWithLogo = (
 ) => {
   const logo = context.item?.info?.logo_url;
 
-  const readable_span_cls = 'overflow-x-auto flex flex-row items-center \
+  const readable_span_cls = ' flex flex-row items-center \
     gap-2  whitespace-nowrap'
   const merged = `${readable_span_cls} ${className} ${extra}`
   return (
@@ -52,7 +52,7 @@ const schema_fields = [
   { 
     key: 'handle', name: 'Handle', comp: Span, 
     comp_params: {
-      className: 'font-semibold', 
+      className: '--font-semibold', 
       extra: 'max-w-[10rem] md:max-w-[18rem]'
     } 
   },
@@ -90,9 +90,8 @@ export default ({}) => {
 
     <ShowIf show={error} children={error?.toString()}/>
     <ShowIf show={!error && page}>
-      <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md  mt-5
-                      dark:shadow-slate-900'>      
+      <div className='w-full rounded-md overflow-hidden 
+        store-table-wrapper mt-5'>      
         <TableSchemaView 
           context={context_mod} 
           data={page} 

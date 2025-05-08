@@ -24,7 +24,8 @@ const schema_fields = [
     key: 'email', name: 'Email', comp: Span 
   },
   { 
-    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView,
+    comp_params: { className: 'font-mono' } 
   },
   { 
     key: 'auth_id', name: 'UID', comp: Span, 
@@ -55,9 +56,8 @@ export default ({}) => {
       hasLoaded={hasLoaded} 
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-    <div className='w-full rounded-md overflow-hidden border 
-                    shelf-border-color shadow-md  mt-5
-                    dark:shadow-slate-900'>      
+      <div className='w-full rounded-md overflow-hidden 
+          store-table-wrapper mt-5'>      
       <TopActions 
         isCollectionEmpty={resource_is_probably_empty}
         ref={ref_actions} 

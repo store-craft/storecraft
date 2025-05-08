@@ -193,7 +193,7 @@
 
   .shelf-body-bg {
     @apply bg-gradient-to-br 
-    from-slate-100 to-teal-50
+    from-gray-100 to-gray-50
     dark:from-slate-800 dark:to-slate-800
     text-gray-800 dark:text-gray-400;
   }
@@ -213,6 +213,11 @@
            bg-white dark:bg-slate-700 ;
   }
 
+  .store-table-wrapper {
+    @apply shadow-xs dark:shadow-slate-900
+    border-gray-300/50 dark:border-slate-600/70 border;
+  }
+
   .shelf-plain-card-fill {
     @apply bg-white dark:bg-slate-800;
     @apply border-gray-300 dark:border-slate-700;
@@ -226,7 +231,7 @@
   }
 
   .shelf-border-color {
-    @apply border-gray-300 dark:border-slate-600;
+    @apply border-gray-300/70 dark:border-slate-600/70;
   }
 
   .shelf-border-color-blend {
@@ -239,7 +244,7 @@
 
   .shelf-card {
     /* @apply shelf-border-color; */
-    @apply border-gray-300 dark:border-slate-600;
+    @apply border-gray-300/70 dark:border-slate-600/30;
     @apply bg-white dark:bg-[rgb(41,52,69)] ;
     /* @apply bg-white dark:bg-slate-700/50 ;
     dark:bg-[rgb(41,52,69)] */

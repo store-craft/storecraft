@@ -30,7 +30,10 @@ const schema_fields = [
     comp_params: { className: 'font-semibold max-w-[8rem] ' } 
   },
   { 
-    key: 'price', name: 'Price', comp: Span 
+    key: 'price', name: 'Price', comp: Span,
+    comp_params: { 
+      className: 'font-mono'
+    }
   },
   { 
     key: 'collections', name: 'Collections', comp: SpanArray, 
@@ -45,7 +48,10 @@ const schema_fields = [
     } 
   },
   { 
-    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView,
+    comp_params: { 
+      className: 'font-mono'
+    }
   },
   { 
     key: undefined, name: 'Actions', 
@@ -82,10 +88,8 @@ export default ({}) => {
       overallCollectionCount={queryCount} 
       hasLoaded={hasLoaded} 
       resource={resource}/>
-      <div 
-        className='w-full rounded-md overflow-hidden border 
-          shelf-border-color shadow-md mt-5
-          dark:shadow-slate-900 '>      
+      <div className='w-full rounded-md overflow-hidden 
+        store-table-wrapper mt-5'>      
         <ShowIf show={error} children={error?.toString()} />
         <TopActions 
           isCollectionEmpty={resource_is_probably_empty}

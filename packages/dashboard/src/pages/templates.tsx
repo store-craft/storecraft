@@ -14,7 +14,7 @@ const schema_fields: TableSchemaViewField<any>[] = [
   { 
     key: 'handle', name: 'Handle', 
     comp: Span, 
-    comp_params: { className: 'font-semibold' } 
+    comp_params: { className: '--font-semibold' } 
   },
   { 
     key: undefined, name: 'Actions', 
@@ -43,9 +43,8 @@ export default ({}) => {
       hasLoaded={hasLoaded} 
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-    <div className='w-full rounded-md overflow-hidden border 
-                    shelf-border-color shadow-md mt-5
-                    dark:shadow-slate-900'>      
+    <div className='w-full rounded-md overflow-hidden 
+      store-table-wrapper mt-5'>      
       <TopActions 
         isCollectionEmpty={resource_is_probably_empty}
         ref={ref_actions} 

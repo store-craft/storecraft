@@ -286,8 +286,8 @@ export const Bling = (
   { 
     className, rounded='rounded-md', 
     children, stroke='border', 
-    from='from-pink-500 dark:from-pink-600', 
-    to='to-kf-500 dark:to-kf-500', ...rest 
+    from='from-pink-500/60 dark:from-pink-600/50', 
+    to='to-kf-500/60 dark:to-kf-500/50', ...rest 
   }: BlingParams
 ) => {
 
@@ -348,9 +348,9 @@ export const Card = (
   return (
 <div {...rest}>
   <div 
-      className={`w-full text-left 
-                  ${border ? 'border rounded-lg shadow-sm dark:shadow-xl  p-5 ' + cardClass : ''}
-                `}>
+    className={`w-full text-left 
+      ${border ? 'border rounded-lg shadow-xs dark:shadow-xl  p-5 ' + cardClass : ''}
+    `}>
 
     {
       (name || rightView) && 

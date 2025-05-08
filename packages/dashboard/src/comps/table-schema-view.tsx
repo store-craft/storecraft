@@ -164,7 +164,7 @@ const Table = <T,>(
                   ix==0 ? 'text-left --px-3' : 
                   ix<fields.length-1 ? 
                   'text-center px-3' : 
-                  'text-right px-0 sticky right-0 bg-white/60 dark:bg-transparent '
+                  'text-right px-0 sticky right-0  '
                 )
               }
               
@@ -219,7 +219,7 @@ export const TableSchemaView = <T,>(
         fields={fields} 
         data={data} 
         recordClassName={recordClassName}
-        className='w-full table-fixed2 whitespace-nowrap'/>
+        className='w-full bg-re-400 whitespace-nowrap'/>
   </div>
 </div>
   )

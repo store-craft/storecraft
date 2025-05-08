@@ -35,7 +35,7 @@
     "preview:esm": "npx http-server . -o index.esm.html",
     "preview:umd": "npx http-server . -o index.umd.html",
     "analyze": "npx vite-bundle-visualizer -c vite.lib.config.ts",
-    "prepublishOnly": "npm version patch --force && npm run build",
+    "prepublishOnly": "npm run build",
     "sc-publish": "npm publish --access public"
   },
   "dependencies": {

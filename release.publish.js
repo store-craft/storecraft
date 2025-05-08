@@ -1,15 +1,18 @@
+import pkg from './package.json' assert { type: 'json' };
+import { fileURLToPath } from 'node:url';
 import { chdir, cwd } from 'node:process';
 import { exec, execSync } from 'node:child_process';
 import { join } from 'node:path';
 
 export const publish_folder = (
-  path='', throw_on_error=true, verbose_output=true
+  path='', throw_on_error=false, verbose_output=true
 ) => {
 
   const current_working_dir = cwd();
 
   try {
     chdir(path);
+    execSync(`npm version ${pkg.version} --no-git-tag-version`);
     const ex = execSync('npm publish --access public');
     if(verbose_output) {
       if(ex) {
@@ -73,7 +76,7 @@ export const publish_folder = (
   p => join('./packages', p)
 )
 .map(
-  p => publish_folder(p, true)
+  p => publish_folder(p, false)
 );
 
 

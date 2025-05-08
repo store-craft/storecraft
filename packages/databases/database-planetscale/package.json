@@ -31,7 +31,6 @@
   "scripts": {
     "database-planetscale:test": "node ./tests/runner.test.js",
     "test": "npm run database-planetscale:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "dependencies": {

@@ -32,7 +32,6 @@
     "database-mysql:docker-compose-up": "docker compose -f ./tests/docker-compose.yml up ",
     "database-mysql:test": "node ./tests/runner.test.js",
     "test": "npm run database-mysql:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "dependencies": {

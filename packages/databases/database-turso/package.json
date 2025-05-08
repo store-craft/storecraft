@@ -35,7 +35,6 @@
   "scripts": {
     "database-turso:test": "node ./tests/runner.test.js",
     "test": "npm run database-turso:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm test && npm publish --access public"
   },
   "dependencies": {

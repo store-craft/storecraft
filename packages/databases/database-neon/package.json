@@ -31,7 +31,6 @@
   "scripts": {
     "database-neon:test": "node ./tests/runner.test.js",
     "test": "npm run database-neon:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "dependencies": {

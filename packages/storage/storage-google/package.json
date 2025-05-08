@@ -18,8 +18,7 @@
   ],
   "scripts": {
     "storage-google:test": "uvu -c",
-    "test": "npm run storage-google:test",
-    "prepublishOnly": "npm version patch --force"
+    "test": "npm run storage-google:test"
   },
   "type": "module",
   "main": "adapter.js",

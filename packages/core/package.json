@@ -6,7 +6,9 @@
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "engines": {
-    "node": "v16.14.0 || v17.1.0 || v18.20.0 || >=v20.10.0"
+    "node": "v16.14.0 || v17.1.0 || v18.20.0 || >=v20.10.0",
+    "deno": "*",
+    "bun": "*"
   },
   "repository": {
     "type": "git",
@@ -243,7 +245,7 @@
   "scripts": {
     "test": "npm run core:test",
     "sc-publish": "npm publish",
-    "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
+    "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test",
     "core:test": "uvu -c",
     "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
     "core:gen:vql": "node ./vql/bool-ql/compile.js",

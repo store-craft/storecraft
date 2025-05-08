@@ -22,7 +22,6 @@
   "scripts": {
     "cli:test": "uvu -c",
     "test": "npm run cli:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "type": "module",

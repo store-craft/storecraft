@@ -21,8 +21,7 @@
   "types": "types.public.d.ts",
   "scripts": {
     "payments-stripe:test": "uvu -c",
-    "test": "npm run payments-stripe:test",
-    "prepublishOnly": "npm version patch --force"
+    "test": "npm run payments-stripe:test"
   },
   "dependencies": {
     "stripe": "^16.6.0"

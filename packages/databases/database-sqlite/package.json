@@ -31,7 +31,6 @@
   "scripts": {
     "database-sqlite:test": "node ./tests/runner.test.js",
     "test": "npm run database-sqlite:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "dependencies": {

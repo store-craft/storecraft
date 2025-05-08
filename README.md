@@ -262,6 +262,43 @@ CLI [code](https://github.com/store-craft/storecraft/tree/main/packages/cli/)
 
 [Here](https://github.com/store-craft/storecraft/tree/main/packages/playground/) 
 
+### Releasing
+
+The source of truth for the versioning and publishing is the mono-repo version.
+All the published packages are synced to the mono-repo version. Packages in
+the mono-repo source code might have different versions but it doesn't matter
+for the published packages.
+
+#### Versioning
+
+All versions are synced to the mono-repo version, and are published to npm.
+Each of the commands:
+
+```bash
+npm run release:version:patch
+npm run release:version:minor
+npm run release:version:major
+```
+
+Will,
+
+- Only update the version of the mono-repo.
+- Add a git tag of the version.
+
+#### Publishing
+
+When running the command: 
+
+```bash
+npm run release:publish
+```
+
+It will,
+
+- Update the version of all the packages in the mono-repo to the same version as the mono-repo.
+- Publish all the packages to `npm` with the same version as the mono-repo.
+
+> This can be done in a CI/CD pipeline, or manually.
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

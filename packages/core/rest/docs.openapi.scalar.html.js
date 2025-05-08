@@ -2,7 +2,7 @@ export default
 `<!doctype html>
 <html>
   <head>
-    <title>API Reference</title>
+    <title>Storecraft API Reference</title>
     <meta charset="utf-8" />
     <link 
       rel="icon" 

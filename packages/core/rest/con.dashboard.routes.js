@@ -46,7 +46,7 @@ const html_esm = (version='latest') => `
     <meta charset="UTF-8" />
     <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Storecraft - Next Gen Commerce-As-Code</title>
+    <title>Storecraft Dashboard</title>
     <script 
     id='_storecraft_script_' 
     type="module">

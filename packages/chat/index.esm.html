@@ -10,6 +10,13 @@
       type="module"
     >
       import { mountStorecraftChat } from '/dist/lib/src/index.js';
+
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
+
+      console.log({ threadId });
+
       mountStorecraftChat(
         document.getElementById('root'), 
         {

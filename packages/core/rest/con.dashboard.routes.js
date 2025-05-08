@@ -63,7 +63,7 @@ const html_esm = (version='latest') => `
 </html>
 `
 
-const favicon = `
+export const favicon = `
 <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
   <defs>
     <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="128" y1="0" x2="128" y2="256" xlink:href="#gradient-0"/>

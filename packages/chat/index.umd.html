@@ -15,6 +15,12 @@
     <script>
       console.log({StorecraftChat});
 
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
+
+      console.log({ threadId });
+
       StorecraftChat.mountStorecraftChat(
         document.getElementById('root'), 
         {

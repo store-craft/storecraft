@@ -11,13 +11,13 @@ export interface StorecraftConfig  {
 
   /**
    * @description The `storecraft` dashboard default version
-   * @default `latest`
+   * @default the same version of `core` version
    */
   dashboard_version?: string;
 
   /**
    * @description The `storecraft` AI Chat default version
-   * @default `latest`
+   * @default the same version of `core` version
    */
   chat_version?: string;
 

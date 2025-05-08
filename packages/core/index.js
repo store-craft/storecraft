@@ -309,8 +309,8 @@ export class App {
       general_forgot_password_confirm_base_url: env?.[
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
-      dashboard_version: 'latest',
-      chat_version: 'latest',
+      dashboard_version: pkg.version,
+      chat_version: pkg.version,
       ...this.config,
     }
 

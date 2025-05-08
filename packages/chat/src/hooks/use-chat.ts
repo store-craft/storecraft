@@ -91,7 +91,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   useEffect(
     () => {
       if(threadId) {
-        put_db(threadId, messages);
+        // put_db(threadId, messages);
       }
     }, [threadId, messages]
   );
@@ -224,14 +224,15 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
             (ms) => {
               const base = ms.at(-1)?.role==='assistant' ? 
                 ms.slice(0, -1) : ms;
-                
-              return [
+              const new_msgs = [
                 ...base,
                 {
                   role: 'assistant',
                   contents: agg
                 }
-              ]
+              ] as ChatMessage[];
+              put_db(threadId, new_msgs);
+              return new_msgs;
             }
           );
         }

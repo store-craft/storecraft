@@ -7,6 +7,7 @@ import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import useDarkMode from '@/hooks/use-dark-mode'
 import LoginLatestUpdates from './comps/login-latest-updates'
 import { ApiAuthResult } from '@storecraft/core/api'
+import { format_storecraft_errors } from './comps/error-message'
 
 const Login = (
   { 
@@ -71,7 +72,11 @@ const Login = (
         );
 
       } catch (e) {
-        setError(e)
+        console.error('error ', e)
+        setError(
+          format_storecraft_errors(e)?.join('\n') ??
+          'Unknown Error'
+        )
       }
     },
     [sdk, updateConfig, credentials],

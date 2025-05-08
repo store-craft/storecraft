@@ -214,8 +214,8 @@
   }
 
   .store-table-wrapper {
-    @apply shadow-xs dark:shadow-lg dark:shadow-slate-900
-    border-gray-300/50 dark:border-slate-600/70 border
+    @apply shadow-md dark:shadow-md dark:shadow-slate-900
+    border-gray-300/100 dark:border-slate-600/70 border
     bg-slate-100 dark:bg-red-800/0;
   }
 
@@ -244,11 +244,13 @@
   }
 
   .shelf-card {
-    /* @apply shelf-border-color; */
     @apply border-gray-300/70 dark:border-slate-600/30;
     @apply bg-white dark:bg-[rgb(41,52,69)] ;
-    /* @apply bg-white dark:bg-slate-700/50 ;
-    dark:bg-[rgb(41,52,69)] */
+  }
+
+  .shelf-card-harder {
+    @apply border-gray-300 dark:border-slate-600;
+    @apply bg-white dark:bg-[rgb(41,52,69)] ;
   }
 
   .shelf-card-light {

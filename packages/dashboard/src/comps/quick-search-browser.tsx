@@ -92,12 +92,12 @@ export const QuickSearchButton = (
   {...rest}  >
   <div 
     className='rounded-md flex flex-row gap-2 p-1 items-center 
-      border shelf-card shelf-text-minor text-sm
+      border shelf-card-harder shelf-text-minor text-sm
       cursor-pointer hover:ring-pink-400 hover:ring-2'>
     <CiSearch/> 
     <span children='Search' />
     <div className='rounded-md border flex flex-row 
-      items-center px-2 shelf-card'>
+      items-center px-2 shelf-card-harder'>
       <MdKeyboardCommandKey />
       <span children='K' />
     </div>

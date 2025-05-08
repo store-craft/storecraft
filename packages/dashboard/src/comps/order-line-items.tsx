@@ -292,9 +292,9 @@ const OrderLineItems = (
       onSave={onBrowseAdd} 
       onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
-  <HR className='mt-5' />
-  <p children='Items' 
-     className='mt-3 text-gray-400 text-lg font-semibold' />
+  {/* <HR className='mt-5' /> */}
+  {/* <p children='Items' 
+     className='mt-3 text-gray-400 text-lg font-semibold' /> */}
   <LineitemsTable 
     items={items} 
     context={context}

@@ -214,8 +214,9 @@
   }
 
   .store-table-wrapper {
-    @apply shadow-xs dark:shadow-slate-900
-    border-gray-300/50 dark:border-slate-600/70 border;
+    @apply shadow-xs dark:shadow-lg dark:shadow-slate-900
+    border-gray-300/50 dark:border-slate-600/70 border
+    bg-slate-100 dark:bg-red-800/0;
   }
 
   .shelf-plain-card-fill {

@@ -35,9 +35,10 @@ const schema_fields = [
     comp_params: { className: 'text-gray-500 font-semibold', extra: 'max-w-[4rem]' } 
   } as TableSchemaViewField<OrderData, 'id', typeof Span>,
   { 
-    key: 'status.fulfillment', name: 'Status', comp: LabelCapsule, 
-    comp_params: { 
-      bgColor: v=>id2ColorFulfill(v?.id), label: v=>v?.name.split(' ')[0] 
+    key: 'status.fulfillment', name: 'Status', 
+    comp: LabelCapsule, comp_params: { 
+      bgColor: (v: OrderData["status"]["fulfillment"]) => id2ColorFulfill(v?.name2), 
+      label: (v: OrderData["status"]["fulfillment"]) => v?.name.split(' ')[0] 
     } 
   },
   { 

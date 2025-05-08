@@ -90,6 +90,7 @@ const StorefrontProducts = (
       pr => pr.title
     }
     tags={value} 
+    clsCapsule='bg-kf-500 dark:bg-kf-500/60' 
     className='mt-5' 
   />
 </div>

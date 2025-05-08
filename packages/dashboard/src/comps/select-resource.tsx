@@ -240,7 +240,7 @@ export default SelectResource;
  */
 export const SelectResourceWithTags = <
   RESOURCE extends queryable_resources = queryable_resources, 
-  T extends InferQueryableType<RESOURCE> = InferQueryableType<RESOURCE>,
+  T extends InferQueryableType<RESOURCE> = (InferQueryableType<RESOURCE>),
 >(
   { 
     field, context, value, onChange, resource, add_all=false, 
@@ -256,15 +256,14 @@ export const SelectResourceWithTags = <
 
   const onAdd = useCallback(
     /** @param {T} t  */
-    (t: T | 'ALL') => {
-      const isAll = t==='ALL';
-      // console.log('t ', t)
-      // t = isAll ? t : t.title ?? t.handle // id or handle of collection
+    (t: T) => {
 
-      if(tags.indexOf(t)!=-1)
+      console.log({t, tags})
+      if(tags.find(it => ((it.id===t.id) || (it.handle===t.handle)))) {
         return
+      }
 
-      const new_tags = isAll ? [t] : [ ...tags.filter(tt => tt!=='ALL'), t];
+      const new_tags = [ ...tags, t];
       console.log('new_tags', new_tags)
       onChange(new_tags)
       setTags(new_tags)

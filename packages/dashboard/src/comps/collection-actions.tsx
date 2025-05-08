@@ -66,6 +66,8 @@ export const TopActions = forwardRef(
         {createLink &&
         <div className={isCollectionEmpty ? 'animate-[wave_1.5s_ease-in-out_infinite]' : ''}>
           <BlingButton2
+            from='from-pink-500/60 dark:from-pink-600'
+            to='to-kf-500/60 dark:to-kf-500'
             className='h-9 w-16 text-base rounded-lg' 
             stroke='border-2' 
             children='add'

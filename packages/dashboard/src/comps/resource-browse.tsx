@@ -281,11 +281,11 @@ export const BrowseProducts = (
 
   return (
 <BrowseCollection 
-    resource='products' 
-    Comp={ProductComp} 
-    onSave={onSave} 
-    onCancel={onCancel} 
-    title='Browse Products' />    
+  resource='products' 
+  Comp={ProductComp} 
+  onSave={onSave} 
+  onCancel={onCancel} 
+  title='Browse Products' />    
   )
 }
 

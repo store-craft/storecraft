@@ -18,7 +18,7 @@ const schema_fields = [
     key: undefined, name: 'Full Name', comp: Span, 
     transform: 
       (item: CustomerType) => extract_contact_field(item),
-    comp_params: { className: 'font-semibold' } 
+    comp_params: { className: 'font-semibold capitalize' } 
   },
   { 
     key: 'email', name: 'Email', comp: Span 

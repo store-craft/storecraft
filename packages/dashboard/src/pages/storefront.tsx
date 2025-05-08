@@ -20,7 +20,7 @@ import { CreateDate, Div, withBling } from '@/comps/common-ui'
 import { DiscountApplicationEnum } from '@storecraft/core/api/types.api.enums.js'
 import { DocumentActionsMode, useDocumentActions } from '@/hooks/use-document-actions'
 import { 
-  CollectionType, DiscountType, PostType, ShippingMethodType, StorefrontType 
+  StorefrontType 
 } from '@storecraft/core/api'
 import { BaseDocumentContext } from '.'
 
@@ -66,7 +66,7 @@ const root_left_schema = {
       desc: 'Decide which collections meta data is used by the Store Front',
       comp: withCard(SelectResourceWithTags<'collections'>, 
         { 
-          className:'w-full', add_all: true, resource: 'collections',
+          className:'w-full', add_all: false, resource: 'collections',
           name_fn: it => it.title, slug: '/pages/collections'
 
         }
@@ -78,7 +78,7 @@ const root_left_schema = {
       editable: true, desc: 'Decide which discounts are used by the Store Front',
       comp: withCard(SelectResourceWithTags<'discounts'>, 
         { 
-          className: 'w-full', add_all: true, resource: 'discounts',
+          className: 'w-full', add_all: false, resource: 'discounts',
           transform_fn: (w) => w.filter(
             it => it.application.id===DiscountApplicationEnum.Auto.id && it.active
           ), slug: '/pages/discounts'
@@ -92,7 +92,7 @@ const root_left_schema = {
       desc: 'Decide which Shipping methods are used by the Store Front',
       comp: withCard(SelectResourceWithTags<'shipping'>, 
         { 
-          className: 'w-full', add_all: true, resource: 'shipping',
+          className: 'w-full', add_all: false, resource: 'shipping',
           name_fn: it => it.title, slug: '/pages/shipping-methods'
         }
       ),  
@@ -103,7 +103,7 @@ const root_left_schema = {
       editable: true, desc: 'Decide which Notes / Posts are used by the Store Front',
       comp: withCard(SelectResourceWithTags<'posts'>, 
         { 
-          className: 'w-full', add_all: true, resource: 'posts',
+          className: 'w-full', add_all: false, resource: 'posts',
           name_fn: it => it.title, slug: '/pages/posts'
         }
       ),  

@@ -164,11 +164,7 @@ class PlanetScaleConnection {
     return {
       insertId,
       rows: ( /** @type {R[]} */ (results.rows)),
-      // @ts-ignore replaces `QueryResult.numUpdatedOrDeletedRows` in kysely > 0.22
-      // following https://github.com/koskimas/kysely/pull/188
       numAffectedRows,
-      // deprecated in kysely > 0.22, keep for backward compatibility.
-      numUpdatedOrDeletedRows: numAffectedRows,
     }
   }
 

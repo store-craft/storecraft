@@ -146,8 +146,6 @@ export class NeonHttpConnection {
       const numAffectedRows = BigInt(last_result?.rowCount ?? 0)
 
       return {
-        // TODO: remove.
-        numUpdatedOrDeletedRows: numAffectedRows,
         numAffectedRows,
         rows: last_result.rows ?? [],
       }

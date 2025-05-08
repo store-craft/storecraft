@@ -138,7 +138,8 @@ export const TextArea = (
 }
 
 const readable_span_cls = 'pr-3 py-2 max-w-[18rem] \
-overflow-clip hover:overflow-x-auto inline-block whitespace-nowrap';
+--overflow-clip --hover:overflow-x-auto \
+inline-block whitespace-nowrap';
 
 
 export const Span = <T,>(
@@ -148,7 +149,7 @@ export const Span = <T,>(
   }: SpanParams<T>
 ) => {
   
-  const readable_span_cls = 'overflow-clip hover:overflow-x-auto inline-block whitespace-nowrap'
+  const readable_span_cls = '--overflow-clip --hover:overflow-x-auto inline-block whitespace-nowrap'
   const merged = `${readable_span_cls} ${className} ${extra}`
   return (
     <div className={merged} {...rest} >
@@ -173,16 +174,18 @@ export const SpanArray = (
       <span key={ix}>
         <span children={name_fn(it)}  />
         { ix<value?.length-1 && 
-          <span children={delimiter} 
-                className={classNameDelimiter} />
+          <span 
+            children={delimiter} 
+            className={classNameDelimiter} />
         }
       </span>
     )
   );
 
   return (
-    <p className={`${readable_span_cls} ${className}`} 
-        children={VV} {...rest} />
+    <p 
+      className={`${readable_span_cls} ${className}`} 
+      children={VV} {...rest} />
   )
 }
 
@@ -464,7 +467,7 @@ export const RecordActions = <T,>(
 
   return (
 <div className='flex flex-row gap-3 items-center text-center flex-shrink-0
-                 justify-end text-base overflow-clip w-fit mx-auto '>
+  justify-end text-base overflow-clip w-fit --mx-auto px-3 shelf-body-bg h-14'>
   { 
     !context?.editDocumentUrl && context?.viewDocumentUrl &&
     <Link to={context.viewDocumentUrl(id)}>

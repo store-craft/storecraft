@@ -99,31 +99,42 @@ const Table = <T,>(
       <tr className={recordClassName} {...rest}>
         {
           fields.map(
-            (field, ix) => (
-              <td 
-                className={
-                  ix==0 ? 'text-start px-3 overflow-x-scroll' : 
-                  ix<fields.length-1 ? 
-                  'text-center px-3 overflow-x-clip ' : 
-                  'text-end px-3 right-0 bg-white/60 dark:bg-transparent \
-                  sticky z-10 w-0  --border-l-2 overflow-clip shelf-body-bg opacity-80'
-                } 
-                // width={'10px'}
-                // style={{width:'0.0%'}}
-                key={ix} 
-                children={
-                  (
-                    <>
-                      <field.comp 
-                        context={{ item, ...context}} 
-                        field={field} 
-                        value={getValue(field.key, item, field.transform)}
-                        {...field.comp_params} 
-                      />
-                    </>
-                  )
-                }/> 
-            )
+            (field, ix) => {
+              const is_last = ix==fields.length-1;
+              const is_last_2 = ix==fields.length-2;
+              let cls = 'w-32';
+              if(is_last) {
+                cls = '';
+              }
+              return (
+                <td 
+                  className={
+                    ' font-light font-mono text-ellipsis overflow-clip hover:overflow-x-scroll ' +
+                    (
+                      ix==0 ? 'px-3 text-left ' : 
+                      ix<fields.length-1 ? 
+                      'px-3 text-center' : 
+                      'px-0 text-right right-0  \
+                      sticky z-10 --w-0 --shelf-body-bg opacity-80 h-14 \
+                      flex flex-row justify-end items-center'
+                    )
+                  } 
+                  key={ix} 
+                  children={
+                    (
+                      <div className={'--overflow-x-scroll ' + (cls)}>
+                        <field.comp 
+                          context={{ item, ...context}} 
+                          field={field} 
+                          value={getValue(field.key, item, field.transform)}
+                          {...field.comp_params} 
+                        />
+                      </div>
+                    )
+                  }
+                /> 
+              )
+            }
           )
         }
       </tr>
@@ -131,25 +142,43 @@ const Table = <T,>(
   }
   
   return (
-<table className={className}>
+<table className={className + ' --table-fixed table-auto'}>
   <thead>
-    <tr className='border-b border-b-gray-300 dark:border-gray-300/25 
-                   h-10 text-xs font-medium text-gray-400' >
+    <tr className='border-b border-b-gray-300 
+      dark:border-gray-300/25 h-10 text-xs font-inter 
+      text-gray-400' >
     {
       fields.map(
-        (field, ix) => (
-          <th 
-            className={
-              ix==0 ? 'text-left pl-3' : 
-              ix<fields.length-1 ? 
-              'text-center' : 
-              'text-end pr-3 sticky right-0 bg-white/60 dark:bg-transparent \
-              --border-l-2 --shelf-body-bg '
-            }
-            key={ix} 
-            children={field.name} 
-          /> 
-        )
+        (field, ix) => {
+          const is_last = ix==fields.length-1;
+          const is_last_2 = ix==fields.length-2;
+          let cls = 'w-32';
+          if(is_last) {
+            cls = '';
+          }
+          return (
+            <th 
+              className={
+                'text-ellipsis ' +
+                (
+                  ix==0 ? 'text-left --px-3' : 
+                  ix<fields.length-1 ? 
+                  'text-center px-3' : 
+                  'text-right px-0 sticky right-0 bg-white/60 dark:bg-transparent '
+                )
+              }
+              
+              key={ix} 
+              children={
+                (
+                  <div className={'px-3 text-ellipsis ' + (cls)}>
+                    {field.name}
+                  </div>
+                )
+              } 
+            /> 
+          )
+        }
       )
     }
     </tr>

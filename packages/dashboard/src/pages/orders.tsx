@@ -19,14 +19,11 @@ const extract_contact_field = (item: OrderData) => {
 }
 
 const schema_fields = [
-  {
-    comp: ({}) => <div/>, key: 'active', name: ''
-  },
   { 
     key: 'contact', name: 'Customer',
     comp: ({context, value,}) => (
       <MDView value={extract_contact_field(context?.item)} 
-              className='overflow-x-auto max-w-20 flex-shrink' />
+        className='max-w-20 flex-shrink' />
     ),
   },
   { 

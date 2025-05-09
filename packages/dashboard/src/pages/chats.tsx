@@ -6,13 +6,14 @@ import { TableSchemaView } from '../comps/table-schema-view'
 import { ResourceTitle } from '../comps/resource-title'
 import { type ChatType } from '@storecraft/core/api'
 import { useMemo } from 'react'
+import { useStorecraft } from '@storecraft/sdk-react-hooks'
 
 const schema_fields = [
   { 
     key: 'id', name: 'Thread', comp: Span 
   },
   { 
-    key: undefined, name: 'Full Name', comp: Span, 
+    key: undefined, name: 'Customer', comp: Span, 
     transform: (item: ChatType) => 
       item?.customer_email ?? item?.customer_id ?? 'anonymous',
     comp_params: { className: 'font-semibold' } 
@@ -49,13 +50,14 @@ export default ({}) => {
       onLimitChange, onReload, prev, next
     }
   } = useCollectionsActions('chats', '/pages/chats');
-
+  const { config } = useStorecraft();
+  
   const context_mod = useMemo(
     () => {
       const { viewDocumentUrl } = context;
       
       return {
-        linkExternalUrl: (id: string) => `/chat?thread_id=${id}`,
+        linkExternalUrl: (id: string) => `${config.endpoint}/chat?thread_id=${id}`,
         deleteDocument: context.deleteDocument
       }
     }, [context]

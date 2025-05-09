@@ -46,7 +46,8 @@ export class StorecraftSDK {
    */  
   constructor(config, fetcher) {
     this.#config = config;
-    this.#fetcher = fetcher ?? ((input, init) => fetch(input, init));
+    this.#fetcher = fetcher ?? 
+      ((input, init) => fetch(input, init));
 
     this.ai = new AI(this);
     this.search = new Search(this);

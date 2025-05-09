@@ -67,6 +67,17 @@ export const create = (app) => {
     );
   });
 
+  s('download non-existing chat', async (ctx) => {
+
+    const id = ID('chat');
+
+    const get_stream = await app.api.chats.download(
+      id, false
+    );
+
+    console.dir(get_stream, { depth: 5 });
+  });
+
   return s;
 }
 

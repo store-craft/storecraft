@@ -20,12 +20,20 @@ export default class Chats extends collection_base {
 
   /**
    * @description Download chat contents and metadata.
+   * @template {true | false} [PRESIGNED=false]
    * @param {string} thread_id the chat thread id 
-   * @param {boolean} [prefers_presigned_urls=false] Do you 
+   * @param {PRESIGNED} [prefers_presigned_urls=false] Do you 
    * prefer presigned urls?
-   * @returns {Promise<ChatHistoryType | StorageSignedOperation>}
+   * @returns {Promise<
+   *  PRESIGNED extends false ? 
+   *    ChatHistoryType : 
+   *    StorageSignedOperation
+   * >}
    */
-  download = async (thread_id, prefers_presigned_urls=false) => {
+  download = async (
+    thread_id, 
+    prefers_presigned_urls=/** @type {PRESIGNED} */(false)
+  ) => {
 
     const result = await fetchApiWithAuth(
       this.sdk,

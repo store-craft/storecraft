@@ -5,8 +5,18 @@ import { type Message } from "./types.chat.js";
  * @description The type being saved in the history
  */
 export type ChatHistoryType = {
+  /**
+   * @description The thread / chat id
+   * @example `chat_i192m19p2su19m21p2m12`
+   */
   thread_id?: string;
+  /**
+   * @description The metadata to save
+   */
   metadata: Record<string, any>;
+  /**
+   * @description The chat messages
+   */
   messages: Message[];
 }
 

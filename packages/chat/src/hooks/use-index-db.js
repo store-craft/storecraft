@@ -3,12 +3,8 @@ import {
 } from 'react'
 
 /**
- * 
  * @param {string} name 
- * 
- * 
  * @returns {Promise<IDBDatabase>}
- * 
  */
 const idb_database = (name) => new Promise(
   (resolve, reject) => {
@@ -16,7 +12,6 @@ const idb_database = (name) => new Promise(
     let request = indexedDB.open(name, 1);
 
     /**
-     * 
      * @param {IDBVersionChangeEvent} event 
      */
     request.onupgradeneeded = function(event) {
@@ -49,16 +44,10 @@ const idb_database = (name) => new Promise(
 );
 
 /**
- * 
  * @template T
- * 
- * 
  * @param {string} db_name 
  * @param {string} [object_store_name='main'] 
- * 
- * 
  * @returns {(key: string, value: T) => Promise<string>}
- * 
  */
 const idb_put = (db_name, object_store_name='main') => {
   /**
@@ -94,16 +83,10 @@ const idb_put = (db_name, object_store_name='main') => {
 }
 
 /**
- * 
  * @template T
- * 
- * 
  * @param {string} db_name 
  * @param {string} [object_store_name='main'] 
- * 
- * 
  * @returns {(key: string) => Promise<T>}
- * 
  */
 const idb_get = (db_name, object_store_name='main') => {
   /**
@@ -137,13 +120,9 @@ const idb_get = (db_name, object_store_name='main') => {
 }
 
 /**
- * 
  * @param {string} db_name 
  * @param {string} [object_store_name='main'] 
- * 
- * 
  * @returns {(key: string) => Promise<string>}
- * 
  */
 const idb_remove = (db_name, object_store_name='main') => {
   /**
@@ -176,10 +155,7 @@ const idb_remove = (db_name, object_store_name='main') => {
 /**
  * A `react hook` for using `IndexDB` at the browser.
  * Useful for creating cache systems
- * 
- * 
  * @template {unknown} [T=unknown]
- * 
  * @param {string} db_name 
  */
 export const useIndexDB = (db_name) => {
@@ -198,7 +174,6 @@ export const useIndexDB = (db_name) => {
 
   const put = useCallback(
     /**
-     * 
      * @param {string} key 
      * @param {T} value 
      */
@@ -218,9 +193,7 @@ export const useIndexDB = (db_name) => {
 
   const get = useCallback(
     /**
-     * 
      * @param {string} key 
-     * 
      * @returns {Promise<T | undefined>}
      */
     async (key) => {
@@ -240,7 +213,6 @@ export const useIndexDB = (db_name) => {
 
   const remove = useCallback(
     /**
-     * 
      * @param {string} key 
      */
     async (key) => {

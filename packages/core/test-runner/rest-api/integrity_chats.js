@@ -187,36 +187,35 @@ export const create = (app) => {
         download: {
           __tests: [
             () => {
-              let proof = false;
               const id = ID('chat');
+              const presigned_result_expected = /** @type {{type: "presigned", presigned: import('../../storage/types.storage.js').StorageSignedOperation}} */({
+                type: 'presigned',
+                presigned: {
+                  method: 'GET',
+                  url: 'https://example.com',
+                  headers: {
+                    'x-amz-content-sha256': 'UNSIGNED-PAYLOAD',
+                    'x-amz-date': '20231001T000000Z',
+                    'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIAEXAMPLE/20231001/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=EXAMPLE'
+                  }
+                }
+              })
 
               return { // asert secured endpoint
                 test: async () => {
                   { // secured
 
                     await sdk.auth.signout();
-                    await sdk.chats.download(id, false);
+                    const presigned_result_actual = await sdk.chats.download(id, false);
 
-                    assert.ok(proof);
+                    assert.equal(presigned_result_actual, presigned_result_expected.presigned);
                   }
                 },
                 intercept_backend_api: async (chat_id, prefers_presigned_urls) => {
                   assert.equal(chat_id, id);
                   assert.equal(prefers_presigned_urls, false);
-                  proof = true;
 
-                  return {
-                    type: 'presigned',
-                    presigned: {
-                      method: 'GET',
-                      url: 'https://example.com',
-                      headers: {
-                        'x-amz-content-sha256': 'UNSIGNED-PAYLOAD',
-                        'x-amz-date': '20231001T000000Z',
-                        'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIAEXAMPLE/20231001/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=EXAMPLE'
-                      }
-                    }
-                  }
+                  return presigned_result_expected;
                 },
               }
             }

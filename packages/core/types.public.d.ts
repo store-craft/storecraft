@@ -8,7 +8,7 @@
 // }
 
 export { type StorecraftConfig } from './api/types.api.js';
-export { type App } from './index.js';
+export { App } from './index.js';
 
 
 /**

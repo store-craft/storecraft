@@ -194,7 +194,6 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           err_index+=1;
           if(err_index==2)
             throw 'error'
-          
         }
         const {
           threadId: thread_id,
@@ -256,7 +255,30 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
       setLoading(true);
 
       try {
-        const messages = thread_id ? (await get_db(thread_id)) : [];
+        // const messages = thread_id ? (await get_db(thread_id)) : [];
+
+        let messages = []
+        if(threadId) {
+          const from_idb = await get_db(threadId);
+          if(from_idb) {
+            messages = from_idb;
+          } else {
+            try {
+              const from_storage = await sdk.chats.download(
+                thread_id, false
+              );
+              if(from_storage) {
+                messages = from_storage.messages;
+                // sync to idb
+                await put_db(thread_id, messages);
+              }
+            } catch (e) {
+              console.log(
+                `error loading ${threadId} from server`, e
+              );
+            }
+          }
+        }
 
         setMessages(messages ?? []);
         setThreadId(thread_id);

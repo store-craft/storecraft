@@ -61,33 +61,66 @@ export const count = (app) =>
 export const download = (app) => 
   /**
    * @description Count query results
+   * @template {true | false} [PRESIGNED=false]
    * @param {string} chat_id the chat thread id
-   * @param {boolean} [prefers_presigned_urls=false] if the client prefers
+   * @param {PRESIGNED} [prefers_presigned_urls=false] if the client prefers
    * presigned urls and the storage driver supports it, a presigned url
    * will be returned. Otherwise, a stream will be returned.
    * @returns {Promise<
-   *  { type: 'presigned', presigned?: StorageSignedOperation } | 
-   *  { type: 'stream', stream?: Get<ReadableStream<ChatHistoryType>> }
+   *  PRESIGNED extends true ? { type: 'presigned', presigned: StorageSignedOperation } :
+   *  { type: 'stream', stream: Get<ReadableStream<any>> }
    * >}
    */
-  async (chat_id, prefers_presigned_urls=false) => {
+  async (chat_id, prefers_presigned_urls=/** @type {PRESIGNED} */(false)) => {
     assert(chat_id, 'chat_id is required');
 
     const features = await app.api.storage.features();
-    const file_key = `chats/${chat_id}.json`;
+    const file_key = to_file(chat_id);
 
     if(prefers_presigned_urls && features.supports_signed_urls) {
+      // @ts-ignore
       return {
         type: 'presigned',
         presigned: await app.api.storage.getSigned(file_key)
       }
-    } else {
+    } else if(!prefers_presigned_urls) {
+      // @ts-ignore
       return {
         type: 'stream',
         stream: (await app.api.storage.getStream(file_key))
       }
     }
   }
+
+
+const to_file = (chat_id='') => `chats/${chat_id}.json`;
+
+/**
+ * @description Upload only the chat contents.
+ * @param {App} app
+ */
+export const upload = (app) => 
+  /**
+   * @description Count query results
+   * @param {string} chat_id the chat thread id
+   * @param {ChatHistoryType} chat_history chat history
+   * @returns {Promise<boolean>} true if the upload was successful
+   */
+  async (chat_id, chat_history) => {
+    assert(chat_id, 'chat_id is required');
+    assert(chat_history, 'chat_history is required');
+
+    return app.storage.putArraybuffer(
+      to_file(chat_id),
+      /** @type {ArrayBuffer} */
+      ((new TextEncoder()).encode(
+        JSON.stringify(chat_history)
+      ).buffer),
+      undefined 
+    );  
+
+  }  
+
 
 
 /**
@@ -102,5 +135,6 @@ export const inter = app => {
     list: regular_list(app, db(app), 'chats/list'),
     count: count(app),
     download: download(app),
+    upload: upload(app),
   }
 }

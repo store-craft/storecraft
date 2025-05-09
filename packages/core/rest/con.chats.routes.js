@@ -101,12 +101,14 @@ export const create_routes = (app) => {
         'something went wrong' 
       );
 
-      if(result.type === 'presigned') {
+      const result_type = result.type;
+
+      if(result_type === 'presigned') {
         res.headers.set(HEADER_PRESIGNED, 'true');
         res.sendJson(
           result.presigned
         );
-      } else if(result.type === 'stream') {
+      } else if(result_type === 'stream') {
         assert(
           result?.stream?.value && !result?.stream?.error, 
           result.stream.message || 
@@ -121,13 +123,12 @@ export const create_routes = (app) => {
         );
         res.headers.set(HEADER_PRESIGNED, 'false');
         res.sendReadableStream(stream);
+      } else {
+        assert(
+          false, 
+          `something went wrong, download type ${result_type} not supported` 
+        );
       }
-
-      assert(
-        false, 
-        `something went wrong, download type ${result.type} not supported` 
-      );
-
     }
   );
   

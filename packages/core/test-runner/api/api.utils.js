@@ -263,3 +263,16 @@ export const assert_async_throws = async (
 
   assert.unreachable(message);
 }
+
+
+/**
+ * @param {ReadableStream} stream 
+ */
+export const stream_to_string = async (stream) => {
+  let text = '';
+  const decoder = new TextDecoder();
+  for await (const part of stream) {
+    text += decoder.decode(part);
+  }
+  return text;
+}

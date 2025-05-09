@@ -9,7 +9,7 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
  * @description Base `chats` metadata **CRUD**
  * @extends {collection_base<ChatTypeUpsert, ChatType>}
  */
-export default class Posts extends collection_base {
+export default class Chats extends collection_base {
 
   /**
    * @param {StorecraftSDK} sdk 

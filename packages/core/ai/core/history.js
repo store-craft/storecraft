@@ -18,33 +18,36 @@ export class StorageHistoryProvider {
   }
 
   /**
-   * @description Load the chat messages from cache or storage
+   * @description Load the chat messages from 
+   * cache or storage
    * @param {string} threadId 
    * @param {App} app 
    * @returns {Promise<ChatHistoryType>}
    */
   #load_chat = async (threadId, app) => {
+    const new_chat = {
+      messages: [],
+      metadata: {
+        thread_id: threadId,
+        created_at: new Date().toISOString(),
+      }
+    }
+
     try {
-      const key = this.#to_key(threadId);
-      if(this.#cache[key])
-        return this.#cache[key];
-  
-      const stream = await app.storage.getStream(
-        key
+      // const key = this.#to_key(threadId);
+      if(this.#cache[threadId])
+        return this.#cache[threadId];
+
+      const get = await app.api.chats.download(
+        threadId, false
       );
   
-      if(!stream.value) {
-        return {
-          messages: [],
-          thread_id: threadId,
-          metadata: {
-          }
-        };
-      }
+      if(!get.stream.value) 
+        return new_chat;
 
       let text = '';
       const decoder = new TextDecoder();
-      for await (const part of stream.value) {
+      for await (const part of get.stream.value) {
         text += decoder.decode(part);
       }
    
@@ -52,23 +55,14 @@ export class StorageHistoryProvider {
 
     } catch(e) {
       console.error('load chat error', e)
-      return {
-        messages: [],
-        metadata: {
-          thread_id: threadId,
-          created_at: new Date().toISOString(),
-        }
-      };
+      return new_chat;
     }
   }
-
-  /** @param {string} threadId */
-  #to_key = (threadId) => `chats/${threadId}.json`;
 
   /** @type {HistoryProvider["load"]} */
   load = async (threadId, app) => {
 
-    const key = this.#to_key(threadId);
+    // const key = this.#to_key(threadId);
     const chat = await this.#load_chat(threadId, app);
 
     /** @type {History} */
@@ -92,28 +86,19 @@ export class StorageHistoryProvider {
 
         // reduce text deltas into text
         chat.messages = chat.messages.map(
-          m => ({
+          (m) => ({
             ...m,
             contents: reduce_text_deltas_into_text(m.contents)
           })
         );
 
-        this.#cache[key] = chat;
+        this.#cache[threadId] = chat;
 
-        await app.storage.putArraybuffer(
-          key,
-          /** @type {ArrayBuffer} */
-          ((new TextEncoder()).encode(
-            JSON.stringify(chat)
-          ).buffer),
-          undefined 
-          // we will not save the metadata here, 
-          // it might hold sensitive data
-          // and we don't want to save it in the storage.
-          // we will save it in the database
-          // chat.metadata
+        await app.api.chats.upload(
+          threadId,
+          chat
         );
-        
+
         return history;
       },
 

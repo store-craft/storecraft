@@ -15,7 +15,7 @@ import {
   api_query_to_searchparams, parse_query 
 } from '../../api/query.js';
 import { ID } from '../../api/utils.func.js';
- 
+
 /**
  * @param {App} app `storecraft` app instance
  */
@@ -167,7 +167,7 @@ export const create = (app) => {
                     assert.equal(proof, 'proof.chats.upsert');
                   }
                   { // non secured
-                    sdk.config.auth = undefined;
+                    await sdk.auth.signout();
                     await assert_async_throws(
                       () => sdk.chats.upsert(item),
                       'upsert is not secured'
@@ -182,7 +182,46 @@ export const create = (app) => {
             }
 
           ]
-        },             
+        },    
+        
+        download: {
+          __tests: [
+            () => {
+              let proof = false;
+              const id = ID('chat');
+
+              return { // asert secured endpoint
+                test: async () => {
+                  { // secured
+
+                    await sdk.auth.signout();
+                    await sdk.chats.download(id, false);
+
+                    assert.ok(proof);
+                  }
+                },
+                intercept_backend_api: async (chat_id, prefers_presigned_urls) => {
+                  assert.equal(chat_id, id);
+                  assert.equal(prefers_presigned_urls, false);
+                  proof = true;
+
+                  return {
+                    type: 'presigned',
+                    presigned: {
+                      method: 'GET',
+                      url: 'https://example.com',
+                      headers: {
+                        'x-amz-content-sha256': 'UNSIGNED-PAYLOAD',
+                        'x-amz-date': '20231001T000000Z',
+                        'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIAEXAMPLE/20231001/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=EXAMPLE'
+                      }
+                    }
+                  }
+                },
+              }
+            }
+          ]
+        }
 
       },
 

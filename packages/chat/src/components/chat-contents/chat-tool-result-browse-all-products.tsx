@@ -1,7 +1,7 @@
 import { 
   type content_tool_result, type InferToolReturnSchema 
 } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { type withDiv } from "../common.types.js";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { ProductsBrowserView } from "./products-browser-view.js";

@@ -1,7 +1,7 @@
 import { 
   type content_tool_result, type InferToolReturnSchema 
 } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";

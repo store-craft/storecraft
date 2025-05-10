@@ -57,7 +57,7 @@ export const create = app => {
   
   s.before(
     async () => { 
-      assert.ok(app.ready);
+      assert.ok(app.isready);
       try {
         await app.api.products.remove(pr_upsert.handle);
         for(const p of related_product_for_upsert)
@@ -73,7 +73,7 @@ export const create = app => {
 
   s('basic upsert of related products test', async () => {
     // upsert 1st product straight to the db because we have ID
-    await app.db.resources.products.upsert(pr_upsert);
+    await app.__show_me_everything.db.resources.products.upsert(pr_upsert);
 
     // upsert all variants
     const related_product_upserted_ids_and_handles = await promises_sequence(
@@ -91,7 +91,7 @@ export const create = app => {
     // console.log('ids', ids)
 
     // now, make the connection
-    await app.db.resources.products.upsert(
+    await app.__show_me_everything.db.resources.products.upsert(
       {
         ...pr_upsert,
         related_products: related_product_upserted_ids_and_handles
@@ -146,7 +146,7 @@ export const create = app => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

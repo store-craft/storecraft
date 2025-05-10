@@ -79,7 +79,7 @@ test('reduce_content_deltas_into_text with mixed content', () => {
 
   const result = reduce_text_deltas_into_text(contents);
 
-  console.dir(result, { depth: 10 });
+  // console.dir(result, { depth: 10 });
   
   assert.equal(
     result, 

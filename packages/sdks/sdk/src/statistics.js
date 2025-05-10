@@ -58,7 +58,7 @@ export default class Statistics  {
 
   /**
    * @description Load **count** `statistics`
-   * @param {keyof App["db"]["resources"]} table 
+   * @param {keyof App["__show_me_everything"]["db"]["resources"]} table 
    * @param {ApiQuery} [query]
    * @returns {Promise<number>}
    * @throws

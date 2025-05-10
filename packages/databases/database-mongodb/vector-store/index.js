@@ -93,10 +93,10 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url] 
-      ?? app.platform.env['MONGODB_URL']; 
-    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name] 
-      ?? app.platform.env['MONGODB_DB_NAME'] ?? 'main'; 
+    this.config.url ??= app.env[MongoVectorStore.EnvConfig.url] 
+      ?? app.env['MONGODB_URL']; 
+    this.config.db_name ??= app.env[MongoVectorStore.EnvConfig.db_name] 
+      ?? app.env['MONGODB_DB_NAME'] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */

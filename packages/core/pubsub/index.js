@@ -99,8 +99,7 @@ export class PubSub {
    * @param {PubSubEvent | string} event An event identifier
    * @param {PubSubSubscriber} callback a `callback` 
    * event handler to invoke, can be a `promise`
-   * @return {Function} A self invoking function that will unsubscribe the callback
-   * @returns {UnsubscribeFunction}
+   * @returns {UnsubscribeFunction} A self invoking function that will unsubscribe the callback
    */
   #on(event, callback) {
     this.#subscribersOf(event).push(callback);

@@ -14,7 +14,7 @@ import { App } from '../index.js';
 /**
  * @param {App} app
  */
-export const db = app => app.db.resources.collections;
+export const db = app => app.__show_me_everything.db.resources.collections;
 
 /**
  * @description `upsert` a `collection`
@@ -99,7 +99,7 @@ export const export_collection = (app) => {
 
     const key = `collections/${collection.handle}.json`;
     const publish_path = `storage://${key}`;
-    const success = await app.storage.putArraybuffer(
+    const success = await app.__show_me_everything.storage.putArraybuffer(
       key,
       // @ts-ignore
       array

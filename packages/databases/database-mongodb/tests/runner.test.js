@@ -8,7 +8,7 @@ import { api } from '@storecraft/core/test-runner';
 // Main MongoDB test suite with the core test-runner for api layer
 //
 
-export const create_app = async () => {
+export const create_app = () => {
   const app = new App(
     {
       auth_admins_emails: ['admin@sc.com'],
@@ -28,13 +28,13 @@ export const create_app = async () => {
     )
   )
   
-  return app.init()
+  return app.init().__show_me_everything.app;
 }
 
 async function test() {
-  const app = await create_app();
+  const app = create_app();
 
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app.__show_me_everything.db, false);
  
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
@@ -43,7 +43,7 @@ async function test() {
   );
   
   const last_test = Object.values(api).at(-1).create(app);
-  last_test.after(async ()=>{app.db.disconnect()});
+  last_test.after(async ()=>{app.__show_me_everything.db.disconnect()});
   last_test.run();
 }
 

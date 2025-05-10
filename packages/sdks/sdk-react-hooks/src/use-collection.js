@@ -21,7 +21,7 @@ import {
 /**
  * 
  * @param {string} resource 
- * @returns {keyof App["db"]["resources"]} 
+ * @returns {keyof App["__show_me_everything"]["db"]["resources"]} 
  */
 export const rest_resource_to_db_resource_table = resource => {
   if(resource==='shipping')

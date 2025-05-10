@@ -52,7 +52,7 @@ export class GeminiEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[GeminiEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[GeminiEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */

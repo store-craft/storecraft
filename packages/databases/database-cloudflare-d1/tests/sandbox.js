@@ -25,10 +25,9 @@ export const test = async () => {
         db_name: process.env.CLOUDFLARE_DATABASE_NAME
       }
     )
-  );
+  ).init();
   
-  await app.init();
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app.__show_me_everything.db, false);
 
 }
 

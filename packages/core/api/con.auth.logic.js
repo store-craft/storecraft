@@ -70,11 +70,11 @@ async (body) => {
   const { email, password, firstname, lastname } = body;
   
   // Check if the user already exists
-  const existingUser = await app.db.resources.auth_users.getByEmail(email);
+  const existingUser = await app.__show_me_everything.db.resources.auth_users.getByEmail(email);
 
   assert(!existingUser, 'auth/already-signed-up', 400);
 
-  const hashedPassword = await app.platform.crypto.hash(
+  const hashedPassword = await app.__show_me_everything.platform.crypto.hash(
     password
   );
 
@@ -195,12 +195,12 @@ async (body) => {
   assert_zod(apiAuthChangePasswordTypeSchema, body);
 
   // Check if the user already exists
-  let existingUser = await app.db.resources.auth_users.get(body.user_id_or_email);
+  let existingUser = await app.__show_me_everything.db.resources.auth_users.get(body.user_id_or_email);
 
   assert(existingUser, 'auth/error', 401)
 
   { // verify the current password
-    const verified = await app.platform.crypto.verify(
+    const verified = await app.__show_me_everything.platform.crypto.verify(
       existingUser.password, body.current_password
     );
     
@@ -221,7 +221,7 @@ async (body) => {
   );
 
     // Hash the password using pbkdf2
-  const hashedPassword = await app.platform.crypto.hash(
+  const hashedPassword = await app.__show_me_everything.platform.crypto.hash(
     body.new_password
   );
 
@@ -289,19 +289,19 @@ async (body, fail_if_not_admin=false) => {
   const { email, password } = body;
 
   // Check if the user already exists
-  let existingUser = await app.db.resources.auth_users.getByEmail(email);
+  let existingUser = await app.__show_me_everything.db.resources.auth_users.getByEmail(email);
   const isAdmin = isAdminEmail(app, email);
   // An admin first login will register the default `admin` password
   if(!existingUser && isAdmin) {
     await signup(app)({ ...body, password: 'admin' });
-    existingUser = await app.db.resources.auth_users.getByEmail(email);
+    existingUser = await app.__show_me_everything.db.resources.auth_users.getByEmail(email);
   }
 
   assert(isAdmin || !fail_if_not_admin, 'auth/error', 401)
   assert(existingUser && existingUser.password, 'auth/error', 401)
 
   // verify the password
-  const verified = await app.platform.crypto.verify(
+  const verified = await app.__show_me_everything.platform.crypto.verify(
     existingUser.password, password
   );
   
@@ -441,7 +441,7 @@ async () => {
   const exported = await crypto.subtle.exportKey("raw", key);
   const ui8a = new Uint8Array(exported);
   const password = fromUint8Array(ui8a, true);
-  const hashedPassword = await app.platform.crypto.hash(
+  const hashedPassword = await app.__show_me_everything.platform.crypto.hash(
     password
   );
 
@@ -515,7 +515,7 @@ export const verify_api_key = (app) =>
       email, password
     } = parse_api_key(body);
 
-    const apikey_user = await app.db.resources.auth_users.getByEmail(
+    const apikey_user = await app.__show_me_everything.db.resources.auth_users.getByEmail(
       email
     );
 
@@ -524,7 +524,7 @@ export const verify_api_key = (app) =>
     );
 
     // verify the password
-    const verified = await app.platform.crypto.verify(
+    const verified = await app.__show_me_everything.platform.crypto.verify(
       apikey_user.password, password
     );
 
@@ -544,7 +544,7 @@ export const list_all_api_keys_info = (app) =>
    */
   async () => {
 
-    const apikeys = await app.db.resources.auth_users.list(
+    const apikeys = await app.__show_me_everything.db.resources.auth_users.list(
       {
         vql: 'tag:apikey',
         limit: 1000,
@@ -570,7 +570,7 @@ export const list_auth_users = (app) =>
  */
 async (query={}) => {
 
-  const items = await app.db.resources.auth_users.list(
+  const items = await app.__show_me_everything.db.resources.auth_users.list(
     query
   );
 
@@ -591,7 +591,7 @@ export const get_auth_user = (app) =>
  */
 async (id_or_email) => {
 
-  return app.db.resources.auth_users.get(
+  return app.__show_me_everything.db.resources.auth_users.get(
     id_or_email
   );
 }
@@ -609,7 +609,7 @@ export const upsert_auth_user = (app) =>
 
     const final = apply_dates(item);
 
-    const success = await app.db.resources.auth_users.upsert(
+    const success = await app.__show_me_everything.db.resources.auth_users.upsert(
       final,
       create_search_terms(final)
     );
@@ -637,8 +637,8 @@ async (id_or_email) => {
   let user_for_remove_event;
 
   { // dispatch event
-    if(app.pubsub.has('auth/remove')) {
-      user_for_remove_event = await app.db.resources.auth_users.get(
+    if(app.__show_me_everything.pubsub.has('auth/remove')) {
+      user_for_remove_event = await app.__show_me_everything.db.resources.auth_users.get(
         id_or_email
       );
     }
@@ -648,14 +648,14 @@ async (id_or_email) => {
       if(id_or_email.startsWith('au_'))
         cus_id_or_email = id_or_email.replace('au_', 'cus_');
 
-      customer_for_remove_event = await app.db.resources.customers.get(
+      customer_for_remove_event = await app.__show_me_everything.db.resources.customers.get(
         cus_id_or_email
       );
     }
   }
 
   // we remove the customer as well in the database in a transaction
-  const success =  await app.db.resources.auth_users.remove(
+  const success =  await app.__show_me_everything.db.resources.auth_users.remove(
     id_or_email
   );
 
@@ -704,7 +704,7 @@ export const confirm_email = (app) =>
     assert(claims.aud===CONFIRM_EMAIL_TOKEN, 'auth/error');
 
     const auth_id = claims.sub;
-    const au = await app.db.resources.auth_users.get(auth_id);
+    const au = await app.__show_me_everything.db.resources.auth_users.get(auth_id);
 
     au.confirmed_mail = true;
 
@@ -783,7 +783,7 @@ export const forgot_password_request_confirm = (app) =>
     assert(claims.aud===FORGOT_PASSWORD_IDENTITY_TOKEN, 'auth/error');
 
     const auth_id_or_email = claims.sub ?? claims.email;
-    const au = await app.db.resources.auth_users.get(auth_id_or_email);
+    const au = await app.__show_me_everything.db.resources.auth_users.get(auth_id_or_email);
 
     const key = await crypto.subtle.generateKey(
       {
@@ -798,7 +798,7 @@ export const forgot_password_request_confirm = (app) =>
     const exported = await crypto.subtle.exportKey("raw", key);
     const ui8a = new Uint8Array(exported);
     const password = fromUint8Array(ui8a, true);
-    const hashedPassword = await app.platform.crypto.hash(
+    const hashedPassword = await app.__show_me_everything.platform.crypto.hash(
       password
     );
 
@@ -830,7 +830,7 @@ export const count = (app) =>
    * @param {ApiQuery<AuthUserType>} query 
    */
   (query) => {
-    return app.db.resources.auth_users.count(query);
+    return app.__show_me_everything.db.resources.auth_users.count(query);
   }
   
 

@@ -12,7 +12,7 @@ import { App } from '../index.js';
 /**
  * @param {App} app
  */
-export const db = app => app.db.resources.images;
+export const db = app => app.__show_me_everything.db.resources.images;
  
 /**
  * @param {App} app
@@ -72,11 +72,11 @@ async (id) => {
     return;
 
   // remove from storage if it belongs
-  if(app.storage && img.url.startsWith('storage://'))
-    await app.storage.remove(img.url.substring('storage://'.length));
+  if(app.__show_me_everything.storage && img.url.startsWith('storage://'))
+    await app.__show_me_everything.storage.remove(img.url.substring('storage://'.length));
 
   // db remove image side-effect
-  const success = await app.db.resources.images.remove(img.id);
+  const success = await app.__show_me_everything.db.resources.images.remove(img.id);
 
   if(success) {
     await app.pubsub.dispatch(

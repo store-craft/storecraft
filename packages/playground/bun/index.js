@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import { app } from './app.js';
  
-await app.init(false);
-
 // @ts-ignore
 Bun.serve(
   {

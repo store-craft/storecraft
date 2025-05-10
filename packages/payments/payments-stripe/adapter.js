@@ -69,15 +69,16 @@ export class Stripe {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.publishable_key ??=
-        app.platform.env[Stripe.EnvConfig.publishable_key];
+      app.env[Stripe.EnvConfig.publishable_key];
     this.config.secret_key ??= 
-        app.platform.env[Stripe.EnvConfig.secret_key];
+      app.env[Stripe.EnvConfig.secret_key];
     this.config.webhook_endpoint_secret ??= 
-        app.platform.env[Stripe.EnvConfig.webhook_endpoint_secret];
+      app.env[Stripe.EnvConfig.webhook_endpoint_secret];
   }
 
   get stripe() {
-    const is_valid = this.config.publishable_key && this.config.secret_key;
+    const is_valid = this.config.publishable_key && 
+      this.config.secret_key;
 
     if(!is_valid) {
       throw new StorecraftError(

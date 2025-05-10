@@ -29,14 +29,14 @@ export const create = (app) => {
   s.before(
     async () => { 
       await app.init();
-      assert.ok(app.ready);
-      app.rest_controller.logger.active=false;
+      assert.ok(app.isready);
+      app.__show_me_everything.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
-      app.rest_controller.logger.active=true;
+      app.__show_me_everything.rest_controller.logger.active=true;
     }
   );
 
@@ -242,7 +242,7 @@ export const create = (app) => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

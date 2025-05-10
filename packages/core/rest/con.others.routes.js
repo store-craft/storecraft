@@ -34,7 +34,7 @@ export const create_routes = (app) => {
       res.sendJson(
         {
           ...app.config,
-          core_version: app.version
+          core_version: app.info.core_version
         }
       );
     }

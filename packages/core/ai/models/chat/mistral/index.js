@@ -29,7 +29,7 @@ export class Mistral extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[Mistral.MistralEnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[Mistral.MistralEnvConfig.api_key]; 
   }
 
 }

@@ -37,7 +37,7 @@ export const create = app => {
     file_name(import.meta.url), 
   );
   
-  s.before(async () => { assert.ok(app.ready) });
+  s.before(async () => { assert.ok(app.isready) });
   const ops = app.api.notifications;
 
   s('add', async () => {
@@ -60,7 +60,7 @@ export const create = app => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

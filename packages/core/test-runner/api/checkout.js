@@ -49,10 +49,11 @@ export const create = (app) => {
   const create_aug_app = () => {
     return app.withPaymentGateways(
       {
-        ...(app.gateways ?? {}),
+        ...(app.__show_me_everything.gateways ?? {}),
         'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
       }
-    ).withTaxes(new UniformTaxes(10));
+    ).withTaxes(new UniformTaxes(10))
+    .init();
   }
 
   /** @type {ReturnType<typeof create_aug_app>} */
@@ -65,7 +66,7 @@ export const create = (app) => {
 
   s.before(
     async () => { 
-      assert.ok(app.ready);
+      assert.ok(app.isready);
       app2 = create_aug_app();
       
       await app2.api.shipping_methods.remove(shipping.handle);
@@ -177,7 +178,7 @@ export const create = (app) => {
         `checkout status error`
       );
   
-      const authorize_on_checkout = app2.gateways.dummy_payments.config.intent_on_checkout==='AUTHORIZE';
+      const authorize_on_checkout = app2.__show_me_everything.gateways.dummy_payments.config.intent_on_checkout==='AUTHORIZE';
       const expected_payment_status = (
         authorize_on_checkout ? enums.PaymentOptionsEnum.authorized.id : 
                   enums.PaymentOptionsEnum.captured.id
@@ -437,7 +438,7 @@ export const create = (app) => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

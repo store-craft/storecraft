@@ -29,11 +29,11 @@ export const app = new App({
   .withExtensions({
     postman: new PostmanExtension(),
   })
-  .withAI(new OpenAI({ model: "gpt-4" }))
+  .withAI(new OpenAI({ model: "gpt-4.1-nano" }))
   .withVectorStore(
     new Vectorize({
       embedder: new CloudflareEmbedder({
         model: "@cf/baai/bge-large-en-v1.5",
       }),
     }),
-  )
+  ).init();

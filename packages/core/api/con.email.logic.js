@@ -37,7 +37,6 @@ export const compileTemplate = (template, data) => {
   }
 }
 
-
 /**
  * @param {App} app 
  */
@@ -51,7 +50,7 @@ export const sendMailWithTemplate = (app) =>
   async ({emails, template_handle, data}) => {
     
     assert(
-      app.mailer,
+      app.__show_me_everything.mailer,
       'Mailer not found'
     );
     
@@ -100,11 +99,11 @@ export const sendMail = (app) =>
     );
 
     assert(
-      app.mailer,
+      app.__show_me_everything.mailer,
       'Mailer not found'
     );
 
-    const r = await app.mailer.email(mail);
+    const r = await app.__show_me_everything.mailer.email(mail);
 
     await app.pubsub.dispatch(
       'email/after-send',
@@ -123,7 +122,6 @@ export const sendMail = (app) =>
 
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

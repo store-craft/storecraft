@@ -45,7 +45,7 @@ export class PlanetScale extends SQL {
     const dialect = /** @type {PlanetScaleDialect} */ (this.config.dialect);
     const config = dialect.config;
 
-    config.url ??= app.platform.env[PlanetScale.EnvConfig.url];
+    config.url ??= app.env[PlanetScale.EnvConfig.url];
     
     super.init(app);
   }

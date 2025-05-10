@@ -12,7 +12,7 @@ import {
 } from './con.shared.js'
 
 /** @param {App} app */
-export const db = app => app.db.resources.chats;
+export const db = app => app.__show_me_everything.db.resources.chats;
 
 /**
  * @param {App} app
@@ -110,7 +110,7 @@ export const upload = (app) =>
     assert(chat_id, 'chat_id is required');
     assert(chat_history, 'chat_history is required');
 
-    return app.storage.putArraybuffer(
+    return app.__show_me_everything.storage.putArraybuffer(
       to_file(chat_id),
       /** @type {ArrayBuffer} */
       ((new TextEncoder()).encode(

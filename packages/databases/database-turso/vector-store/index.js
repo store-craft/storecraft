@@ -102,11 +102,11 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken ??= app.platform.env[LibSQLVectorStore.EnvConfig.authToken] 
-        ?? app.platform.env['LIBSQL_AUTH_TOKEN'];
+    this.config.authToken ??= app.env[LibSQLVectorStore.EnvConfig.authToken] 
+        ?? app.env['LIBSQL_AUTH_TOKEN'];
 
-    this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url] 
-        ?? app.platform.env['LIBSQL_URL'] ?? 'file:data.db';
+    this.config.url ??= app.env[LibSQLVectorStore.EnvConfig.url] 
+        ?? app.env['LIBSQL_URL'] ?? 'file:data.db';
   }
 
   /** @type {VectorStore["embedder"]} */

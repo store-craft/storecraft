@@ -11,7 +11,7 @@ import { regular_get, regular_list,
   regular_remove, regular_upsert } from './con.shared.js'
 
 /** @param {App} app */
-export const db = app => app.db.resources.storefronts;
+export const db = app => app.__show_me_everything.db.resources.storefronts;
 
 /**
  * @param {App} app
@@ -56,7 +56,7 @@ export const export_storefront = (app) => {
     );
 
     assert(
-      app.storage,
+      app.__show_me_everything.storage,
       'storage not available'
     );
 
@@ -65,7 +65,7 @@ export const export_storefront = (app) => {
 
     const key = `storefronts/${sf.handle}.json`;
     const publish_path = `storage://${key}`;
-    const success = await app.storage.putArraybuffer(
+    const success = await app.__show_me_everything.storage.putArraybuffer(
       key,
       // @ts-ignore
       array

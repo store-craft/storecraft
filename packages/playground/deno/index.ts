@@ -1,7 +1,5 @@
 import { app } from './app.js';
 
-await app.init(false);
-
 // @ts-ignore
 Deno.serve(
   {

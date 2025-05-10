@@ -34,7 +34,7 @@ export class Resend {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.platform.env[Resend.EnvConfig.apikey];
+    this.config.apikey ??= app.env[Resend.EnvConfig.apikey];
   };
 
   /**

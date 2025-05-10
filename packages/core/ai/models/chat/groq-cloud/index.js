@@ -50,7 +50,7 @@ export class GroqCloud extends OpenAI {
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
     this.config.api_key ??= 
-      app.platform.env[GroqCloud.GroqEnvConfig.api_key]; 
+      app.__show_me_everything.platform.env[GroqCloud.GroqEnvConfig.api_key]; 
   }
 
 }

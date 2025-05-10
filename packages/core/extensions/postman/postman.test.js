@@ -2,6 +2,7 @@
  * @import { AuthUserType, OrderData } from '../../api/types.api.js'
  * @import { Test } from 'uvu';
  * @import { events } from '../../pubsub/types.public.js';
+ * @import { InitializedStorecraftApp } from '../../types.public.js';
  */
 import { test, suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -518,7 +519,7 @@ export const create_test = (app) => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create_test(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

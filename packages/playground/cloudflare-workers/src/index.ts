@@ -51,16 +51,14 @@ export default {
       .withExtensions({
         postman: new PostmanExtension(),
       })
-      .withAI(new OpenAI({ model: "gpt-4" }))
+      .withAI(new OpenAI({ model: "gpt-4.1-nano" }))
       .withVectorStore(
         new Vectorize({
           embedder: new CloudflareEmbedder({
             model: "@cf/baai/bge-large-en-v1.5",
           }),
         }),
-      )
-
-    await app.init()
+      ).init();
 
     const response = await app.handler(request)
 

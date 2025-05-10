@@ -8,8 +8,22 @@
 // }
 
 export { type StorecraftConfig } from './api/types.api.js';
+import { App } from './index.js';
 export { App } from './index.js';
 
+type storecraft_properties_after_build = '__show_me_everything' | 
+  'info' | 'print_banner' | 'pubsub' | 'config' | 
+  'isready' | 'handler' | 'api' | 'env';
+
+export type OmitAppBuild<APP extends App = App> = Omit<
+  APP, 
+  storecraft_properties_after_build
+>;
+
+export type InitializedStorecraftApp<APP extends App = App> = Pick<
+  APP, 
+  storecraft_properties_after_build
+>;
 
 /**
  * @description A small utility type to rewrite any record type

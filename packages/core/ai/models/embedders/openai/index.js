@@ -59,7 +59,7 @@ export class OpenAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[OpenAIEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[OpenAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

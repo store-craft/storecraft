@@ -36,7 +36,7 @@ export class XAI extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[XAI.XAIEnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[XAI.XAIEnvConfig.api_key]; 
   }
 
 }

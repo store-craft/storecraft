@@ -6,12 +6,10 @@ import { App } from "@storecraft/core";
 
 /**
  * @description Seeds the database with the provided data.
- * @param {App} app 
+ * @param {import("@storecraft/core").InitializedStorecraftApp} app 
  * @param {any} data 
  */
 export const seed = async (app, data) => {
-  await app.init();
-
   for (const v of data?.collections ?? []) {
     await app.api?.collections.upsert(v);
   }

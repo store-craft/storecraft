@@ -20,8 +20,6 @@ import {
  * uses `{email: string, token: string}`
  * - `auth/confirm-email-token-generated` via `confirm-email` 
  * template (currently not present), uses `{email: string, token: string}`
- * 
- * 
  * @implements {extension}
  */
 export class PostmanExtension {
@@ -42,7 +40,6 @@ export class PostmanExtension {
   onInit(app) {
 
     // checkout events notifications
-
     app.pubsub.on(
       'orders/checkout/complete',
       async (event) => {

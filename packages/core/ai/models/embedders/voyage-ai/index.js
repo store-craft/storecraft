@@ -59,7 +59,7 @@ export class VoyageAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[VoyageAIEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[VoyageAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

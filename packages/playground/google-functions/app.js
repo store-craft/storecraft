@@ -8,6 +8,8 @@ export const app = new App(
   {
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token',
+    auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+    auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     storage_rewrite_urls: undefined,
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
@@ -28,4 +30,4 @@ export const app = new App(
       }
     ),
   }
-);
+).init();

@@ -7,7 +7,7 @@ import { app } from './app.js';
 functions.http(
   'storecraft',
   async (req, res) => {
-    await app.init();
+    app.print_banner();
     return app.handler(req, res);
   }
 );

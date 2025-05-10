@@ -62,9 +62,9 @@ export class CloudflareEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.account_id ??= app.platform.env[CloudflareEmbedder.EnvConfig.account_id]; 
-    this.config.api_key ??= app.platform.env[CloudflareEmbedder.EnvConfig.api_key] 
-          ?? app.platform.env['CF_API_KEY']; 
+    this.config.account_id ??= app.__show_me_everything.platform.env[CloudflareEmbedder.EnvConfig.account_id]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[CloudflareEmbedder.EnvConfig.api_key] 
+          ?? app.__show_me_everything.platform.env['CF_API_KEY']; 
     // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 

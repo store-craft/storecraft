@@ -14,12 +14,12 @@ import { assert } from "./utils.func.js";
 export const speakWithAgentSync = (app) => 
   /**
    * @description speak with agent synchronously.
-   * @param {keyof T["agents"]} agent_handle agent identifier
+   * @param {keyof T["__show_me_everything"]["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunResponse>}
    */
   async (agent_handle, params) => {
-    const agent = app.agents?.[String(agent_handle)];
+    const agent = app.__show_me_everything.agents?.[String(agent_handle)];
     assert(
       agent,
       `Agent ${String(agent_handle)} not found !`
@@ -37,13 +37,13 @@ export const speakWithAgentSync = (app) =>
 export const speakWithAgentStream = (app) => 
   /**
    * @description speak with agent with streaming.
-   * @param {keyof T["agents"]} agent_handle agent identifier
+   * @param {keyof T["__show_me_everything"]["agents"]} agent_handle agent identifier
    * @param {AgentRunParameters} params 
    * @returns {Promise<AgentRunStreamResponse>}
    */
   async (agent_handle, params) => {
     
-    const agent = app.agents?.[String(agent_handle)];
+    const agent = app.__show_me_everything.agents?.[String(agent_handle)];
 
     assert(
       agent,

@@ -44,9 +44,9 @@ export class Turso extends SQL {
     const dconfig = dialect.config;
     
     // optional
-    dconfig.authToken ??= app.platform.env[Turso.EnvConfig.authToken];
+    dconfig.authToken ??= app.env[Turso.EnvConfig.authToken];
     // mandatory
-    dconfig.url ??= (app.platform.env[Turso.EnvConfig.url] ?? 'file:data.db');
+    dconfig.url ??= (app.env[Turso.EnvConfig.url] ?? 'file:data.db');
 
     if (!dconfig.url) {
       console.warn(

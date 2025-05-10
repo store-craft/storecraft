@@ -45,7 +45,7 @@ export class SQLite extends SQL {
 
   /** @type {SQL["init"]} */
   init = (app) => {
-    this.dialect_config.filepath ??= app.platform.env[SQLite.EnvConfig.filepath];
+    this.dialect_config.filepath ??= app.env[SQLite.EnvConfig.filepath];
     super.init(app);
   }
 

@@ -1,5 +1,6 @@
 /**
  * @import { ExtensionItemGet } from '../api/types.api.js';
+ * @import { InitializedStorecraftApp } from '../types.public.js';
  */
 import { assert } from '../api/utils.func.js'
 import { App } from '../index.js';
@@ -7,17 +8,17 @@ import { App } from '../index.js';
 
 /**
  * @template {App} T
- * @param {T} app
+ * @param {T} app 
  */
 export const get_extension = (app) => 
   /**
    * @description `Get` Extension info
-   * @param {keyof T["extensions"]} extension_handle `handle` of `extension` 
+   * @param {keyof T["__show_me_everything"]["extensions"]} extension_handle `handle` of `extension` 
    * @returns {Promise<ExtensionItemGet>}
    */
   async (extension_handle) => {
     const handle = /** @type {string} */(extension_handle);
-    const ext = app.extensions?.[handle];
+    const ext = app.__show_me_everything.extensions?.[handle];
 
     assert(
       ext,
@@ -41,7 +42,7 @@ export const list_extensions = (app) =>
    * @returns {Promise<ExtensionItemGet[]>}
    */
   async () => {
-    return Object.entries(app.extensions ?? {}).map(
+    return Object.entries(app.__show_me_everything.extensions ?? {}).map(
       ([handle, ext]) => (
         {
           config: ext.config,
@@ -61,7 +62,7 @@ export const list_extensions = (app) =>
 export const invoke_extension_action = (app) => 
   /**
    * @description Invoke an `extension` **Action**.
-   * @param {keyof T["extensions"]} extension_handle `extension` handle for identification
+   * @param {keyof T["__show_me_everything"]["extensions"]} extension_handle `extension` handle for identification
    * @param {string} action_handle `action` handle of extension
    * @param {any} [body] `action` input
    */
@@ -69,7 +70,7 @@ export const invoke_extension_action = (app) =>
     extension_handle, action_handle, body
   ) => {
     const handle = /** @type {string} */(extension_handle);
-    const ext = app.extensions?.[handle];
+    const ext = app.__show_me_everything.extensions?.[handle];
 
     assert(
       ext, 
@@ -83,7 +84,7 @@ export const invoke_extension_action = (app) =>
 
 /**
  * @template {App} T
- * @param {T} app
+ * @param {T} app 
  */  
 export const inter = app => {
 

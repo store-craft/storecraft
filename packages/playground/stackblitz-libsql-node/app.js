@@ -58,5 +58,5 @@ export const app = new App({
       'read product: ', e.payload.current
     )
   }
-)
+).init();
 

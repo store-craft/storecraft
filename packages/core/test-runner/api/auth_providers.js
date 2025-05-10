@@ -14,10 +14,9 @@ import { DummyAuth } from '../../auth/providers/dummy/index.js';
 import { verify_api_auth_result } from './auth.utils.js';
 
 /**
- * 
  * @param {App} app 
  */
-export const create = app => {
+export const create = (app) => {
   const s = suite(
     file_name(import.meta.url), 
   );
@@ -30,12 +29,11 @@ export const create = app => {
       x: new XAuth(),
       dummy: new DummyAuth()
     }
-  );
+  ).init();
   
   s.before(
     async () => { 
-      await app2.init();
-      assert.ok(app2.ready) 
+      assert.ok(app2.isready) 
     }
   );
   
@@ -43,7 +41,7 @@ export const create = app => {
 
     const list = await app2.api.auth.identity_providers_list();
     
-    for(const handle of Object.keys(app2.auth_providers)) {
+    for(const handle of Object.keys(app2.__show_me_everything.auth_providers)) {
 
       const provider_in_list = list.find(a => a.provider===handle)
       assert.ok(
@@ -51,15 +49,18 @@ export const create = app => {
         `provider ${handle} did not return in list`
       );
       assert.equal(
-        provider_in_list.name, app2.auth_providers[handle].name, 
+        provider_in_list.name, 
+        app2.__show_me_everything.auth_providers[handle].name, 
         'name doesn\'t match'
       );
       assert.equal(
-        provider_in_list.description, app2.auth_providers[handle].description, 
+        provider_in_list.description, 
+        app2.__show_me_everything.auth_providers[handle].description, 
         'description doesn\'t match'
       );
       assert.equal(
-        provider_in_list.logo_url, app2.auth_providers[handle].logo_url, 
+        provider_in_list.logo_url, 
+        app2.__show_me_everything.auth_providers[handle].logo_url, 
         'logo_url doesn\'t match'
       );
     }
@@ -81,7 +82,7 @@ export const create = app => {
       );
 
       // reset the codes to users
-      app2.auth_providers.dummy.codes_to_users = {}
+      app2.__show_me_everything.auth_providers.dummy.codes_to_users = {}
       const r = await app2.api.auth.identity_provider_create_auth_uri(
         {
           provider: 'dummy',
@@ -176,7 +177,6 @@ export const create = app => {
 }
 
 
-
 (async function inner_test() {
   // helpful for direct inner tests
   if(!esMain(import.meta)) return;
@@ -184,7 +184,7 @@ export const create = app => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

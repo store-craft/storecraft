@@ -28,7 +28,7 @@ export class Gemini extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[Gemini.GeminiEnvConfig.api_key]; 
+    this.config.api_key ??= app.__show_me_everything.platform.env[Gemini.GeminiEnvConfig.api_key]; 
   }
 
 }

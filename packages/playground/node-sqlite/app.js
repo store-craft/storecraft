@@ -63,4 +63,4 @@ export const app = new App(
       embedder: new CloudflareEmbedder()
     }
   )
-)
+).init()

@@ -150,7 +150,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
   if(!avoid_setup) {
     s.before(
       async (ctx) => { 
-        assert.ok(ctx.app.ready) 
+        assert.ok(ctx.app.isready) 
         try {
           for(const p of ctx.items) {
             await ctx.ops.remove(p.id);
@@ -166,7 +166,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
 
   s.after(
     async (ctx) => {
-      assert.ok(ctx.app.ready) 
+      assert.ok(ctx.app.isready) 
       try {
         for(const p of ctx.items) {
           await ctx.ops.remove(p.id);

@@ -47,7 +47,7 @@ export class StoreAgent {
 
   get provider() {
     return this.config.chat_ai_provider ?? 
-      this.#app.ai_chat_provider;
+      this.#app.__show_me_everything.ai_chat_provider;
   }
 
   /**

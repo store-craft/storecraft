@@ -74,8 +74,8 @@ export class MongoDB {
 
     const c = this.#config;
 
-    c.db_name ??= app.platform.env[MongoDB.EnvConfig.db_name];
-    c.url ??= app.platform.env[MongoDB.EnvConfig.url] ?? 'main';
+    c.db_name ??= app.env[MongoDB.EnvConfig.db_name];
+    c.url ??= app.env[MongoDB.EnvConfig.url] ?? 'main';
 
     if(!this.config.db_name || !this.config.url) {
       throw new Error(

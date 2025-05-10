@@ -81,11 +81,11 @@ export const create = (app) => {
   const create_aug_app = () => {
     return app.withPaymentGateways(
       {
-        ...(app.gateways ?? {}),
+        ...(app.__show_me_everything.gateways ?? {}),
         dummy_1,
         dummy_2,
       }
-    );
+    ).init();
   }
 
   /** @type {ReturnType<typeof create_aug_app>} */
@@ -93,7 +93,7 @@ export const create = (app) => {
 
   s.before(
     async () => { 
-      assert.ok(app.ready);
+      assert.ok(app.isready);
       // we setup here to avoid race condition with other
       // tests that might hijack and change the app.
       // here this is safe because they will run in a queue.
@@ -104,7 +104,7 @@ export const create = (app) => {
 
   s.after(
     async () => { 
-      assert.ok(app.ready);
+      assert.ok(app.isready);
       await app2.api.orders.remove(test_order.id);
     }
   );
@@ -288,7 +288,7 @@ export const create = (app) => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

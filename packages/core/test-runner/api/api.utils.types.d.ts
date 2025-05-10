@@ -1,7 +1,7 @@
 import { type BaseType } from "../../api/types.api.js"
 import { type ApiQuery } from "../../api/types.api.query.js"
 import { type PubSubEvent } from "../../pubsub/types.public.js"
-import { type App } from "../../types.public.js"
+import { InitializedStorecraftApp, type App } from "../../types.public.js"
 
 export type PartialBase = Partial<BaseType>
 
@@ -23,7 +23,7 @@ export type CrudTestContext<G = PartialBase, U = PartialBase> = {
 
 export type QueryTestContext<G extends Partial<BaseType>, U extends Partial<BaseType>> = {
   items: U[]
-  resource: keyof Omit<App["db"]["resources"], 'search'>
+  resource: keyof Omit<App["__show_me_everything"]["db"]["resources"], 'search'>
   ops: {
     upsert?: (item: U) => Promise<string>
     get?: (id: string) => Promise<G>
@@ -36,3 +36,6 @@ export type QueryTestContext<G extends Partial<BaseType>, U extends Partial<Base
   }
   app: App
 }
+
+export type ExtractFullApp<T> = T extends InitializedStorecraftApp<infer U> ? U : (T extends App ? T : never);
+

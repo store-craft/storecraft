@@ -82,12 +82,17 @@ export class S3CompatibleStorage {
    * @type {storage_driver["init"]}
    */
   async init(app) { 
-    this.config.accessKeyId ??= app.platform.env[S3CompatibleStorage.EnvConfig.accessKeyId];
-    this.config.secretAccessKey ??= app.platform.env[S3CompatibleStorage.EnvConfig.secretAccessKey];
-    this.config.bucket ??= app.platform.env[S3CompatibleStorage.EnvConfig.bucket];
+    this.config.accessKeyId ??= 
+      app.env[S3CompatibleStorage.EnvConfig.accessKeyId];
+    this.config.secretAccessKey ??= 
+      app.env[S3CompatibleStorage.EnvConfig.secretAccessKey];
+    this.config.bucket ??= 
+      app.env[S3CompatibleStorage.EnvConfig.bucket];
     // @ts-ignore
-    this.config.region ??= app.platform.env[S3CompatibleStorage.EnvConfig.region];
-    this.config.endpoint ??= app.platform.env[S3CompatibleStorage.EnvConfig.endpoint];
+    this.config.region ??= 
+      app.env[S3CompatibleStorage.EnvConfig.region];
+    this.config.endpoint ??= 
+      app.env[S3CompatibleStorage.EnvConfig.endpoint];
     return this; 
   }
 
@@ -313,8 +318,10 @@ export class R2 extends S3CompatibleStorage {
   /** @type {S3CompatibleStorage["init"]} */
   init = async (app) => {
     await super.init(app);
-    this.r2_config.account_id ??= app.platform.env[R2.R2EnvConfig.account_id];
-    this.config.endpoint ??= `https://${this.r2_config.account_id}.r2.cloudflarestorage.com`;
+    this.r2_config.account_id ??= 
+      app.env[R2.R2EnvConfig.account_id];
+    this.config.endpoint ??= 
+      `https://${this.r2_config.account_id}.r2.cloudflarestorage.com`;
     return this;
   }
   

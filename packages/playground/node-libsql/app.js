@@ -75,8 +75,11 @@ export const app = new App({
 })
 .on(
   'templates/get',
-  e => {
+  async (e) => {
     e.payload.current
   }
 )
+.init()
+// .__show_me_everything.extensions.notifications
+// .api.payments.get('')
 

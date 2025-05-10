@@ -39,8 +39,8 @@ export class DummyAuth {
 
   /** @type {AuthProvider["init"]} */
   init = (app) => {
-    this.config.app_id ??= app.platform.env[DummyAuth.EnvConfig.app_id];
-    this.config.app_secret ??= app.platform.env[DummyAuth.EnvConfig.app_secret];
+    this.config.app_id ??= app.__show_me_everything.platform.env[DummyAuth.EnvConfig.app_id];
+    this.config.app_secret ??= app.__show_me_everything.platform.env[DummyAuth.EnvConfig.app_secret];
   }
 
   /** @type {AuthProvider<Config>["generateAuthUri"]} */

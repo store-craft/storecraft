@@ -5,14 +5,12 @@ import { seed } from './seed/index.js';
 import http from "node:http";
 import { app } from './app.js';
  
-// init app
-await app.init(false);
 // migrate database if needed
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 // seed
 await seed(app, seed_data);
 // create vector index
-await app.vectorstore?.createVectorIndex(true);
+await app.__show_me_everything.vector_store?.createVectorIndex(true);
 // start server
 http
 .createServer(app.handler)

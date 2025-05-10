@@ -50,7 +50,7 @@ export class NeonServerless extends SQL {
     const config = neon_dialect.config;
 
     config.poolConfig.connectionString ??= 
-      app.platform.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.connectionString];
+      app.env[NeonServerless.NeonServerlessEnvConfig.poolConfig.connectionString];
 
     super.init(app);
   }
@@ -93,7 +93,7 @@ export class NeonHttp extends SQL {
     const config = neon_dialect.config;
 
     config.connectionString ??= 
-      app.platform.env[NeonHttp.NeonHttpEnvConfig.connectionString];
+      app.env[NeonHttp.NeonHttpEnvConfig.connectionString];
 
     super.init(app);
   }

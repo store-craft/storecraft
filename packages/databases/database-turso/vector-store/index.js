@@ -281,10 +281,11 @@ export class LibSQLVectorStore {
 
   /**
    * 
+   * @param {Record<string, any>} [params={}] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (delete_index_if_exists_before=false) => {
+  createVectorIndex = async (params={}, delete_index_if_exists_before=false) => {
 
     /** @type {string[]} */
     const batch = [];
@@ -299,6 +300,9 @@ export class LibSQLVectorStore {
     );
 
     const result = await this.client.batch(batch);
+
+    // console.log({result});
+
     return true;
   }
 

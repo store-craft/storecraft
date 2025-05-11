@@ -9,10 +9,7 @@ import { compile_google_functions } from "./compile.platform.google-functions.js
 import { compile_node } from "./compile.platform.node.js";
 import { assert } from "./compile.utils.js";
 
-
-
 /**
- * 
  * @param {Meta} meta 
  */
 export const compile_all = async (meta) => {
@@ -42,6 +39,5 @@ export const compile_all = async (meta) => {
     default:
       throw new Error(`platform ${meta.platform.id} unknown :(`);
   }
-
   
 }

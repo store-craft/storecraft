@@ -24,7 +24,8 @@ export const compile_bun = async (meta) => {
       "type": "module",
       "scripts": {
         "start": `bun run --watch ./index.js`,
-        "migrate": `bun run ./migrate.js`
+        "migrate": `bun run ./migrate.js`,
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -55,8 +56,6 @@ const index_js = () => `
 import 'dotenv/config';
 import { app } from './app.js';
  
-await app.init(false);
-
 Bun.serve(
   {
     port: 8000,
@@ -100,6 +99,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

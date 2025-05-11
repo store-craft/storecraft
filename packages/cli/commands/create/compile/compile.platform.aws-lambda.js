@@ -42,7 +42,8 @@ export const compile_aws = async (meta) => {
         "test": "npx jest",
         "cdk": "cdk",
         "all": "npm run build && npx cdk synth --no-staging && sam local start-api --debug --warm-containers EAGER -t ./cdk.out/AppStack.template.json",
-        "migrate": `node ./migrate.js`
+        "migrate": `node ./migrate.js`,
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -145,12 +146,14 @@ import type {
 } from "@storecraft/core/platform/aws-lambda";
 import { app } from './app';
 
-export const handler = async (event: LambdaEvent, context: LambdaContext): Promise<APIGatewayProxyResult> => {
-  // // will only init once
-  await app.init();
-
+export const handler = async (
+  event: LambdaEvent, context: LambdaContext
+): Promise<APIGatewayProxyResult> => {
+  
   // // handler
-  const response = await app.handler(event, context);
+  const response = await app.handler(
+    event, context
+  );
 
   return response;
 }
@@ -190,6 +193,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -1128,9 +1128,8 @@ const compose_instance_with_config = (cls_name, config={}, extra_kvs={}) => {
  * @param {number} idx 
  */
 export const counter = (pre, idx) => {
-  return idx==0 ? pre : `${pre}-${idx}`;
+  return idx==0 ? pre : `'${pre}-${idx}'`;
 }
-
 
 
 /**
@@ -1168,14 +1167,14 @@ ${compose_instance_with_config(mailer.cls, meta.mailer.config)}
 ${
   meta.payments.map(
     (m, idx) => {
-      return `'${counter(m.id, idx)}': ${compose_instance_with_config(payments[idx].cls, m.config)},`
+      return `${counter(m.id, idx)}: ${compose_instance_with_config(payments[idx].cls, m.config)},`
     }
   ).join('\n')
 }
 })
 .withExtensions(
   {
-    'postman': new PostmanExtension()
+    postman: new PostmanExtension()
   }
 )`;
 
@@ -1208,13 +1207,16 @@ ${compose_instance_with_config(
 ${
   meta.auth_providers.map(
     (m, idx) => {
-      return `'${m.id}': ${compose_instance_with_config(auth_providers[idx].cls, m.config)},`
+      return `${m.id}: ${compose_instance_with_config(auth_providers[idx].cls, m.config)},`
     }
   ).join('\n')
 }
-})`;    
+})`;
   }
 
+  code += `
+.init();  
+`
 
   return {
     code,

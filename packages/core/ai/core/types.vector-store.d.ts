@@ -127,10 +127,11 @@ export interface VectorStore<
 
   /**
    * @description Create the vector index
-   * @param params input
+   * @param params extra parameters
    * @param delete_index_if_exists_before 
    */
   createVectorIndex(
-    params: any, delete_index_if_exists_before?: boolean
+    params?: any, 
+    delete_index_if_exists_before?: boolean
   ): Promise<any>
 }

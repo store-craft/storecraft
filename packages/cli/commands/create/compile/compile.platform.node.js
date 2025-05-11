@@ -26,7 +26,8 @@ export const compile_node = async (meta) => {
       "type": "module",
       "scripts": {
         "start": `node --watch --no-warnings ./index.js`,
-        "migrate": `node --no-warnings ./migrate.js`
+        "migrate": `node --no-warnings ./migrate.js`,
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -57,8 +58,6 @@ import 'dotenv/config';
 import http from "node:http";
 import { app } from './app.js';
  
-await app.init(false);
-
 http.createServer(app.handler).listen(
   8000,
   () => { app.print_banner('http://localhost:8000') }
@@ -92,6 +91,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -54,7 +54,7 @@ export default () => {
               <Hero />
               <Bling 
                 rounded='rounded-lg' 
-                className='absolute bottom-0 lg:top-4 right-0 
+                className='absolute bottom-0 left-2 sm:left-4 lg:left-auto lg:top-4 right-0 
                   z-50 text-xs sm:text-base w-fit h-fit' >
                 <NPX className='text-tiny sm:text-sm md:text-base' />
               </Bling>

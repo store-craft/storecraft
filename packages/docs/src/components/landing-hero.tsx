@@ -9,20 +9,34 @@ export const Hero = () => {
     <div 
       className='graph absolute w-full h-full 
         -top-1/6 sm:-top-1/12 z-50 ' />
+    
+    <div className='absolute bottom-0 -right-0 sm:bottom-0 z-100'>
+      <div className='bg-fuchsia-500/50 whitespace-pre-line 
+        rounded-md border-2 --border-white/20 
+        p-0 sm:p-2 --font-mono 
+        border-pink-600/50 shadow-[0_2px_5px_rgba(255,255,255,0.5)]
+        text-white
+        text-[10px] sm:text-sm 
+        font-mono '>
+        Ai first <br />
+        Open Source <br />
+        Javascript <br/>
+        Commerce <br/>
+        Backend
+      </div>
+    </div>
 
     <div 
-      className='w-fit rounded-2xl px-2 xs:px-4'>
+      className='w-fit rounded-2xl px-2 xs:px-4 '>
       <LogoGradient 
         className='w-[300px] sm:w-[500px] md:w-[600px] ' />
 
-<div className=''>
+      <div className='md:-translate-y-3 lg:-translate-y-0'>
         <span 
           children={`Next `} 
           className='text-2xl/tight sm:text-5xl  
             text-kf-900 dark:text-white/90
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-sans italic
             font-semibold
              -hidden --z-50' />
@@ -31,8 +45,6 @@ export const Hero = () => {
           className='text-2xl/tight sm:text-5xl  
             text-kf-900/70 dark:text-white/75
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-inter --italic
             font-extralight
              -hidden --z-50' />        
@@ -42,8 +54,6 @@ export const Hero = () => {
           className='text-2xl/tight sm:text-5xl  
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-sans italic
             font-semibold
              -hidden --z-50' />
@@ -52,8 +62,6 @@ export const Hero = () => {
           className='text-2xl/tight sm:text-5xl  
             text-kf-900/70 dark:text-white/75
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-inter --italic
             font-normal xs:font-light sm:font-light
              -hidden --z-50' />     
@@ -62,9 +70,8 @@ export const Hero = () => {
           className='text-2xl/tight sm:text-2xl  
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-mono --italic
+            hidden sm:inline
             --font-bold
              -hidden --z-50' />     
         <span 
@@ -72,9 +79,8 @@ export const Hero = () => {
           className='text-2xl/tight sm:text-5xl  
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
-            left-3 xs:left-5 sm:left-6 
-            bottom-7 sm:bottom-8 
             font-mono italic
+            hidden sm:inline
             font-bold
              -hidden --z-50' />                  
       </div>

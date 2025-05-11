@@ -67,6 +67,7 @@ export const app = new App({
 ).init();
 
 await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store?.createVectorIndex();
 
 http
 .createServer(app.handler)

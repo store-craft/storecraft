@@ -679,6 +679,17 @@ export class App {
   }
 
   /**
+   * @description Get the app's entire resources
+   * objects. Using this is not recommended, but it can be useful.
+   * using the database directly, for example, will not validate
+   * types with zod and the pubsub system will not be used.
+   * Use it to exploit the full power of the app.
+   */
+  get _() {
+    return this.__show_me_everything;
+  }
+
+  /**
    * @description Get `storecraft` app public information
    */
   get info() {

@@ -13,7 +13,7 @@ export { App } from './index.js';
 
 type storecraft_properties_after_build = '__show_me_everything' | 
   'info' | 'print_banner' | 'pubsub' | 'config' | 
-  'isready' | 'handler' | 'api' | 'env';
+  'isready' | 'handler' | 'api' | 'env' | '_';
 
 export type OmitAppBuild<APP extends App = App> = Omit<
   APP, 

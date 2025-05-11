@@ -80,24 +80,26 @@ const app = new App({
   async (event) => {
     // send a team slack message
   }
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
- 
-const server = http.createServer(app.handler).listen(
+await migrateToLatest(app._.db, false);
+await app._.vector_store?.createVectorIndex();
+
+http
+.createServer(app.handler)
+.listen(
   8000,
   () => {
     app.print_banner('http://localhost:8000');
   }
-);
+); 
 
 ```
 
 **Will produce**
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/docs/main/storecraft-terminal.png' 
+  <img src='https://storecraft.app/docs/storecraft-terminal-2.png' 
       width='100%' />
 </div><hr/><br/>
 

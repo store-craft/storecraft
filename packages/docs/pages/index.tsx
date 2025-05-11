@@ -69,7 +69,7 @@ export default () => {
               <Segment className='w-full'>
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
-                    text-center md:text-left  '>
+                    text-center md:text-left  font-thin '>
                     <div>
                       Craft the perfect commerce backend with 30 
                       <span children='loc' className=' font-mono'/>
@@ -84,7 +84,7 @@ export default () => {
               </Segment>
 
               
-              {/* code sample 2 */}
+              {/* code sample 2
               <Segment className='w-full' reverse={true}>
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit text-center 
@@ -94,7 +94,7 @@ export default () => {
                   children={code_payment} 
                   showLinesNumbers={false} 
                   outerClassName='w-full md:w-fit --flex-shrink-0' />
-              </Segment>
+              </Segment> */}
               
 
               {/* terminal */}
@@ -102,8 +102,8 @@ export default () => {
                 items-center justify-between '>
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
-                    text-center md:text-left ' 
-                  children='Will produce' />
+                    text-center md:text-left  font-thin' 
+                  children='Will produce a server' />
                 <Bling 
                   stroke='border-[1px]' 
                   className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
@@ -118,12 +118,32 @@ export default () => {
               </div>
 
 
+              {/* ai */}
+              <div className='flex flex-col w-full gap-10 
+                items-center justify-between '>
+                <CommonGradientText 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center md:text-left  font-thin' 
+                  children='Let your customers speak with Ai' />
+                <Bling 
+                  stroke='border-[1px]' 
+                  className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
+                  rounded='rounded-2xl'
+                  from='from-pink-500 dark:from-pink-500/90'
+                  to='to-kf-500 dark:to-kf-500/90'>
+                  <img 
+                    src='/ai-1.gif' 
+                    className='border border-gray-600 --object-contain 
+                      mx-auto rounded-2xl w-full max-w-[1000px] max-h-[750px]' />
+                </Bling>
+              </div>
+
               {/* dashboard */}
               <div className='flex flex-col w-full gap-10 
                 items-center justify-between '>
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
-                    text-center md:text-left ' 
+                    text-center md:text-left font-thin' 
                   children='Official Dashboard' />
                 <Bling 
                   stroke='border-[1px]' 
@@ -140,31 +160,38 @@ export default () => {
 
 
               {/* npx create */}
-              <Segment className='w-full'>
-                <div className='flex flex-col'>
-                  <div className='flex flex-row flex-wrap items-center gap-3'>
-                    <IoTerminal className='text-5xl'/> 
-                    <span children='npx' className='text-5xl w-fit font-mono' />
+              <div className='flex flex-col w-full gap-10 
+                items-center justify-between '>
+                <CommonGradientText 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center font-thin md:text-right ' 
+                  children='Create a store from the command line' />
+                <Segment className='w-full'>
+                  <div className='flex flex-col'>
+                    <div className='flex flex-row flex-wrap items-center gap-3'>
+                      <IoTerminal className='text-5xl'/> 
+                      <span children='npx' className='text-5xl w-fit font-mono' />
+                    </div>
+                    <CommonGradientText 
+                      className='text-5xl w-fit font-mono max-w-[705px] 
+                        text-center md:text-left ' 
+                      children='storecraft create' />
                   </div>
-                  <CommonGradientText 
-                    className='text-5xl w-fit font-mono max-w-[705px] 
-                      text-center md:text-left ' 
-                    children='storecraft create' />
-                </div>
-                <Bling 
-                  stroke='border-[6px]' 
-                  className='w-fit mx-auto'
-                  from='from-pink-500 dark:from-pink-500/90'
-                  to='to-kf-500 dark:to-kf-500/90'>
-                  <img 
-                    src='/cli.gif' 
-                    className='border border-gray-600 mx-auto rounded-md' />
-                </Bling>
-              </Segment>
-
+                  <Bling 
+                    stroke='border-[6px]' 
+                    className='w-fit mx-auto'
+                    from='from-pink-500 dark:from-pink-500/90'
+                    to='to-kf-500 dark:to-kf-500/90'>
+                    <img 
+                      src='/cli.gif' 
+                      className='border border-gray-600 mx-auto rounded-md' />
+                  </Bling>
+                </Segment>
+              </div>
 
               {/* detailed opan-api docs */}
-              <div className='flex flex-col w-full gap-10 items-center justify-between '>
+              <div className='flex flex-col w-full gap-10 items-center 
+                justify-between font-thin '>
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
                     text-center md:text-left ' 

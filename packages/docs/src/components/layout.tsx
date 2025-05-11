@@ -32,7 +32,7 @@ const Layout = (
   const [menu, toggleMenu] = useToggle(false);
   const { darkMode } = useDarkMode();
 
-  console.log(data);
+  // console.log(data);
 
   const main_ref = useRef<HTMLDivElement>(null);
 

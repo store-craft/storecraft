@@ -11,8 +11,7 @@ const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
-
-await app.init();
+.init();
 
 ```
 

@@ -64,10 +64,9 @@ export const app = new App({
   async (event) => {
     // send a team slack message
   }
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 http
 .createServer(app.handler)

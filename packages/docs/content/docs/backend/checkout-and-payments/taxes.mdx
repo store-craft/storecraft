@@ -15,8 +15,7 @@ import { UniformTaxes } from '@storecraft/core/taxes';
 const app = new App(config)
 .withPlatform(new NodePlatform())
 .withTaxes(new UniformTaxes(18))
-
-await app.init();
+.init();
 
 ```
 

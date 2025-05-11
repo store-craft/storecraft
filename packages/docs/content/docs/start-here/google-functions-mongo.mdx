@@ -60,6 +60,7 @@ const app = new App({
     intent_on_checkout: "AUTHORIZE",
   }),
 })
+.init();
 
 ```
 
@@ -71,8 +72,7 @@ import 'dotenv/config';
 import { app } from './app.js';
 import { migrateToLatest } from '@storecraft/database-mongodb/migrate.js';
  
-await app.init();
-await migrateToLatest(app.db, true);
+await migrateToLatest(app.__show_me_everything.db, true);
 
 ```
 
@@ -84,14 +84,9 @@ import 'dotenv/config';
 import * as functions from '@google-cloud/functions-framework';
 import { app } from './app.js';
 
-// console.log('env ', process.env)
-
 functions.http(
   'storecraft',
   async (req, res) => {
-    // runs once
-    await app.init();
-
     // handler
     return app.handler(req, res);
   }

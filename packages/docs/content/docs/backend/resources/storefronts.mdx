@@ -19,9 +19,8 @@ import { R2 } from '@storecraft/storage-s3-compatible'
 const app = new App(config)
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
-  .withStorage(new R2());
-
-await app.init();
+  .withStorage(new R2())
+  .init();
 
 ```
 

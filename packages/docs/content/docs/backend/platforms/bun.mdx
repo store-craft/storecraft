@@ -19,9 +19,8 @@ const app = new App(
   .withPlatform(new BunPlatform())
   .withDatabase(new MongoDB())
   .withStorage(new BunLocalStorage('storage'))
-
-await app.init();
- 
+  .init();
+  
 const server = Bun.serve(
   {
     port: 8000,

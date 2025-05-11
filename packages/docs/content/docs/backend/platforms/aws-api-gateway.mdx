@@ -26,7 +26,7 @@ const app = new App(
   .withPlatform(new AWSLambdaPlatform())
   .withDatabase(new MongoDB())
   .withStorage(new S3())
-
+  .init();
 
 export const handler = async (
     event: LambdaEvent, lambdaContext?: LambdaContext
@@ -157,14 +157,10 @@ export const app = new App(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
   }
-);
+).init();
 
 
 export const handler = async (event: LambdaEvent, context: LambdaContext): Promise<APIGatewayProxyResult> => {
-  // will only init once
-  await app.init();
-
-  // // handler
   const response = await app.handler(event, context);
   return response;
 }

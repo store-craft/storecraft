@@ -18,24 +18,19 @@ import { DenoPlatform } from '@storecraft/core/platform/deno';
 import { DenoLocalStorage } from '@storecraft/core/storage/deno'
 import { MongoDB } from '@storecraft/database-mongodb'
 
-const app = new App(
-    config
-  )
-  .withPlatform(new NodePlatform())
-  .withDatabase(new MongoDB())
-  .withStorage(new DenoLocalStorage('storage'))
+const app = new App(config)
+.withPlatform(new NodePlatform())
+.withDatabase(new MongoDB())
+.withStorage(new DenoLocalStorage('storage'))
+.init();
 
-await app.init();
- 
-const server = Deno.serve(
-  {
-    port: 8000,
-    fetch: app.handler
+Deno.serve({
+  port: 8000,
+  fetch: app.handler,
+  onListen: () => {
+    app.print_banner('http://localhost:8000');
   }
-);
-
-console.log(`Listening on http://localhost:${server.port} ...`);
-
+});
 ```
 
 ```text

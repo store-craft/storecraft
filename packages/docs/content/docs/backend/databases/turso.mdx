@@ -29,41 +29,34 @@ import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { Turso, LibSQLVectorStore } from '@storecraft/database-turso'
 import { migrateToLatest } from '@storecraft/database-turso/migrate.js'
 
-const app = new App(
-  {
-    auth_admins_emails: ['admin@sc.com'],
-  }
-)
+const app = new App({
+  auth_admins_emails: ['admin@sc.com'],
+})
 .withPlatform(new NodePlatform())
 .withDatabase(
-  new Turso(
-    { 
-      prefers_batch_over_transactions: true,
-      // all of these configurations can be inferred by env variables at init
-      url: process.env.LIBSQL_URL,
-      authToken: process.env.LIBSQL_API_TOKEN,
-    }
-  )
+  new Turso({ 
+    prefers_batch_over_transactions: true,
+    // all of these configurations can be inferred by env variables at init
+    url: process.env.LIBSQL_URL,
+    authToken: process.env.LIBSQL_API_TOKEN,
+  })
 )
 .withStorage(new NodeLocalStorage('storage'))
 .withVectorStore(
-  new LibSQLVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-      url: process.env.LIBSQL_URL,
-      authToken: process.env.LIBSQL_API_TOKEN,
-    }
-  )
-)
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+    url: process.env.LIBSQL_URL,
+    authToken: process.env.LIBSQL_API_TOKEN,
+  })
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
-await app.vectorstore.createVectorIndex();
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');  
   }
 ); 
 

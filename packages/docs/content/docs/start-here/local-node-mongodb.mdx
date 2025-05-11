@@ -55,10 +55,10 @@ const app = new App({
 )
 .withAuthProviders({
   google: new GoogleAuth(),
-});
+}).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store?.createVectorIndex();
 
 http
 .createServer(app.handler)

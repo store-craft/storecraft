@@ -75,7 +75,12 @@ export const create = (app) => {
       id, false
     );
 
-    console.dir(get_stream, { depth: 5 });
+    assert.ok(
+      get_stream.stream.error,
+      'expected error stream'
+    )
+
+    // console.dir(get_stream, { depth: 5 });
   });
 
   return s;

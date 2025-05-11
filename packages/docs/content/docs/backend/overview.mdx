@@ -34,25 +34,21 @@ import { NodePlatform } from '@storecraft/core/platform/node'
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 
-const app = new App(
-  {
-    auth_admins_emails: ['john@doe.com']
-  }
-)
+const app = new App({
+  auth_admins_emails: ['john@doe.com']
+})
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
 .withStorage(new R2())
-.withPaymentGateways(
-  {
-    'stripe': new Stripe(
-      { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
-      }
-    )
-  }
-).on(
+.withPaymentGateways({
+  'stripe': new Stripe(
+    { 
+      publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+      secret_key: process.env.STRIPE_SECRET_KEY, 
+      webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+    }
+  )
+}).on(
   'auth/signup',
   async (event) => {
     const user: Partial<AuthUserType> = event.payload;
@@ -64,17 +60,14 @@ const app = new App(
     const order_data: OrderData = event.payload;
     // Here send an email with order details to customer
   }
-);
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
  
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
-  () => {
-    console.log(`Server is running on http://localhost:8000`);
-  }
-);
+  () => { app.print_banner('http://localhost:8000') }
+); 
 
 ```
 

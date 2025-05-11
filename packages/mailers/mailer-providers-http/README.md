@@ -34,9 +34,7 @@ const app = new App(config)
       apikey: process.env.SEND_GRID_SECRET
     }
   )
-);
-
-await app.init();
+).init();
 ```
 
 Storecraft will search the following `env` variables
@@ -68,9 +66,7 @@ const app = new App(config)
       apikey: process.env.RESEND_API_KEY
     }
   )
-);
-
-await app.init();
+).init();
 ```
 
 Storecraft will search the following `env` variables
@@ -103,9 +99,8 @@ const app = new App(config)
       apikey: process.env.MAILCHIMP_API_KEY
     }
   )
-);
+).init();
 
-await app.init();
 ```
 Storecraft will search the following `env` variables
 
@@ -138,9 +133,7 @@ const app = new App(config)
       apikey: process.env.MAILGUN_API_KEY
     }
   )
-);
-
-await app.init();
+).init();
 ```
 
 Storecraft will search the following `env` variables

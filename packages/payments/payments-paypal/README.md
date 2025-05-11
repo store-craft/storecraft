@@ -46,13 +46,9 @@ const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
-.withPaymentGateways(
-  {
-    'paypal_standard_prod': new Paypal() // config can be inferred from env variables
-  }
-);
-
-await app.init();
+.withPaymentGateways({
+  paypal_standard_prod: new Paypal() // config can be inferred from env variables
+}).init();
 
 ```
 

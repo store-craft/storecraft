@@ -45,9 +45,8 @@ const app = new App(config)
   {
     'my-slack-extension': new SendSlackMessageExtension()
   }
-)
+).init();
 
-await app.init();
 ```
 
 ## Invoke Action with HTTP REST API

@@ -19,15 +19,14 @@ const app = new App(
   .withPlatform(new DenoPlatform())
   .withDatabase(new MongoDB())
   .withStorage(new DenoLocalStorage('storage'))
+  .init();
 
-await app.init();
- 
-const server = Deno.serve(
-  {
-    port: 8000,
-    fetch: app.handler
-  }
+Deno.serve({
+    onListen(d) {
+      app.print_banner(`http://${d.hostname}:${d.port}`);
+    }
+  },
+  app.handler
 );
 
-console.log(`Listening on http://localhost:${server.port} ...`);
 ```

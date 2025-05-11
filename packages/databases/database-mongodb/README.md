@@ -45,16 +45,15 @@ const app = new App()
     }
   )
 )
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
-// create if not exists
-await app.vectorstore.createVectorIndex(false, false);
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 

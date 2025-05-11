@@ -67,11 +67,10 @@ export const app = new App({
 .withStorage(new NodeLocalStorage())
 .withMailer(new SendGrid({ apikey: process.env.SENDGRID_APIKEY }))
 .withPaymentGateways({
-  'dummy_payments': new DummyPayments()
-});
+  dummy_payments: new DummyPayments()
+}).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 http.createServer(app.handler).listen(
   8000,

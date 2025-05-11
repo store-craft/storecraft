@@ -57,11 +57,10 @@ const app = new App(
     dialect: sqlite_dialect, 
     dialect_type: 'SQLITE'
   })
-);
+)
+.init();
 
-
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 ```
 
@@ -107,10 +106,9 @@ const app = new App(
     dialect: pg_dialect, 
     dialect_type: 'POSTGRES'
   })
-);
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 ```
 
@@ -153,9 +151,8 @@ const app = new App(
     dialect: dialect, 
     dialect_type: 'MYSQL'
   })
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 ```

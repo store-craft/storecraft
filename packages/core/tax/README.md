@@ -16,8 +16,6 @@ const app = new App(config)
 .withPlatform(new NodePlatform())
 .withTaxes(new UniformTaxes(18))
 
-await app.init();
-
 ```
 
 As you can see, each `app` has a `.withTaxes(...)` modifier where you can inject your own

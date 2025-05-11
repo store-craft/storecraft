@@ -17,10 +17,9 @@ const app = new App({
     const order: orderData = event.payload;
     // send email here
   }
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 http.createServer(app.handler).listen();
 `;
@@ -58,7 +57,7 @@ const app = new App({
   async (event) => {
     // send a team slack message
   }
-)
+).init();
 `;
 
 export const code_payment = `
@@ -76,7 +75,7 @@ const app = new App(config)
       }
     ),
   }
-)
+).init();
 `;
 
 

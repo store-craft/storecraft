@@ -4,6 +4,7 @@ import { Polka } from './polka/index.js'
 import { authorize_admin } from './con.auth.middle.js';
 import openapi_html from './docs.openapi.scalar.html.js'
 import openapi_json from './openapi.json' with { type: 'json' }
+import { favicon } from './con.dashboard.routes.js';
 
 /**
  * @param {App} app
@@ -48,6 +49,14 @@ export const create_routes = (app) => {
     }
   );
 
+  polka.get(
+    '/favicon.ico',
+    async (req, res) => {
+      res.headers.set("Content-Type", "image/svg+xml");
+      res.send(favicon);
+    }
+  );
+ 
 
   return polka;
 }

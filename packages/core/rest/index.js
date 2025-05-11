@@ -24,7 +24,7 @@ import { create_routes as create_payment_gateways_route } from "./con.payment-ga
 import { create_routes as create_extensions_route } from "./con.extensions.routes.js";
 import { create_routes as create_statistics_route } from "./con.statistics.routes.js";
 import { create_routes as create_others_route } from "./con.others.routes.js";
-import { create_routes as create_dashboard_route } from "./con.dashboard.routes.js";
+import { create_routes as create_dashboard_route, favicon } from "./con.dashboard.routes.js";
 import { create_routes as create_chat_route } from "./con.chat.routes.js";
 import { create_routes as create_search_route } from "./con.search.routes.js";
 import { create_routes as create_ai_route } from "./con.ai.routes.js";
@@ -87,6 +87,13 @@ export const create_rest_api = (app, config) => {
       this.#factory['/api'] = create_others_route;
       this.#factory['/dashboard'] = create_dashboard_route;
       this.#factory['/chat'] = create_chat_route;
+      this.#factory['/favicon.ico'] = () => new Polka().get(
+        '/',
+        async (req, res) => {
+          res.headers.set("Content-Type", "image/svg+xml");
+          res.send(favicon);
+        }
+      );
     }
 
     /** 

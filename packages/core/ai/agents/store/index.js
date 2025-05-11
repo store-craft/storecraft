@@ -1,7 +1,6 @@
 /**
  * @import { 
- *  Agent, AgentConfig,
- AgentRunParameters, 
+ *  Agent, AgentConfig, AgentRunParameters, 
  * } from '../types.js'
  * @import { ChatAI } from '../../core/types.private.js'
  * @import { StorefrontType } from '../../../api/types.public.js';

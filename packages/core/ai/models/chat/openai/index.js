@@ -51,7 +51,7 @@ export class OpenAI {
   constructor(config={}) {
 
     this.config = /** @type {config} */({
-      model: 'gpt-4.1-nano',
+      model: 'gpt-4.1-mini',
       endpoint: 'https://api.openai.com/',
       api_version: 'v1',
       ...config,
@@ -200,9 +200,9 @@ export class OpenAI {
       ({
         model: this.config.model,
         messages,
-        tools: this.#to_native_tools(tools),
+        tools: tools && this.#to_native_tools(tools),
         stream,
-        tool_choice: 'auto'
+        tool_choice: tools ? 'auto' : undefined
       })
     );
 
@@ -232,6 +232,7 @@ export class OpenAI {
     // for await (const c of result.body) {
     //   console.log(new TextDecoder().decode(c))
     // }
+    // throw 'tomer'
 
     // console.log(this.#chat_completion_url)
     // console.log(body)
@@ -311,6 +312,10 @@ export class OpenAI {
     }
 
     let current = builder.done();
+
+    // console.dir(current, {
+    //   depth: 10
+    // });
 
     // while we are at a tool call, we iterate internally
     while(
@@ -407,6 +412,10 @@ export class OpenAI {
             for await (const m of this.#generator_completion(params)) {
               if(callbacks?.onDone)
                 contents.push(m);
+
+              // console.dir({m}, {
+              //   depth: 10
+              // });
 
               controller.enqueue(m);
             }

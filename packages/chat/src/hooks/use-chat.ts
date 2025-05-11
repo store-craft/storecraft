@@ -73,11 +73,11 @@ const usePreference = create_local_storage_hook<string | undefined>(
  * @description `chat` hook
  * 
  */
-export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
+export const useChat = (config: ChatHookConfig) => {
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ChatError>();
-  const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
+  const [threadId, setThreadId] = useState<string | undefined>(config?.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const {state: preference, setState: setPreference} = usePreference();
 
@@ -191,12 +191,12 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
 
         {
           // test
-          err_index+=1;
-          if(err_index==2)
-            throw 'error'
+          // err_index+=1;
+          // if(err_index==2)
+          //   throw 'error'
         }
         const {
-          threadId: thread_id,
+          threadId: recieved_thread_id,
           generator
         } = await sdk.ai.streamSpeak(
           'store',
@@ -206,11 +206,11 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           }
         );
   
-        if(!thread_id) {
+        if(!recieved_thread_id) {
           throw new Error('Thread ID is missing from the backend');
         }
 
-        setThreadId(thread_id);
+        setThreadId(recieved_thread_id);
 
         const acc: content[] = [];
   
@@ -230,7 +230,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
                   contents: agg
                 }
               ] as ChatMessage[];
-              put_db(threadId, new_msgs);
+              put_db(recieved_thread_id, new_msgs);
               return new_msgs;
             }
           );
@@ -258,8 +258,8 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
         // const messages = thread_id ? (await get_db(thread_id)) : [];
 
         let messages = []
-        if(threadId) {
-          const from_idb = await get_db(threadId);
+        if(thread_id) {
+          const from_idb = await get_db(thread_id);
           if(from_idb) {
             messages = from_idb;
           } else {
@@ -274,7 +274,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
               }
             } catch (e) {
               console.log(
-                `error loading ${threadId} from server`, e
+                `error loading ${thread_id} from server`, e
               );
             }
           }

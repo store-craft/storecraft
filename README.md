@@ -108,7 +108,7 @@ http
 Located at `/chat`
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/chat.png' 
+  <img src='https://storecraft.app/ai-2.gif' 
       width='100%' />
 </div><hr/><br/>
 

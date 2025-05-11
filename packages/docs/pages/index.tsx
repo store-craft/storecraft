@@ -132,7 +132,7 @@ export default () => {
                   from='from-pink-500 dark:from-pink-500/90'
                   to='to-kf-500 dark:to-kf-500/90'>
                   <img 
-                    src='/ai-1.gif' 
+                    src='/ai-2.gif' 
                     className='border border-gray-600 --object-contain 
                       mx-auto rounded-2xl w-full max-w-[1000px] max-h-[750px]' />
                 </Bling>

@@ -14,7 +14,7 @@ export const Hero = () => {
       <div className='bg-fuchsia-500/50 whitespace-pre-line 
         rounded-md border-2 --border-white/20 
         p-0 sm:p-2 --font-mono 
-        border-pink-600/50 shadow-[0_2px_5px_rgba(255,255,255,0.5)]
+        border-pink-600/50 shadow-[0_2px_5px_rgba(7,217,222,0.75)]
         text-white
         text-[10px] sm:text-sm 
         font-mono '>

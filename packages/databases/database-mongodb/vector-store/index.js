@@ -15,6 +15,7 @@ mongo_vectorSearch_pipeline,
  * } from 'mongodb'
  * @import { ENV } from '@storecraft/core';
  */
+import { truncate_or_pad_vector } from '@storecraft/core/ai/models/vector-stores/index.js';
 import { Collection } from 'mongodb';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
@@ -29,13 +30,12 @@ export const DEFAULT_INDEX_NAME = 'vector_store';
 /**
  * @description MongoDB Atlas Vector Store
  * {@link https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-type/#:~:text=You%20can%20use%20the%20vectorSearch,to%20pre%2Dfilter%20your%20data.}
- * 
  * @implements {VectorStore}
  */
 export class MongoVectorStore {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     db_name: 'MONGODB_VECTOR_STORE_DB_NAME',
     url: 'MONGODB_VECTOR_STORE_URL'
   });
@@ -94,10 +94,10 @@ export class MongoVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.url ??= app.platform.env[MongoVectorStore.EnvConfig.url] 
-      ?? app.platform.env['MONGODB_URL']; 
-    this.config.db_name ??= app.platform.env[MongoVectorStore.EnvConfig.db_name] 
-      ?? app.platform.env['MONGODB_DB_NAME'] ?? 'main'; 
+    this.config.url ??= app.env[MongoVectorStore.EnvConfig.url] 
+      ?? app.env['MONGODB_URL']; 
+    this.config.db_name ??= app.env[MongoVectorStore.EnvConfig.db_name] 
+      ?? app.env['MONGODB_DB_NAME'] ?? 'main'; 
   }
 
   /** @type {VectorStore["embedder"]} */
@@ -117,7 +117,9 @@ export class MongoVectorStore {
       (doc, ix) => (
         {
           updated_at: new Date().toISOString(),
-          embedding: vectors[ix],
+          embedding: truncate_or_pad_vector(
+            vectors[ix], this.config.dimensions
+          ),
           metadata: doc.metadata,
           pageContent: doc.pageContent,
           [NAMESPACE_KEY]: doc.namespace,
@@ -163,6 +165,13 @@ export class MongoVectorStore {
         )
       }
     );
+
+    if(!result) {
+      console.warn(
+        'MongoVectoreStore::upsertDocuments() - no result from embedder'
+      );
+      return;
+    }
 
     const vectors = result.content;
 
@@ -247,15 +256,41 @@ export class MongoVectorStore {
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (disconnect_after_finish=true, delete_index_if_exists_before=false) => {
+  createVectorIndex = async (
+    disconnect_after_finish=true, 
+    delete_index_if_exists_before=false
+  ) => {
     if(delete_index_if_exists_before) {
       await this.deleteVectorIndex();
     }
-
+    
     const db = this.client.db(this.config.db_name);
     const collection_name = this.config.index_name;
+
+    { // skip if index already exists
+      const indices = await db
+      .collection(collection_name)
+      .listSearchIndexes()
+      .toArray();
+
+      if(indices?.length) {
+        const index = indices.find(
+          (index) => index.name === this.config.index_name
+        );
+        if(index) {
+          console.log('MongoVectorStore::createVectorIndex - index already exists, skipping');
+          if(disconnect_after_finish)
+            await this.client.close();
+
+          return true;
+        }
+      }
+    }
+
     // collection name will have the same name as the index
     await db.createCollection(collection_name);
+
+
     const index_result = await db.collection(collection_name).createSearchIndex(
       {
         name: this.config.index_name,

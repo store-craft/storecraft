@@ -1,3 +1,6 @@
+/**
+ * @import { Get } from "../storage/types.storage.js";
+ */
 import { App } from "../index.js";
 import { assert } from "./utils.func.js";
 
@@ -120,7 +123,7 @@ export const features = (app) =>
    * @description Get the storage official Features
    */
   async () => {
-    return app.storage.features() ?? { 
+    return app.__show_me_everything.storage.features() ?? { 
       supports_signed_urls: false 
     }
   }
@@ -136,7 +139,7 @@ export const putStream = (app) =>
    * @param {number} [content_length_bytes=0] content length in bytes
    */
   async (file_key, stream, meta={}, content_length_bytes=0) => {
-    return app.storage.putStream(
+    return app.__show_me_everything.storage.putStream(
       file_key, stream, meta, 
       content_length_bytes
     );
@@ -150,10 +153,10 @@ export const putSigned = (app) =>
    */
   async (file_key) => {
     assert(
-      app.storage.features().supports_signed_urls,
+      app.__show_me_everything.storage.features().supports_signed_urls,
       'Storage driver does not support signed urls'
     );
-    return app.storage.putSigned(
+    return app.__show_me_everything.storage.putSigned(
       file_key
     );
   }
@@ -167,10 +170,10 @@ export const getSigned = (app) =>
    */
   async (file_key) => {
     assert(
-      app.storage.features().supports_signed_urls,
+      app.__show_me_everything.storage.features().supports_signed_urls,
       'Storage driver does not support signed urls'
     );
-    return app.storage.getSigned(
+    return app.__show_me_everything.storage.getSigned(
       file_key
     );
   }
@@ -178,8 +181,10 @@ export const getSigned = (app) =>
 /** @param {App} app */
 export const getStream = (app) => 
   /**
+   * @template {any} [T=any]
    * @description Get a file stream for download
    * @param {string} file_key file path, example `/path/to/file.txt`
+   * @returns {Promise<Get<ReadableStream<T>>>}
    */
   async (file_key) => {
     assert(
@@ -187,7 +192,7 @@ export const getStream = (app) =>
       'file_key is required'
     );
     
-    return app.storage.getStream(
+    return app.__show_me_everything.storage.getStream(
       file_key
     );
   }
@@ -200,7 +205,7 @@ export const remove = (app) =>
    * @param {string} file_key file path, example `/path/to/file.txt`
    */
   async (file_key) => {
-    return app.storage.remove(
+    return app.__show_me_everything.storage.remove(
       file_key
     );
   }

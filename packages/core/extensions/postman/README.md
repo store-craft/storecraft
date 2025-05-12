@@ -47,15 +47,7 @@ import { PostmanExtension } from "@storecraft/core/extensions/postman";
 
 export const app = new App(
   {
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token',
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_admins_emails: ['john@doe.com'],
-    general_confirm_email_base_url: 'localhost:8000/api/auth/confirm-email',
-    general_forgot_password_confirm_base_url: 'localhost:8000/api/auth/forgot-password-request-confirm'
+    // ...your app config
   }
 )
 .withPlatform(new NodePlatform())
@@ -64,9 +56,10 @@ export const app = new App(
 .withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
 .withExtensions(
   {
-    'postman': new PostmanExtension()
+    postman: new PostmanExtension()
   }
-);
+)
+.init();
 
 ```
 

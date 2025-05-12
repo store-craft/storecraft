@@ -45,10 +45,7 @@ const internal_updateConfig = (config) => {
 /**
  * A simple `react` hook to get access to `sdk`
  * with realtime reports about `auth`
- * 
- * 
  * @param {StorecraftSDKConfig} [config]
- * 
  */
 export const useStorecraft = (config=getLatestConfig()) => {
 

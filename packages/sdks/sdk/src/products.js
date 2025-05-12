@@ -8,7 +8,6 @@ import {
 
 /**
  * @description Base `products` **CRUD**
- * 
  * @extends {collection_base<ProductTypeUpsert, ProductType>}
  */
 export default class Products extends collection_base {

@@ -34,7 +34,6 @@ import {
 export const table_name = 'products'
 
 /**
- * 
  * @param {db_col["$type_upsert"]} item 
  */
 const is_variant = item => {
@@ -54,8 +53,6 @@ const is_variant = item => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["upsert"]}
  */
 const upsert = (driver) => {
@@ -423,15 +420,6 @@ const list = (driver) => {
       ),
       query, table_name
     ).execute();
-
-    // .where(
-    //   (eb) => {
-    //     return query_to_eb(eb, query, table_name);
-    //   }
-    // )
-    // .orderBy(query_to_sort(query, table_name))
-    // .limit(query.limitToLast ?? query.limit ?? 10)
-    // .execute();
 
     if(query.limitToLast) 
       items.reverse();

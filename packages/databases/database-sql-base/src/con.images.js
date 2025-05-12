@@ -203,15 +203,6 @@ const list = (driver) => {
       query, table_name
     ).execute()
 
-      // .where(
-      //   (eb) => {
-      //     return query_to_eb(eb, query, table_name);
-      //   }
-      // )
-      // .orderBy(query_to_sort(query, 'images')) // ts complains because `usage` field is absent
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) 
       items.reverse();
 

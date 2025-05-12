@@ -29,7 +29,7 @@ export const choices = /** @type {const} */ ([
   },
   {
     name: 'Groq Cloud',
-    value: 'groq'
+    value: 'groq-cloud'
   },
   {
     name: 'Mistral',
@@ -91,19 +91,19 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Claude Model will you use ?',
-              options: [
-                { value: 'claude-3-5-haiku-20241022'},
-                { value: 'claude-3-5-sonnet-20241022'},
-                { value: 'claude-3-haiku-20240307'},
-                { value: 'claude-3-opus-20240229'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Claude Model will you use ?',
+        //       options: [
+        //         { value: 'claude-3-5-haiku-20241022'},
+        //         { value: 'claude-3-5-sonnet-20241022'},
+        //         { value: 'claude-3-haiku-20240307'},
+        //         { value: 'claude-3-opus-20240229'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }
 
       return config;
@@ -121,27 +121,27 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Gemini Model will you use ?',
-              options: [
-                { value: 'gemini-1.5-flash'},
-                { value: 'gemini-1.5-flash-8b'},
-                { value: 'gemini-1.5-pro'},
-                { value: 'gemini-2.0-flash'},
-                { value: 'gemini-2.0-flash-lite-preview-02-05'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Gemini Model will you use ?',
+        //       options: [
+        //         { value: 'gemini-1.5-flash'},
+        //         { value: 'gemini-1.5-flash-8b'},
+        //         { value: 'gemini-1.5-pro'},
+        //         { value: 'gemini-2.0-flash'},
+        //         { value: 'gemini-2.0-flash-lite-preview-02-05'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }
 
       return config;
     }
 
-    case 'groq': {
-      /** @type {import('@storecraft/core/ai/models/chat/groq').config} */
+    case 'groq-cloud': {
+      /** @type {import('@storecraft/core/ai/models/chat/groq-cloud').config} */
       const config = {
         api_key: await withCancel(
           text(
@@ -152,21 +152,21 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Groq Cloud Model will you use ?',
-              options: [
-                { value: 'llama-3.3-70b-versatile'},
-                { value: 'deepseek-r1-distill-llama-70b'},
-                { value: 'gemma2-9b-it'},
-                { value: 'llama-3.1-8b-instant'},
-                { value: 'llama-3.2-3b-preview'},
-                { value: 'llama3-8b-8192'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Groq Cloud Model will you use ?',
+        //       options: [
+        //         { value: 'llama-3.3-70b-versatile'},
+        //         { value: 'deepseek-r1-distill-llama-70b'},
+        //         { value: 'gemma2-9b-it'},
+        //         { value: 'llama-3.1-8b-instant'},
+        //         { value: 'llama-3.2-3b-preview'},
+        //         { value: 'llama3-8b-8192'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }
 
       return config;
@@ -184,24 +184,24 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which Mistral Model will you use ?',
-              options: [
-                { value: 'mistral-large-latest'},
-                { value: 'codestral-latest'},
-                { value: 'ministral-3b-latest'},
-                { value: 'ministral-8b-latest'},
-                { value: 'mistral-saba-latest'},
-                { value: 'mistral-small-latest'},
-                { value: 'open-mistral-nemo'},
-                { value: 'pixtral-12b-2409'},
-                { value: 'pixtral-large-latest'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which Mistral Model will you use ?',
+        //       options: [
+        //         { value: 'mistral-large-latest'},
+        //         { value: 'codestral-latest'},
+        //         { value: 'ministral-3b-latest'},
+        //         { value: 'ministral-8b-latest'},
+        //         { value: 'mistral-saba-latest'},
+        //         { value: 'mistral-small-latest'},
+        //         { value: 'open-mistral-nemo'},
+        //         { value: 'pixtral-12b-2409'},
+        //         { value: 'pixtral-large-latest'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }      
       return config;
     }
@@ -218,20 +218,20 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which OpenAI Model will you use ?',
-              options: [
-                { value: 'gpt-4'},
-                { value: 'gpt-4-turbo'},
-                { value: 'gpt-4o'},
-                { value: 'gpt-4o-mini'},
-                { value: 'o1-mini'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which OpenAI Model will you use ?',
+        //       options: [
+        //         { value: 'gpt-4'},
+        //         { value: 'gpt-4-turbo'},
+        //         { value: 'gpt-4o'},
+        //         { value: 'gpt-4o-mini'},
+        //         { value: 'o1-mini'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }      
       return config;
     }
@@ -248,18 +248,18 @@ const collect_general_config = async (
             }
           )
         ),
-        model: await withCancel(
-          select(
-            { 
-              message: 'Which xAI Model will you use ?',
-              options: [
-                { value: 'grok-2'},
-                { value: 'grok-2-vision'},
-                { value: 'grok-3'},
-              ]
-            }
-          )
-        ),
+        // model: await withCancel(
+        //   select(
+        //     { 
+        //       message: 'Which xAI Model will you use ?',
+        //       options: [
+        //         { value: 'grok-2'},
+        //         { value: 'grok-2-vision'},
+        //         { value: 'grok-3'},
+        //       ]
+        //     }
+        //   )
+        // ),
       }      
       return config;
     }

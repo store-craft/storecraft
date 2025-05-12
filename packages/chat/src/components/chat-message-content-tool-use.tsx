@@ -1,5 +1,5 @@
-import { content_tool_use } from "@storecraft/core/ai";
-import type { withDiv } from "./common.types";
+import { type content_tool_use } from "@storecraft/core/ai";
+import { type withDiv } from "./common.types";
 import { MDView } from "./md-view";
 import { Card } from "./card";
 import { useEffect, useState } from "react";
@@ -48,9 +48,10 @@ export const ChatMessageToolUseContent = (
               <MDView 
                 value={c.title ?? 'Performing Action'} 
                 className='max-w-full flex-1 prose dark:prose-invert px-2
-                          prose-headings:mt-0 prose-headings:mb-0 
-                          prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                          prose-ol:my-0' />
+                  prose-headings:mt-0 prose-headings:mb-0 
+                  prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+                  prose-ol:my-0' 
+                />
             </Card>
           )
         )

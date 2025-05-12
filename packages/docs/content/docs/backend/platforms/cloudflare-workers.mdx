@@ -19,9 +19,8 @@ const app = new App(
   .withPlatform(new CloudflareWorkersPlatform())
   .withDatabase(new D1())
   .withStorage(new R2())
+  .init();
 
-await app.init();
- 
 ```
 
 ## instructions
@@ -123,10 +122,8 @@ export default {
           db: env.D1
         } 
       )
-    );
+    ).init();
 
-    app = await app.init();
-    
     const response = await app.handler(request);
 
     return response;

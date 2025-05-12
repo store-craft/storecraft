@@ -132,15 +132,6 @@ const list = (driver) => {
       query, table_name
     ).execute();
 
-      // .where(
-      //   (eb) => {
-      //     return query_to_eb(eb, query, table_name);
-      //   }
-      // )
-      // .orderBy(query_to_sort(query, 'collections'))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
@@ -185,11 +176,6 @@ const list_collection_products = (driver) => {
       .limit(query.limitToLast ?? query.limit ?? 10),
       query, 'products'
     ).execute()
-      // .orderBy(query_to_sort(query, 'products'))
-      // .execute();
-
-      // .compile();
-      // console.log(items[0])
 
     if(query.limitToLast) 
       items.reverse();

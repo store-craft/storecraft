@@ -5,51 +5,77 @@
        width='90%' />
 </div><hr/><br/>
 
+# **Storecraft** Official Universal `Javascript` **SDK**
+
 This is the official `storecraft` universal javascript `SDK` which is `fetch` based,
-which means you can you it both at browser and at backend runtimes such (`node` / `bun` / `deno`)
+which means you can you it both at browser and at backend runtimes such as,
+- `node`
+- `bun`
+- `deno`
+- `cloudflare workers`
 
-It will allow you to fetch / mutate all of the resources at the `backend` in a 
-convenient manner with `javascript`, such as:
-
-#### collections
-`products`, `collections`, `auth_users`, `customers`, `orders`, `discounts`,
-`storefronts`, `shipping`, `tags`, `posts`, `notifications`,
-`templates`, `extensions`, `images`
-
-#### Auth
-Perform authentication such as `signin` / `signup` / `api-key`
-
-#### Checkout
-Perform checkout `create` / `complete`
-
-#### Storage
-Perform storage operations such as `put` / `get` / `delete`
-
-#### Payments
-Perform payments `status-check` / `invoke-action`
-
-#### Statistics
-- Query some basic statistics about `orders` in a time span
-- Query count of items in collections
-
-#### AI
-Speak with a `storecraft` agent (Supports streaming :))
-
-#### Semantic / Similarity Search
-Search Storecraft with AI for similar `products`, `discounts`, `collections`, `shipping` based on a prompt.
-
-#### Quick Search
-List super lite search results with `id`, `handle`, `title` over most resources 
-
-<hr/>
-
-Start by installing, 
-
-Plus, everything is typed so you dont have to guess any parameter or queryable key
+Start by installing the package:
 
 ```bash
 npm i @storecraft/sdk
 ```
+
+## Resources
+
+The SDK is a wrapper around the `storecraft` REST API, and it allows you to
+perform operations on the following resources:
+
+### collections
+- **products** - manage products
+- **collections** - manage collections
+- **auth_users** - manage auth users
+- **customers** - manage customers
+- **orders** - manage orders
+- **discounts** - manage discounts
+- **storefronts** - manage storefronts
+- **shipping** - manage shipping
+- **tags** - manage tags
+- **posts** - manage posts
+- **notifications** - manage notifications
+- **templates** - manage templates
+- **extensions** - manage extensions
+- **payments** - manage payment gateways
+- **images** - manage images
+
+### Auth
+
+Perform authentication such as `signin` / `signup` / `api-key`
+
+### Checkout
+
+Perform checkout `create` / `complete` with payment gateways such as `stripe` / `paypal`.
+
+### Storage
+
+Perform storage operations such as `put` / `get` / `delete`
+
+### Payments
+
+Perform payments `status-check` / `invoke-action`
+
+### Statistics
+
+- Query some basic statistics about `orders` in a time span
+- Query count of items in collections
+
+### AI
+
+Speak with a `storecraft` agent (Supports streaming :))
+
+### Semantic / Similarity Search
+
+Search Storecraft with AI for similar `products`, `discounts`, `collections`, `shipping` based on a prompt.
+
+### Quick Search
+
+List super lite search results with `id`, `handle`, `title` over most resources 
+
+<hr/>
 
 ## Authentication
 
@@ -70,7 +96,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 
 const sdk = new StorecraftSDK(
   {
-    backend: 'http://localhost:8000', 
+    endpoint: 'http://localhost:8000', 
     auth: {
       apikey: <YOUR-API-KEY>
     }
@@ -90,7 +116,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 
 const sdk = new StorecraftSDK(
   {
-    backend: 'http://localhost:8000', 
+    endpoint: 'http://localhost:8000', 
   }
 );
 
@@ -106,7 +132,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 
 const sdk = new StorecraftSDK(
   {
-    backend: 'http://localhost:8000', 
+    endpoint: 'http://localhost:8000', 
     auth: {
       access_token: <OPTIONAL-ACCESS-TOKEN>,
       refresh_token: <OPTIONAL-REFRESH-TOKEN>,
@@ -125,7 +151,7 @@ import { StorecraftSDK } from '@storecraft/sdk'
 
 const sdk = new StorecraftSDK(
   {
-    backend: 'http://localhost:8000', 
+    endpoint: 'http://localhost:8000', 
   }
 );
 
@@ -143,7 +169,6 @@ const auth_result = await sdk.auth.signout();
 
 ## Querying
 
-
 Here are some examples for querying.
 
 - Every key and string in the example below is fully typed with `typescript`,
@@ -159,13 +184,19 @@ const sdk = new StorecraftSDK();
 const products: ProductType[] = await sdk.products.list(
   {
     expand: ['collections', 'variants'],
-    sortBy: ['updated_at', 'id'], // all keys will show up in intellisense
+    sortBy: ['updated_at', 'id'],
     order: 'desc',
-    startAt: [
-      ['updated_at': '2024-03-24'],
-    ],
+    vql: {
+      updated_at: {
+        $gte: '2024-03-24',
+      },
+      active: true,
+      $or: [
+        { $search: 'tag:genre_action' },
+        { $search: 'tag:genre_sports' },
+      ],
+    }
     limit: 5,
-    vql: '(keyword1 | keyword2) -(keyword3)'
   }
 )
 
@@ -180,7 +211,7 @@ const sdk = new StorecraftSDK();
 
 const collections: CollectionType[] = await sdk.collections.list(
   {
-    equals: [['active': true]]
+    vql: 'active=true & (nintendo | playstation)'
     limit: 5,
   }
 );
@@ -194,7 +225,6 @@ as part of the **REST API** tests.
 
 This package will hold more `unit` tests for the `sdk` itself, which include
 side effects and particular behaviours.
-
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

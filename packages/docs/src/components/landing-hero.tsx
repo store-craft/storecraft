@@ -3,22 +3,91 @@ import { LogoGradient } from "./logo-text"
 export const Hero = () => {
 
   return (
-  <div className='w-full h-[180px]  sm:h-[280px] overflow-clip relative '>
-    <div className='graph absolute w-full h-full -top-1/4 z-50 ' />
-
-    <div className='w-fit rounded-2xl px-2 xs:px-4'>
-      <LogoGradient className='w-[300px] sm:w-[500px] md:w-[600px] ' />
-      <div children={`
-Next Generation 
-Commerce As Code 
-      `}
-        className='text-4xl sm:text-5xl font-normal 
-        whitespace-pre-line left-2 xs:left-4 bottom-8 
-        absolute -hidden --z-50
-        ' />
-
+  <div 
+    className='w-full h-[140px] sm:h-[230px] overflow-clip 
+      rounded-xl relative '>
+    <div 
+      className='graph absolute w-full h-full 
+        -top-1/6 sm:-top-1/12 z-50 ' />
+    
+    <div className='absolute bottom-0 -right-0 sm:bottom-0 z-100'>
+      <div className='bg-fuchsia-500/50 whitespace-pre-line 
+        rounded-md border-2 --border-white/20 
+        p-0 sm:p-2 --font-mono 
+        border-pink-600/50 shadow-[0_2px_5px_rgba(7,217,222,0.75)]
+        text-white
+        text-[10px] sm:text-sm 
+        font-mono '>
+        Ai first <br />
+        Open Source <br />
+        Javascript <br/>
+        Commerce <br/>
+        Backend
+      </div>
     </div>
-    <div className='absolute bottom-0 left-0 w-full h-[26px] bg-pink-500/20 z-50'/>
+
+    <div 
+      className='w-fit rounded-2xl px-2 xs:px-4 '>
+      <LogoGradient 
+        className='w-[300px] sm:w-[500px] md:w-[600px] ' />
+
+      <div className='md:-translate-y-3 lg:-translate-y-0'>
+        <span 
+          children={`Next `} 
+          className='text-2xl/tight sm:text-5xl  
+            text-kf-900 dark:text-white/90
+            whitespace-pre-line 
+            font-sans italic
+            font-semibold
+             -hidden --z-50' />
+        <span 
+          children={` Generation `} 
+          className='text-2xl/tight sm:text-5xl  
+            text-kf-900/70 dark:text-white/75
+            whitespace-pre-line 
+            font-inter --italic
+            font-extralight
+             -hidden --z-50' />        
+        <br/>
+        <span 
+          children={`Commerce `} 
+          className='text-2xl/tight sm:text-5xl  
+            text-kf-900 dark:text-white/80
+            whitespace-pre-line 
+            font-sans italic
+            font-semibold
+             -hidden --z-50' />
+        <span 
+          children={` As Code`} 
+          className='text-2xl/tight sm:text-5xl  
+            text-kf-900/70 dark:text-white/75
+            whitespace-pre-line 
+            font-inter --italic
+            font-normal xs:font-light sm:font-light
+             -hidden --z-50' />     
+        <span 
+          children={` x `} 
+          className='text-2xl/tight sm:text-2xl  
+            text-kf-900 dark:text-white/80
+            whitespace-pre-line 
+            font-mono --italic
+            hidden sm:inline
+            --font-bold
+             -hidden --z-50' />     
+        <span 
+          children={` AI`} 
+          className='text-2xl/tight sm:text-5xl  
+            text-kf-900 dark:text-white/80
+            whitespace-pre-line 
+            font-mono italic
+            hidden sm:inline
+            font-bold
+             -hidden --z-50' />                  
+      </div>
+    </div>
+    <div 
+      className='absolute bottom-0 left-0 w-full 
+        h-[26px] bg-pink-500/20 z-50'/>
   </div>
 
   )

@@ -1,3 +1,6 @@
+/**
+ * @import { Route, Trouter as TrouterType } from './index.js'
+ */
 import { parse } from './regexparam/index.js';
 
 const MAP = {
@@ -13,8 +16,12 @@ const MAP = {
   PUT: 9,
 };
 
+/**
+ * @template T
+ */
 export class Trouter {
   constructor() {
+    /** @type {Route[]} */
     this.routes = [];
 
     this.all = this.add.bind(this, '');
@@ -29,10 +36,26 @@ export class Trouter {
     this.put = this.add.bind(this, 'PUT');
   }
 
+  remove_route_by_original_registered_route(route='') {
+    this.routes = this.routes.filter(
+      r => r.original_registered_route !== route
+    );
+  }
+
   use(route, ...fns) {
     let handlers = [].concat.apply([], fns);
     let { keys, pattern } = parse(route, true);
-    this.routes.push({ keys, pattern, method: '', handlers, midx: MAP[''] });
+    // console.log({keys, pattern});
+    this.routes.push(
+      { 
+        keys, 
+        pattern, 
+        method: '', 
+        handlers, 
+        midx: MAP[''],
+        original_registered_route: route
+      }
+    );
     return this;
   }
 

@@ -29,7 +29,6 @@ import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { PlanetScale } from '@storecraft/database-planetscale'
 import { migrateToLatest } from '@storecraft/database-planetscale/migrate.js'
 
-
 const app = new App(
   {
     auth_admins_emails: ['admin@sc.com'],
@@ -47,14 +46,15 @@ const app = new App(
   )
 )
 .withStorage(new NodeLocalStorage('storage'))
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
- 
-const server = http.createServer(app.handler).listen(
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
+
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 

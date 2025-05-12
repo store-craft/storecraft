@@ -72,16 +72,17 @@ const upsert = (driver) => {
             .columns(['entity_handle', 'entity_id', 'value', 'reporter'])
             .expression(eb => 
               eb.selectFrom('products')
-                .select(eb => [
-                    'handle as entity_handle',
-                    'id as entity_id',
-                    eb.val(item.id).as('value'),
-                    eb.val(item.handle).as('reporter')
-                  ]
-                )
-                .where(
-                  eb => eb.and(discount_to_conjunctions(eb, item))
-                )
+              .select(
+                eb => [
+                  'handle as entity_handle',
+                  'id as entity_id',
+                  eb.val(item.id).as('value'),
+                  eb.val(item.handle).as('reporter')
+                ]
+              )
+              .where(
+                eb => eb.and(discount_to_conjunctions(eb, item))
+              )
             ).execute();
 
             for(const extra_search of extra_search_for_products) {
@@ -261,10 +262,6 @@ const list = (driver) => {
       query, table_name
     ).execute();
 
-      // .orderBy(query_to_sort(query, table_name))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) 
       items.reverse();
 
@@ -308,9 +305,6 @@ const list_discount_products = (driver) => {
       .limit(query.limitToLast ?? query.limit ?? 10),
       query, 'products'
     ).execute();
-
-      // .orderBy(query_to_sort(query, 'products'))
-      // .execute();
 
     if(query.limitToLast) 
       items.reverse();

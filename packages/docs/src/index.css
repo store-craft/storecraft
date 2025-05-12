@@ -1,15 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @custom-variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 @plugin 'tailwind-scrollbar';
 
 @theme {
   --font-inter: Inter, sans-serif;
-  --font-display: "Oswald", "sans-serif";
+  --font-display: Inter, sans-serif;
+  --font-open-sans: open-sans, sans-serif;
   --font-display--font-feature-settings: "cv02", "cv03", "cv04", "cv11"; 
   --font-display--font-variation-settings: "opsz" 32; 
-  
+
+  --text-tiny: 0.625rem;
+  --text-tiny--line-height: 1.5rem; 
+  --text-tiny--letter-spacing: 0.125rem; 
+  --text-tiny--font-weight: 500; 
+
   --breakpoint-xs: 480px;
   --breakpoint-sm: 580px;
   --breakpoint-md: 768px;
@@ -111,7 +117,7 @@
 
   .graph {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0px, rgb(210, 51, 225) 0%, rgba(54, 226, 248, 0.5) 3px, rgba(0, 0, 0, 0) 0px), linear-gradient(90deg, rgba(0, 0, 0, 0) 0px, rgba(248, 54, 219, 0.5) 0%, rgba(248, 54, 216, 0.5) 3px, rgba(0, 0, 0, 0) 0px); 
-    background-size: 5% 5%;
+    background-size: 10% 10%;
     /* background-size: 70px 20px; */
     /* clip-path: circle(40%); */
     clip-path: xywh(0 45% 100% 75% round 15% 0);
@@ -122,24 +128,28 @@
     /* transform: perspective(400px) rotateX(65deg) scale(2); */
     /* transform: perspective(200px) rotateX(65deg) scale(2); */
     animation-name: MOVE-BG;
-    animation-duration: 35s;
+    animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-}
-
-@keyframes MOVE-BG {
-  0% {
-    transform: perspective(200px) rotateX(65deg) scale(2);
-    background-position-y: 0%;
+    @variant sm {
+      background-size: 5% 7%;
+      animation-duration: 28s;
+    }
   }
-  50% { 
-    /* transform: perspective(400px) rotateX(65deg) scale(2); */
+  
+  @keyframes MOVE-BG {
+    0% {
+      transform: perspective(200px) rotateX(65deg) scale(2);
+      background-position-y: 0%;
+    }
+    50% { 
+      /* transform: perspective(400px) rotateX(65deg) scale(2); */
+    }
+    100% { 
+      background-position-y: 100%;
+      transform: perspective(200px) rotateX(65deg) scale(2);
+    }
   }
-  100% { 
-    background-position-y: 100%;
-    transform: perspective(200px) rotateX(65deg) scale(2);
-  }
-}
 
   .shelf-media-source {
     @apply bg-slate-50 dark:bg-slate-50/10 

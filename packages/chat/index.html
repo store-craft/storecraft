@@ -8,6 +8,26 @@
   </head>
   <body class="bg-gray-800">
     <div id="root"></div>
-    <script type="module" src="/src/auto-mount.ts"></script>
+    <script type="module" dsrc="/src/auto-mount.ts">
+      import { mountStorecraftChat } from '/src/index.tsx';
+
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
+
+      console.log({ threadId });
+      
+      mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId,
+            storecraft_config: {
+              endpoint: 'http://localhost:8000',
+            }
+          }
+        }
+      );
+    </script>
   </body>
 </html>

@@ -13,6 +13,8 @@ import {
   apiAuthSignupTypeSchema,
   apiKeyResultSchema,
   authUserTypeSchema,
+  chatTypeSchema,
+  chatTypeUpsertSchema,
   checkoutCreateTypeAfterValidationSchema,
   checkoutCreateTypeSchema,
   checkoutStatusEnumSchema,
@@ -64,6 +66,8 @@ import * as path from 'node:path';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from "node:url";
 import { count } from 'node:console';
+import { chatHistoryTypeSchema } from '../ai/core/types.autogen.zod.js';
+import { agentRunParametersSchema, agentRunResponseSchema } from '../ai/agents/types.zod.generated.js';
 //
 // This file creates an OpenAPI file
 //
@@ -381,8 +385,8 @@ const create_all = () => {
 
   // register routes
   register_reference(registry);
-  register_dashboard(registry);
   register_ai(registry);
+  register_chats(registry);
   register_similarity_search(registry);
   register_auth(registry);
   register_storage(registry);
@@ -1068,112 +1072,112 @@ const register_emails = (registry) => {
  */
 const register_ai = (registry) => {
 
-  const aiMessageTextContent = z.object(
-    {
-      type: z.literal("text"),
-      content: z.string().optional().describe('text or prompt'),
-    }
-  ).describe('Text content');
+  // const aiMessageTextContent = z.object(
+  //   {
+  //     type: z.literal("text"),
+  //     content: z.string().optional().describe('text or prompt'),
+  //   }
+  // ).describe('Text content');
 
-  const aiMessageTextDeltaContent = z.object(
-    {
-      type: z.literal("delta_text"),
-      content: z.string().optional().describe('Partial text update'),
-    }
-  ).describe('Text delta / update');
+  // const aiMessageTextDeltaContent = z.object(
+  //   {
+  //     type: z.literal("delta_text"),
+  //     content: z.string().optional().describe('Partial text update'),
+  //   }
+  // ).describe('Text delta / update');
 
-  const aiMessageToolUseContent = z.object(
-    {
-      type: z.literal("tool_use"),
-      content: z.object(
-        {
-          name: z.string().optional().describe("Name of the tool"),
-          id: z.string().optional().describe("id of the tool call"),
-          title: z.string().optional().describe("Optional readable name"),
-        }
-      ),
-    }
-  ).describe('Tool use update content');
+  // const aiMessageToolUseContent = z.object(
+  //   {
+  //     type: z.literal("tool_use"),
+  //     content: z.object(
+  //       {
+  //         name: z.string().optional().describe("Name of the tool"),
+  //         id: z.string().optional().describe("id of the tool call"),
+  //         title: z.string().optional().describe("Optional readable name"),
+  //       }
+  //     ),
+  //   }
+  // ).describe('Tool use update content');
 
-  const aiMessageToolResultContent = z.object(
-    {
-      type: z.literal("tool_result"),
-      content: z.object(
-        {
-          data: z.any().describe("Result of the tool call"),
-          id: z.string().optional().describe("id of the tool call"),
-        }
-      ),
-    }
-  ).describe('Tool result update content');
+  // const aiMessageToolResultContent = z.object(
+  //   {
+  //     type: z.literal("tool_result"),
+  //     content: z.object(
+  //       {
+  //         data: z.any().describe("Result of the tool call"),
+  //         id: z.string().optional().describe("id of the tool call"),
+  //       }
+  //     ),
+  //   }
+  // ).describe('Tool result update content');
 
-  const aiMessageImageContent = z.object(
-    {
-      type: z.literal("image"),
-      content: z.string().optional().describe("base64 encoded image"),
-    }
-  ).describe('Image content');
+  // const aiMessageImageContent = z.object(
+  //   {
+  //     type: z.literal("image"),
+  //     content: z.string().optional().describe("base64 encoded image"),
+  //   }
+  // ).describe('Image content');
 
-  const aiMessageObjectContent = z.object(
-    {
-      type: z.literal("object"),
-      content: z.any().optional().describe("any object"),
-    }
-  ).describe('Object content');
+  // const aiMessageObjectContent = z.object(
+  //   {
+  //     type: z.literal("object"),
+  //     content: z.any().optional().describe("any object"),
+  //   }
+  // ).describe('Object content');
 
-  const aiMessageErrorContent = z.object(
-    {
-      type: z.literal("error"),
-      content: z.union([
-        z.string().optional().describe("any object"),
-        z.object(
-          {
-            code: z.string().optional().describe("code of error"),
-            message: z.string().optional().describe("message of error"),
-          }
-        )
-      ]),
-    }
-  ).describe('Error content');
+  // const aiMessageErrorContent = z.object(
+  //   {
+  //     type: z.literal("error"),
+  //     content: z.union([
+  //       z.string().optional().describe("any object"),
+  //       z.object(
+  //         {
+  //           code: z.string().optional().describe("code of error"),
+  //           message: z.string().optional().describe("message of error"),
+  //         }
+  //       )
+  //     ]),
+  //   }
+  // ).describe('Error content');
 
-  const all_messages = z.union(
-    [
-      aiMessageTextContent, aiMessageTextDeltaContent, aiMessageToolUseContent,
-      aiMessageToolResultContent, aiMessageObjectContent, aiMessageImageContent, 
-      aiMessageErrorContent
-    ]
-  ).describe('All messages types between user and LLM')
+  // const all_messages = z.union(
+  //   [
+  //     aiMessageTextContent, aiMessageTextDeltaContent, aiMessageToolUseContent,
+  //     aiMessageToolResultContent, aiMessageObjectContent, aiMessageImageContent, 
+  //     aiMessageErrorContent
+  //   ]
+  // ).describe('All messages types between user and LLM')
 
-  const storeAgentRunParametersSchema = z.object(
-    {
-      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
-      prompt: z.array(z.union([aiMessageTextContent, aiMessageImageContent])).describe('Current customer prompt'),
-      maxTokens: z.number().optional().describe('Max tokens'),
-      maxSteps: z.number().optional().describe('Max steps per agent'),
-    }
-  ).describe('The agent run parameters');
+  // const storeAgentRunParametersSchema = z.object(
+  //   {
+  //     thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+  //     prompt: z.array(z.union([aiMessageTextContent, aiMessageImageContent])).describe('Current customer prompt'),
+  //     maxTokens: z.number().optional().describe('Max tokens'),
+  //     maxSteps: z.number().optional().describe('Max steps per agent'),
+  //   }
+  // ).describe('The agent run parameters');
 
-  const storeAgentRunResponseSchema = z.object(
-    {
-      thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
-      contents: z.array(all_messages).describe('Current **LLM** formatted responses'),
-    }
-  ).describe('The response');
+  // const storeAgentRunResponseSchema = z.object(
+  //   {
+  //     thread_id: z.string().optional().describe('the id of the conversation, for future usage'),
+  //     contents: z.array(all_messages).describe('Current **LLM** formatted responses'),
+  //   }
+  // ).describe('The response');
 
-  registry.register('aiMessageTextContent', aiMessageTextContent);
-  registry.register('aiMessageTextDeltaContent', aiMessageTextDeltaContent);
-  registry.register('aiMessageToolUseContent', aiMessageToolUseContent);
-  registry.register('aiMessageToolResultContent', aiMessageToolResultContent);
-  registry.register('aiMessageObjectContent', aiMessageObjectContent);
-  registry.register('aiMessageImageContent', aiMessageImageContent);
-  registry.register('aiMessageErrorContent', aiMessageErrorContent);
+  // registry.register('aiMessageTextContent', aiMessageTextContent);
+  // registry.register('aiMessageTextDeltaContent', aiMessageTextDeltaContent);
+  // registry.register('aiMessageToolUseContent', aiMessageToolUseContent);
+  // registry.register('aiMessageToolResultContent', aiMessageToolResultContent);
+  // registry.register('aiMessageObjectContent', aiMessageObjectContent);
+  // registry.register('aiMessageImageContent', aiMessageImageContent);
+  // registry.register('aiMessageErrorContent', aiMessageErrorContent);
 
-  registry.register(
-    'storeAgentRunParameters', storeAgentRunParametersSchema
-  );
-  registry.register(
-    'storeAgentRunResponseSchema', storeAgentRunResponseSchema
-  );
+  // registry.register(
+  //   'storeAgentRunParameters', storeAgentRunParametersSchema
+  // );
+  // registry.register(
+  //   'storeAgentRunResponseSchema', storeAgentRunResponseSchema
+  // );
 
   registry.registerPath({
     method: 'post',
@@ -1190,7 +1194,7 @@ const register_ai = (registry) => {
       body: {
         content: {
           "application/json": {
-            schema: storeAgentRunParametersSchema,
+            schema: agentRunParametersSchema,
             example: {
               prompt: [
                 {
@@ -1243,7 +1247,7 @@ const register_ai = (registry) => {
       body: {
         content: {
           "application/json": {
-            schema: storeAgentRunParametersSchema,
+            schema: agentRunParametersSchema,
             example: {
               prompt: [
                 {
@@ -1271,7 +1275,7 @@ const register_ai = (registry) => {
         ),
         content: {
           'application/json': {
-            schema: storeAgentRunResponseSchema,
+            schema: agentRunResponseSchema,
             example: {
               contents: [
                 {
@@ -1425,60 +1429,6 @@ const register_reference = (registry) => {
   });  
 }
 
-/**
- * @param {OpenAPIRegistry} registry 
- */
-const register_dashboard = (registry) => {
-  registry.register('storecraftConfigSchema', storecraftConfigSchema);
-
-  registry.registerPath({
-    method: 'get',
-    path: `/dashboard`,
-    summary: `Get Default Dashboard`,
-    description: `Get the default (usually latest) dashboard. This default be set from the storecraft app config`,
-    tags: ['dashboard'],
-    responses: {
-      200: {
-        description: `Dashboard HTML`,
-        content: {
-          'text/html': {
-            schema: z.string(),
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-
-  registry.registerPath({
-    method: 'get',
-    path: `/dashboard/{version}`,
-    summary: `Get Dashboard By version`,
-    description: `Get the Dashboard by a specific version, see https://www.npmjs.com/package/@storecraft/dashboard?activeTab=versions`,
-    tags: ['dashboard'],
-    request: {
-      params: z.object({
-        version: z.string().openapi(
-          { 
-            examples: ['1.0.35', 'latest'],
-            description: 'The version of the dashboard to get, or `latest` for the latest version'
-          }
-        ),
-      }),
-    },
-    responses: {
-      200: {
-        description: `Dashboard HTML`,
-        content: {
-          'text/html': {
-            schema: z.string(),
-          },
-        },
-      },
-      ...error() 
-    },
-  });
-}
 
 /**
  * @param {OpenAPIRegistry} registry 
@@ -1958,24 +1908,28 @@ const error = () => {
 /**
  * @param {OpenAPIRegistry} registry 
  */
-const register_storage = registry => {
-  const tags = ['storage'];
-  const zod_presigned = z.object(
+const PresignedUrl = (registry) => registry.register(
+  'PresignedUrl', 
+  z.object(
     {
       url: z.string().openapi({ description: 'The request url to follow' }),
       method: z.enum(['GET', 'POST', 'PUT']).openapi({ description: 'The request method' }),
       headers: z.record(z.string()).optional().openapi({ description: 'Additional request headers'}),
     }
   )
+).openapi(
+  {
+    description: '`presigned` urls endpoints generate a description of `http` request \
+    that a client can assemble and use it\'s own resources and network to execute to perform\
+    image download or upload. This is highly recommended'
+  }
+);
 
-  const PresignedUrl = registry.register('PresignedUrl', zod_presigned).openapi(
-    {
-      description: '`presigned` urls endpoints generate a description of `http` request \
-      that a client can assemble and use it\'s own resources and network to execute to perform\
-      image download or upload. This is highly recommended'
-    }
-  );
-
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_storage = registry => {
+  const tags = ['storage'];
   const query = z.object(
     {
       signed: z.boolean().optional().openapi(
@@ -2046,7 +2000,7 @@ const register_storage = registry => {
         description: 'A `http` request instruction, that you should execute',
         content: {
           "application/json": {
-            schema: PresignedUrl,
+            schema: PresignedUrl(registry),
             example: {
               "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710878150&Signature=XQttB9RJbIQalNoHENZenlq9LEIVf3jKU4zdJJEXLO1cdnjZ8CqRUgM4exbh5nclakrGA7waNwfHpaaAAs5nUnUPhoDBYv7y8wcDMK%2BJL9%2F4uNSSAX4TutudLZ1EMQ4CoGTfPCPXnoTPcGjOm2L5TPB6PeTeWgq%2BUiPZ%2FoMrDDHe8Xjy0WCuAJQo6LPWQtdcnRsLedJB77K8NYxjWzxqNgrhft08d3YjugFDAvDcCz7hOgA8mXBAinKH6JvBQhjRgQaUCCIQr0qJPyroX7rfgxBKCFs0jJjdtVlwDCm535BOENWCI5bgcxSy4yUu9b%2BI59v%2B8Zg74ANAFGIQq0zXdA%3D%3D",
               "method": "GET"
@@ -2121,7 +2075,7 @@ const register_storage = registry => {
         description: 'A `http` request instruction, that you should execute',
         content: {
           "application/json": {
-            schema: PresignedUrl,
+            schema: PresignedUrl(registry),
             example: {
               "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710879955&Signature=Wi5Di1f55k%2FWt9yULSHmyZpYpgBW3VTw9ZqlityFrI%2BgKehA%2FEptAHb%2FoWEWblv5Pd9RDGhFl9PoNaV6j%2B8dl4qdJkTJNWufXhYRmTirxsuXZlPYV25lMPPZ6HBaurg1Cjgd0V87FASsXTshnpC514MUH%2BioDCxksdybTEu%2BRSG27KqlGfY1CXEheBUncSmY6%2BURVhZhhRGLc2f7sfTlVpwq5d4HHSk%2FkLHflUPMUQioEYOD6EwKd8FBLdciA%2FQjDK3AcpmRrQslR5f524V8AfFdWRsRMqE%2BBFcYR4FimHkjuQPo4HedfQ5uSwnWi4g9TugWpIwVVNgfbQoN9wJOzQ%3D%3D",
               "method": "PUT",
@@ -2705,7 +2659,7 @@ const register_discounts = registry => {
     method: 'get',
     path: `/${slug_base}/{id_or_handle}/products/used_tags`,
     description: 'List all the tags of products in a discount, This is helpful for building a filter system in the frontend if you know in advance all the tags of the products in a discount',
-    summary: 'List All collection\'s products tags',
+    summary: 'List All discount\'s products tags',
     tags,
     request: {
       params: z.object({
@@ -3193,6 +3147,117 @@ const register_posts = registry => {
   register_base_delete(registry, slug_base, name, tags, example_id);
   register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
 }
+
+/**
+ * @param {OpenAPIRegistry} registry 
+ */
+const register_chats = registry => {
+  const name = 'chat metadata'
+  const slug_base = 'chats'
+  const tags = [slug_base];
+  const example_id = 'chat_65f2ae998bf30e6cd0ca9605';
+  const _typeSchema = registry.register(name, chatTypeSchema);
+  const _typeUpsertSchema = registry.register(`${name}Upsert`, chatTypeUpsertSchema);
+  const _chatHistoryTypeSchema = registry.register('chatHistoryTypeSchema', chatHistoryTypeSchema);
+
+  register_base_get(registry, slug_base, name, tags, example_id, _typeSchema, example_post);
+  register_base_upsert(registry, slug_base, name, tags, example_id, _typeUpsertSchema, example_post);
+  register_base_delete(registry, slug_base, name, tags, example_id);
+  register_base_list(registry, slug_base, name, tags, _typeUpsertSchema, example_post);
+
+  registry.registerPath({
+    method: 'get',
+    path: '/chats/download/{chat_id}',
+    description: 'Download entire `chat` / `thread` history',
+    summary: 'Download chat (directly)',
+    tags,
+    request: {
+      params: z.object({
+        chat_id: z.string().openapi(
+          { 
+            example: 'chat_65f2ae998bf30e6cd0ca9605',
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: 'chat history',
+        content: {
+          "application/json": {
+            schema: _chatHistoryTypeSchema,
+            example: {
+              "messages": [
+                {
+                  "role": "user",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "Hello"
+                    }
+                  ]
+                },
+                {
+                  "role": "assistant",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "Hi"
+                    }
+                  ]
+                }              
+              ],
+              "thread_id": "chat_65f2ae998bf30e6cd0ca9605",
+              "metadata": {
+                "id": "chat_65f2ae998bf30e6cd0ca9605",
+                "created_at": "2024-03-14T08:00:25.859Z",
+                "updated_at": "2024-03-14T08:00:25.859Z"
+              }
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/chats/download/{chat_id}?signed=true',
+    description: 'Download entire `chat` / `thread` via a proxy presigned URL',
+    summary: 'Download chat (presigned)',
+    tags,
+    request: {
+      params: z.object({
+        chat_id: z.string().openapi(
+          { 
+            example: 'chat_65f2ae998bf30e6cd0ca9605',
+          }
+        ),
+      }),
+    },
+    responses: {
+      200: {
+        description: 'presigned URL instructions',
+        content: {
+          "application/json": {
+            schema: PresignedUrl(registry),
+            example: {
+              "url": "https://storage.googleapis.com/shelf-demo-da5fd.appspot.com/a111.png?GoogleAccessId=firebase-adminsdk-izooa%40shelf-demo-da5fd.iam.gserviceaccount.com&Expires=1710879955&Signature=Wi5Di1f55k%2FWt9yULSHmyZpYpgBW3VTw9ZqlityFrI%2BgKehA%2FEptAHb%2FoWEWblv5Pd9RDGhFl9PoNaV6j%2B8dl4qdJkTJNWufXhYRmTirxsuXZlPYV25lMPPZ6HBaurg1Cjgd0V87FASsXTshnpC514MUH%2BioDCxksdybTEu%2BRSG27KqlGfY1CXEheBUncSmY6%2BURVhZhhRGLc2f7sfTlVpwq5d4HHSk%2FkLHflUPMUQioEYOD6EwKd8FBLdciA%2FQjDK3AcpmRrQslR5f524V8AfFdWRsRMqE%2BBFcYR4FimHkjuQPo4HedfQ5uSwnWi4g9TugWpIwVVNgfbQoN9wJOzQ%3D%3D",
+              "method": "PUT",
+              "headers": {
+                  "Content-Type": "image/png"
+              }
+            }
+          },
+        },
+      },
+      ...error() 
+    },
+  });
+
+}
+
 
 /**
  * @param {OpenAPIRegistry} registry 

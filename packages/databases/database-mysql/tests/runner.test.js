@@ -29,10 +29,9 @@ export const create_app = async () => {
         }
       }
     )
-  );
+  ).init();
   
-  await app.init();
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app._.db, false);
 
   return app;
 }
@@ -41,11 +40,11 @@ async function test() {
   const app = await create_app();
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
-      runner.create(app).run();
+      runner.create(app._.app).run();
     }
   );
-  const last_test = Object.values(api).at(-1).create(app);
-  last_test.after(async () => { await app.db.disconnect() });
+  const last_test = Object.values(api).at(-1).create(app._.app);
+  last_test.after(async () => { await app._.db.disconnect() });
   last_test.run();
 }
 

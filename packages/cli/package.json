@@ -1,6 +1,6 @@
 {
   "name": "storecraft",
-  "version": "1.0.27",
+  "version": "1.2.5",
   "description": "Official storecraft CLI",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -22,7 +22,6 @@
   "scripts": {
     "cli:test": "uvu -c",
     "test": "npm run cli:test",
-    "prepublishOnly": "npm version patch --force",
     "sc-publish": "npm publish"
   },
   "type": "module",

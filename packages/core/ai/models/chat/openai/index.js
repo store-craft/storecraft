@@ -1,11 +1,12 @@
 /**
  * @import { config } from "./types.js";
- * @import { 
+ * @import { assistant_message,
  *  chat_completion_chunk_result, chat_completion_input, 
- *  chat_message 
+ *  chat_message, tool_message, user_message, 
+ *  user_message_content_image_part, user_message_content_text_part
  * } from "./types.private.js";
  * @import { 
- *  content, content_text, GenerateTextParams, StreamTextCallbacks, ChatAI
+ *  content, GenerateTextParams, ChatAI
  * } from "../../../core/types.private.js";
  * @import { ENV } from '../../../../types.public.js';
  */
@@ -13,7 +14,7 @@
 import { invoke_tool_safely } from "../../../core/tools.js";
 import { zod_to_json_schema } from "../../../core/json-schema.js";
 import { SSEGenerator } from "../../../core/sse.js";
-import { stream_accumulate } from "../../../core/stream-accumulate.js";
+import { content_stream_accumulate } from "../../../core/content-utils.js";
 import { stream_message_builder } from "./stream-message-builder.js";
 
 /**
@@ -40,19 +41,21 @@ export class OpenAI {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[OpenAI.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[OpenAI.EnvConfig.api_key]; 
   }
 
   /**
    * @param {config} [config] 
    */
   constructor(config={}) {
-    this.config = {
+
+    this.config = /** @type {config} */({
+      model: 'gpt-4.1-mini',
+      endpoint: 'https://api.openai.com/',
+      api_version: 'v1',
       ...config,
-      model: config.model ?? 'gpt-4o',
-      endpoint: config.endpoint ?? 'https://api.openai.com/',
-      api_version: config.api_version ?? 'v1'
-    }
+    });
 
     this.#chat_completion_url = new URL(
       strip_leading(this.config.api_version + '/chat/completions'), 
@@ -66,31 +69,103 @@ export class OpenAI {
   }
 
 
-  /** @type {Impl["user_content_to_llm_user_message"]} */
-  user_content_to_llm_user_message = (prompts) => {
-    const prompts_filtered = prompts.filter(
-      p => (p.type==='text' || p.type==='image')
-    );
-
-    return {
-      role: 'user',
-      content: prompts_filtered.map(
-        (pr) => (
-
-          (pr.type==='text') ? { 
-            type: 'text', text: pr.content 
-          } : {
-            type: 'image_url',
-            image_url: {
-              url: pr.content,
-              detail: 'auto'
-            }
-          }
-        )
-      )
-    }
+  /** @type {Impl["user_content_to_native_llm_user_message"]} */
+  user_content_to_native_llm_user_message = (prompts) => {
+    return this.history_message_to_native_llm_messages(
+      {
+        role: 'user',
+        contents: prompts
+      }
+    )?.at(0);
   };
 
+  /** @type {Impl["history_message_to_native_llm_messages"]} */
+  history_message_to_native_llm_messages = (message) => {
+
+    const contents = message.contents;
+
+    if(message.role==='user') {
+      return [/** @type {user_message} */ ({
+        role: 'user',
+        content: contents.map(
+          (c) => {
+            switch(c.type) {
+              case 'text':
+                return /** @type {user_message_content_text_part} */ ({
+                  type: 'text',
+                  text: c.content
+                })
+              case 'image':
+                return /** @type {user_message_content_image_part} */ ({
+                  type: 'image_url',
+                  image_url: {
+                    url: c.content,
+                    detail: 'auto'
+                  }
+                })
+              default:
+                console.log(
+                  `unsupported user content type ${c.type}`
+                );
+                return undefined;
+            }
+          }
+        ).filter(Boolean)
+      })]
+    }
+
+    if(message.role==='assistant') {
+      // we will convert each content to OpenAI message format
+
+      return contents.map(
+        (content) => {
+          switch(content.type) {
+            case 'text':
+              return /** @type {assistant_message} */ ({
+                role: 'assistant',
+                content: [
+                  {
+                    type: 'text',
+                    text: content.content
+                  }
+                ]
+              })
+            case 'tool_use': {
+              return /** @type {assistant_message} */ ({
+                role: 'assistant',
+                tool_calls: content.content.map(
+                  (tc) => ({
+                    id: tc.id,
+                    type: 'function',
+                    function: {
+                      name: tc.name,
+                      arguments: JSON.stringify(tc.arguments),
+                    }
+                  })
+                )
+              })
+            }
+            case 'tool_result': {
+              return /** @type {tool_message} */ ({
+                role: 'tool',
+                tool_call_id: content.content.id,
+                content: JSON.stringify(
+                  content.content?.data ?? null
+                )
+              })
+            }
+            default: {
+              console.log(
+                `unsupported assistant content type ${content.type}`
+              );
+              return undefined;
+            }
+          }
+        }
+      ).filter(Boolean)
+    }
+  }
+    
 
   /**
    * @description Transform our tools specification in to **OpenAI**
@@ -115,26 +190,34 @@ export class OpenAI {
   }
 
   /**
-   * @param {Impl["__gen_text_params_type"]} params
+   * @param {chat_message[]} messages
+   * @param {GenerateTextParams["tools"]} tools
    * @param {boolean} [stream=false]
    */
-  #text_complete = async (params, stream=false) => {
+  #text_complete = async (messages, tools, stream=false) => {
 
     const body = (/** @type {chat_completion_input} */
       ({
         model: this.config.model,
-        messages: params.history,
-        tools: this.#to_native_tools(params.tools),
-        stream: stream,
-        tool_choice: 'auto'
+        messages,
+        tools: tools && this.#to_native_tools(tools),
+        stream,
+        tool_choice: tools ? 'auto' : undefined
       })
     );
+
+    // console.dir({
+    //   messages: [...messages]
+    // }, {depth: 10});
+
+    const body_post_hook = this.config?.__hooks?.pre_request?.(
+      body) ?? body;
 
     const result = await fetch(
       this.#chat_completion_url,
       {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify(body_post_hook),
         headers: {
           "Authorization" : `Bearer ${this.config.api_key}`,
           "Content-Type": "application/json"
@@ -142,9 +225,14 @@ export class OpenAI {
       }
     );
 
+    // console.dir(await result.json(), {
+    //   depth: 10
+    // });
+
     // for await (const c of result.body) {
     //   console.log(new TextDecoder().decode(c))
     // }
+    // throw 'tomer'
 
     // console.log(this.#chat_completion_url)
     // console.log(body)
@@ -157,12 +245,15 @@ export class OpenAI {
   }
 
   /**
-   * @param {Impl["__gen_text_params_type"]} params
+   * @param {chat_message[]} messages
+   * @param {GenerateTextParams["tools"]} tools
    * @return {AsyncGenerator<chat_completion_chunk_result>}
    */
-   async * #text_complete_stream(params) {
+   async * #text_complete_stream(messages, tools) {
 
-    const stream = await this.#text_complete(params, true)
+    const stream = await this.#text_complete(
+      messages, tools, true
+    );
   
     for await (const frame of SSEGenerator(stream.body)) {
       // console.log(frame);
@@ -178,25 +269,33 @@ export class OpenAI {
   }
 
   /**
-   * 
-   * @param {GenerateTextParams<chat_message>} params
-   * @param {StreamTextCallbacks<chat_message>} [callbacks]
+   * @param {GenerateTextParams} params
    * @returns {AsyncGenerator<content>} 
    */
-  async * #_gen_text_generator(params, callbacks) {
+  async * #generator_completion(params) {
     let max_steps = params.maxSteps ?? 6;
 
-    const base_history_length = params.history.length;
-    params.history = [
+    /** @type {chat_message[]} */
+    const messages = [
       { // rewrite system prompt
         content: params.system,
         role: 'system'
       },
-      ...(params.history ?? [])?.filter(m => m.role!=='system'),
-      this.user_content_to_llm_user_message(params.prompt)
+
+      // map history to OpenAI format
+      ...(params.history ?? []).map(
+        this.history_message_to_native_llm_messages
+      ).flat(),
+
+      // map current prompt to OpenAI format
+      this.user_content_to_native_llm_user_message(
+        params.prompt
+      )
     ];
 
-    let current_stream = this.#text_complete_stream(params);
+    let current_stream = this.#text_complete_stream(
+      messages, params.tools
+    );
 
     const builder = stream_message_builder();
     
@@ -210,10 +309,13 @@ export class OpenAI {
           content: chunk.choices[0].delta.content
         }
       }
-
     }
 
     let current = builder.done();
+
+    // console.dir(current, {
+    //   depth: 10
+    // });
 
     // while we are at a tool call, we iterate internally
     while(
@@ -230,7 +332,7 @@ export class OpenAI {
           tc => ({
             name: tc.function.name,
             id: tc.id,
-            arguments: tc.function.arguments,
+            arguments: JSON.parse(tc.function.arguments),
             title: params.tools?.[tc.function.name].title
           })
         )
@@ -239,7 +341,7 @@ export class OpenAI {
       max_steps -= 1;
 
       // push `assistant` message into history
-      params.history.push(current.choices[0].message);
+      messages.push(current.choices[0].message);
 
       // invoke tools
       for(const tool_call of current.choices[0].message.tool_calls) {
@@ -250,7 +352,7 @@ export class OpenAI {
           JSON.parse(tool_call.function.arguments)
         );
 
-        params.history.push(
+        messages.push(
           {
             role: 'tool',
             tool_call_id: tool_call.id,
@@ -272,7 +374,9 @@ export class OpenAI {
       }
 
       // again
-      current_stream = this.#text_complete_stream(params);
+      current_stream = this.#text_complete_stream(
+        messages, params.tools
+      );
       
       const builder = stream_message_builder();
     
@@ -291,26 +395,35 @@ export class OpenAI {
     }
     
     // push `assistant` message into history
-    params.history.push(current.choices[0].message);
-
-    if(callbacks?.onDone) {
-      await callbacks.onDone(
-        params.history.slice(1 + base_history_length)
-      );
-    }
+    messages.push(current.choices[0].message);
   }
   
   
   /** @type {Impl["streamText"]} */
-  streamText = async (params, callbacks) => {
+  async streamText(params, callbacks) {
     
     /** @type {ReadableStream<content>} */
     const stream = new ReadableStream(
       {
         start: async (controller) => {
           try {
-            for await (const m of this.#_gen_text_generator(params, callbacks)) {
+            /** @type {content[]} */
+            const contents = [];
+            for await (const m of this.#generator_completion(params)) {
+              if(callbacks?.onDone)
+                contents.push(m);
+
+              // console.dir({m}, {
+              //   depth: 10
+              // });
+
               controller.enqueue(m);
+            }
+
+            if(callbacks?.onDone) {
+              await callbacks.onDone(
+                contents
+              );
             }
           } catch(e) {
             console.log(e)
@@ -332,26 +445,16 @@ export class OpenAI {
     }
   }
   
-  /**
-   * 
-   * @type {Impl["generateText"]} 
-   */
+  /** @type {Impl["generateText"]} */
   generateText = async (params) => {
-    let delta_messages = [];
     const { stream } = await this.streamText(
       params,
-      {
-        onDone: async (messages) => {
-          delta_messages = messages;
-        }
-      }
     );
 
-    const contents = await stream_accumulate(stream);
+    const contents = await content_stream_accumulate(stream);
 
     return {
-      contents,
-      delta_messages
+      contents
     };
   }
 

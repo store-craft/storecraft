@@ -14,7 +14,9 @@ import type {
   TagType, TagTypeUpsert, 
   TemplateType, TemplateTypeUpsert, 
   QuickSearchResult,
-  timestamps, 
+  timestamps,
+  ChatTypeUpsert,
+  ChatType, 
 } from "../api/types.api.d.ts";
 import type { 
   ExpandQuery, ApiQuery 
@@ -130,6 +132,12 @@ export interface db_auth_users extends OmitGetByHandle<db_crud<AuthUserType>> {
 /** @description `TagType` crud */
 export interface db_tags extends db_crud<
   withConcreteIdAndHandle<TagTypeUpsert>, TagType
+  > {
+}
+
+/** @description `chat` metadata crud */
+export interface db_chats extends db_crud<
+  withConcreteIdAndHandle<ChatTypeUpsert>, ChatType
   > {
 }
 
@@ -367,6 +375,7 @@ export interface db_driver<ConfigType extends any = any> {
   resources?: {
     auth_users: db_auth_users;
     tags: db_tags;
+    chats: db_chats;
     collections: db_collections;
     customers: db_customers;
     products: db_products;

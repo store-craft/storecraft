@@ -32,21 +32,21 @@ import { MongoDB } from '@storecraft/database-mongodb'
 
 // console.log('env ', process.env)
 
-const app = new App(
-  {
-    auth_admins_emails: ['john@doe.com']
-  }
-)
+const app = new App({})
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB());
+.init();
+ 
+http.createServer(app.handler).listen(
+  8000,
+  () => {
+    app.print_banner('http://localhost:8000');
+  }
+); 
 
 functions.http(
   'storecraft',
   async (req, res) => {
-    // happends once
-    await app.init();
-
-    // handle request
     return app.handler(req, res);
   }
 );

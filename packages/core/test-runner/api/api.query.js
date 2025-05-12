@@ -63,9 +63,16 @@ export const assert_query_list_integrity = (list, q) => {
     );
   }
 
-  assert_items_against_vql_integrity(
-    list, q.vql, [], {query: q}
-  );
+  if(typeof q.vql !== 'string') {
+    assert_items_against_vql_integrity(
+      list, q.vql, [], {query: q}
+    );
+  } else {
+    assert.unreachable(
+      `assert_query_list_integrity:: vql is not a string !`
+    )
+  }
+
 
 
   // // asc:  (0, 1, 2, 3, 4, 5, )

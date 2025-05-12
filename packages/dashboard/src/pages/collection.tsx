@@ -94,10 +94,10 @@ const right = {
       comp: withCard(TagsEdit),
       comp_params: {className: 'w-full  '}  
     },
-    {
-      comp: BulkTagProductsInCollection,
-      comp_params: {className: 'w-full'} 
-    },
+    // {
+    //   comp: BulkTagProductsInCollection,
+    //   comp_params: {className: 'w-full'} 
+    // },
   ]
 }
 

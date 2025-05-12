@@ -1,6 +1,9 @@
 export { OpenAIEmbedder } from './index.js';
 
 export type config = {
+  /**
+   * @default 'text-embedding-3-large'
+   */
   model?: ('text-embedding-3-small' | 'text-embedding-3-large' | 'text-embedding-ada-002'),
   endpoint?: string,
   api_version?: string;

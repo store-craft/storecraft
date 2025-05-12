@@ -10,7 +10,7 @@ import { App } from '@storecraft/core';
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node';
 import { Anthropic } from "@storecraft/core/ai/models/chat/anthropic";
-import { Groq } from "@storecraft/core/ai/models/chat/groq";
+import { GroqCloud } from "@storecraft/core/ai/models/chat/groq-cloud";
 import { Gemini } from "@storecraft/core/ai/models/chat/gemini";
 import { Mistral } from "@storecraft/core/ai/models/chat/mistral";
 import { XAI } from "@storecraft/core/ai/models/chat/xai";
@@ -22,6 +22,8 @@ export const app = new App(
   {
     auth_secret_access_token: 'auth_secret_access_token',
     auth_secret_refresh_token: 'auth_secret_refresh_token',
+    auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+    auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
     auth_admins_emails: ['tomer.shalev@gmail.com'],
     general_store_name: 'Wush Wush Games',
     general_store_description: 'We sell cool retro video games',
@@ -40,25 +42,19 @@ export const app = new App(
 )
 .withStorage(new NodeLocalStorage("storage"))
 .withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
-.withPaymentGateways(
-  {
-    'paypal': new Paypal({ env: 'test' }),
-    'stripe': new Stripe(),
-    'dummy_payments': new DummyPayments(),
-  }
-)
-.withExtensions(
-  {
-    'postman': new PostmanExtension()
-  }
-)
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension()
+})
 .withAI(
   new XAI()
 )
 .withVectorStore(
-  new Vectorize(
-    {
-      embedder: new CloudflareEmbedder()
-    }
-  )
-)
+  new Vectorize({
+    embedder: new CloudflareEmbedder()
+  })
+).init()

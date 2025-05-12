@@ -1,0 +1,68 @@
+# Storecraft Chat Agent
+
+## Demo
+<Image src={`/ai-2.gif`} className='max-w-full  mx-auto --h-[500px] --object-contain' 
+       label={undefined}/>
+
+## How to
+If you want to add agentic capabilities to your store, be sure
+to add `withAI` and `withVectorStore` to your app.
+
+```ts
+const app = new App({
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
+})
+.withPlatform(new NodePlatform())
+.withDatabase(new LibSQL())
+.withStorage(new NodeLocalStorage('storage'))
+.withMailer(new Resend())
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
+.on(
+  'order/checkout/complete',
+  async (event) => {
+    // send a team slack message
+  }
+).init();
+```
+
+This, in turn, will generate a full commerce solution backend for you, with all the bells and whistles.
+
+<Image src={`/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>
+
+From there, you can access the chat agent via the `/chat` endpoint, and it will be able to answer questions about your store, and even take actions on it.
+
+
+## Features
+
+Currently, the agent can do the following:
+- Answer questions about your store
+- Search products / collections / discounts and more by keywords and tags
+- Search products / collections / discounts and more by Similarity search
+- Show you collections of products with frontend browser
+- Show you discounted products with frontend browser
+
+Soon, we will add:
+- Ask about your orders
+- Prepare cart
+- Create checkout

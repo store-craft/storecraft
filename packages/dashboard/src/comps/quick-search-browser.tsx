@@ -57,6 +57,7 @@ const resource_to_base_url = {
   'storefronts': '/pages/storefronts',
   'tags': '/pages/tags',
   'posts' : '/pages/posts',
+  'chats' : '/pages/chats',
   'templates': '/apps/templates',
   'images': '/apps/gallery/img',
 } as Record<keyof import('@storecraft/core/database').db_driver["resources"], string>;
@@ -91,12 +92,12 @@ export const QuickSearchButton = (
   {...rest}  >
   <div 
     className='rounded-md flex flex-row gap-2 p-1 items-center 
-      border shelf-card shelf-text-minor text-sm
+      border shelf-card-harder shelf-text-minor text-sm
       cursor-pointer hover:ring-pink-400 hover:ring-2'>
     <CiSearch/> 
     <span children='Search' />
     <div className='rounded-md border flex flex-row 
-                    items-center px-2 shelf-card'>
+      items-center px-2 shelf-card-harder'>
       <MdKeyboardCommandKey />
       <span children='K' />
     </div>
@@ -169,7 +170,8 @@ const to_title: Partial<Record<keyof db_driver["resources"], string>> = {
   'storefronts': '🏪 Storefronts',
   'tags': '⌗ tags',
   'templates': 'templates',
-  'posts' : '📄 Posts'
+  'posts' : '📄 Posts',
+  'chats' : '🤖 AI Chats',
 }
 
 
@@ -360,9 +362,9 @@ const QuickSearchBrowser = (
 <div className='w-full h-full relative'>
   <div onClick={e => e.stopPropagation()} 
       className='w-full --m-3 md:w-[35rem] --h-4/5 h-fit
-                  shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
-                  rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
-                  text-base flex flex-col --overflow-hidden'>
+        shelf-plain-card-soft absolute top-20 left-1/2 -translate-x-1/2
+        rounded-xl --p-3 --sm:p-5 border shadow-lg --gap-5 
+        text-base flex flex-col --overflow-hidden'>
 
     <div className='w-full h-fit flex flex-col gap-5 px-3 pt-3'>
 
@@ -396,7 +398,7 @@ const QuickSearchBrowser = (
         <div className={`flex flex-col gap-5 w-full h-fit`}>
 
           <div className='w-full --h-full max-h-[50svh] overflow-y-auto 
-                          px-1 flex flex-col gap-5 pb-5'>
+            px-1 flex flex-col gap-5 pb-5'>
 
             <ShowIf show={groups.length==0 && !loading}>
               <Nada />

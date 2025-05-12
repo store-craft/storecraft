@@ -13,7 +13,7 @@ const schema_fields: TableSchemaViewField[] = [
   { 
     key: 'updated_at', name: 'Last Updated	', 
     comp: TimeStampView, 
-    comp_params: { className: 'font-semibold' } 
+    comp_params: { className: 'font-mono' } 
   },
   { 
     key: undefined, name: 'Actions', 
@@ -40,9 +40,8 @@ export default ({}) => {
       hasLoaded={hasLoaded} 
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-      <div className='w-full rounded-md overflow-hidden shadow-md 
-                      dark:shadow-slate-900 border mt-5
-                      shelf-border-color'>      
+    <div className='w-full rounded-md overflow-hidden 
+      store-table-wrapper mt-5'>      
         <TopActions 
           isCollectionEmpty={resource_is_probably_empty}
           ref={ref_actions} 

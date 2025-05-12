@@ -14,7 +14,7 @@ import { App } from '../index.js';
 /**
  * @param {App} app
  */
-export const db = app => app.db.resources.collections;
+export const db = app => app.__show_me_everything.db.resources.collections;
 
 /**
  * @description `upsert` a `collection`
@@ -46,7 +46,6 @@ export const list_collection_products = (app) =>
   /**
    * @description given a collection handle and query, 
    * return products of that collection
-   * 
    * @param {HandleOrId} handle_or_id 
    * @param {ApiQuery<ProductType>} [q] 
    */
@@ -63,7 +62,6 @@ export const list_used_products_tags = (app) =>
    * @description List all the tags of products in a collection, This is helpful 
    * for building a filter system in the frontend if you know in advance all 
    * the tags of the products in a collection
-   * 
    * @param {HandleOrId} handle_or_id 
    */
   (handle_or_id) => {
@@ -79,9 +77,7 @@ export const export_collection = (app) => {
    * @description Export a colletion of `products` into the `storage`. This is
    * beneficial for `collections`, that hardly change and therefore can be 
    * efficiently stored in a cost-effective `storage` and **CDN** network.
-   * 
    * @param {HandleOrId} handle_or_id 
-   * 
    * @return {Promise<string>}
    */
   return async (handle_or_id) => {
@@ -103,7 +99,7 @@ export const export_collection = (app) => {
 
     const key = `collections/${collection.handle}.json`;
     const publish_path = `storage://${key}`;
-    const success = await app.storage.putArraybuffer(
+    const success = await app.__show_me_everything.storage.putArraybuffer(
       key,
       // @ts-ignore
       array
@@ -131,7 +127,6 @@ export const export_collection = (app) => {
 export const count = (app) => 
   /**
    * @description Count query results
-   * 
    * @param {ApiQuery<CollectionType>} query 
    */
   (query) => {
@@ -145,7 +140,6 @@ export const count = (app) =>
 export const count_collection_products_query = (app) => 
   /**
    * @description Count query results
-   * 
    * @param {string} id_or_handle id or handle of the collection
    * @param {ApiQuery<ProductType | VariantType>} [query] query object for products
    */
@@ -155,7 +149,6 @@ export const count_collection_products_query = (app) =>
   
 
 /**
- * 
  * @param {App} app
  */  
 export const inter = app => {

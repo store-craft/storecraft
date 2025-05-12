@@ -24,40 +24,48 @@ Now, create a new file `index.js`
 import 'dotenv/config';
 import http from "node:http";
 import { NodePlatform } from '@storecraft/core/platform/node';
-import { MongoDB, migrateToLast } from '@storecraft/database-mongodb'
+import { MongoDB, MongoVectorStore, migrateToLast } from '@storecraft/database-mongodb'
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
 import { DummyPayments } from '@storecraft/core/payments/dummy'
 import { SendGrid } from '@storecraft/mailer-providers-http/sendgrid';
 import { App } from '@storecraft/core';
  
-const app = new App(
-  {
-    storage_rewrite_urls: undefined,
+const app = new App({
     general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    auth_secret_access_token: process.env.auth_secret_access_token,
-    auth_secret_refresh_token: process.env.auth_secret_refresh_token
     auth_admins_emails: ['jonny@begood.com']
-  }
-)
+})
 .withPlatform(new NodePlatform())
-.withDatabase(new MongoDB({ url: process.env.mongo_url }))
+.withDatabase(new MongoDB({ url: process.env.MONGO_URL }))
 .withStorage(new NodeLocalStorage())
 .withMailer(new SendGrid({ apikey: process.env.SEND_GRID_SECRET }))
-.withPaymentGateways(
-  {
-    'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-  }
-);
+.withPaymentGateways({
+  dummy_payments: new DummyPayments()
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new MongoVectorStore({
+    embedder: new OpenAIEmbedder(),
+    url: process.env.MONGO_URL
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+}).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store?.createVectorIndex();
 
-http.createServer(app.handler).listen(
+http
+.createServer(app.handler)
+.listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 
@@ -71,5 +79,5 @@ npm start
 
 Viola, You should see the following,
 
-<Image src={`/docs/main/storecraft-terminal.png`} className='w-full' 
+<Image src={`/storecraft-terminal.png`} className='w-full' 
        label={undefined}/>

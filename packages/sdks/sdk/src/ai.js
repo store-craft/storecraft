@@ -56,7 +56,7 @@ export default class AI {
    * @param {AgentRunParameters} params 
    */
   streamSpeak = async (agent_handle, params) => {
-    
+    // console.log({config: this.sdk.config})
     const response = await this.sdk.fetcher(
       url(this.sdk.config, `ai/agents/${agent_handle}/stream`),
       {
@@ -67,6 +67,13 @@ export default class AI {
         }
       }
     );
+
+    if(!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${error.message}`
+      );
+    }
 
     const threadId = response.headers.get(
       HEADER_STORECRAFT_THREAD_ID ?? 'X-Storecraft-Thread-Id'

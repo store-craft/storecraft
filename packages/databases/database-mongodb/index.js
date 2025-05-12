@@ -19,6 +19,7 @@ import { impl as storefronts } from './src/con.storefronts.js';
 import { impl as tags } from './src/con.tags.js';
 import { impl as templates } from './src/con.templates.js';
 import { impl as search } from './src/con.search.js';
+import { impl as chats } from './src/con.chats.js';
 export { migrateToLatest } from './migrate.js';
 export { MongoVectorStore } from './vector-store/index.js';
 
@@ -28,7 +29,7 @@ export { MongoVectorStore } from './vector-store/index.js';
 export class MongoDB {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     db_name: 'MONGODB_NAME',
     url: 'MONGODB_URL',
   });
@@ -73,8 +74,8 @@ export class MongoDB {
 
     const c = this.#config;
 
-    c.db_name ??= app.platform.env[MongoDB.EnvConfig.db_name];
-    c.url ??= app.platform.env[MongoDB.EnvConfig.url] ?? 'main';
+    c.db_name ??= app.env[MongoDB.EnvConfig.db_name];
+    c.url ??= app.env[MongoDB.EnvConfig.url] ?? 'main';
 
     if(!this.config.db_name || !this.config.url) {
       throw new Error(
@@ -98,6 +99,7 @@ export class MongoDB {
       shipping_methods: shipping(this),
       templates: templates(this),
       search: search(this),
+      chats: chats(this),
     }
     
     this.#is_ready = true; 

@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/mailer-providers-http",
-  "version": "1.0.17",
+  "version": "1.2.5",
   "description": "Official Serverless Friendly e-mail adapters for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,8 +21,7 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "mailer-providers-http:test": "uvu -c",
-    "test": "npm run mailer-providers-http:test",
-    "prepublishOnly": "npm version patch --force"
+    "test": "npm run mailer-providers-http:test"
   },
   "exports": {
     ".": {

@@ -7,15 +7,15 @@
 
 Official **React** hooks for storecraft's javascript `SDK`.
 Many hooks manage the state into the browser `LocalStorage` and even a cache
-hook for `IndexDB`.
+hook for `IndexDB`. All hooks have types and documentation.
 
-All hooks have typesnand documentation.
+Start by installing the package:
 
 ```bash
 npm i @storecraft/sdk-react-hooks
 ```
 
-Main hooks are:
+Some of the useful hooks are:
 
 ## `useStorecraft()`
 
@@ -60,7 +60,7 @@ const {
 
 ```
 
-## general `useDocument()`
+## `useDocument()`
 
 Fetch / Mutate a single document by `id` or `handle`
 
@@ -80,7 +80,7 @@ const {
   actions: { 
     reload, upsert, remove, setError,
   }
-} : useDocumentHookReturnType<ProductType & VariantType> = useDocument(
+} = useDocument(
   'products', 
   'product_id_or_handle', 
   autoLoad=true, 
@@ -89,7 +89,7 @@ const {
 
 ```
 
-## general `useCollection()`
+## `useCollection()`
 
 Query collection of documents with pagination
 
@@ -112,25 +112,27 @@ const {
     poll, 
     removeDocument
   },
-} : useCollectionHookReturnType<ProductType & VariantType> = useCollection(
+} = useCollection(
   'products', 
-  // optional initial query,  you can also use the `query` callback
-  {
+  { // optional initial query
     order: 'desc',
     sortBy: ['updated_at', 'id'],
-    startAt: [
-      ['updated_at', '2024-12-1']
-    ], 
+    vql: {
+      updated_at: {
+        $gte: '2024-03-24',
+      },
+      active: true,
+      $or: [
+        { $search: 'tag:genre_action' },
+        { $search: 'tag:genre_sports' },
+      ],
+    },
     limit: 10,
-    vql: 'color_black | color_white -(color_green)'
   },
   autoLoad=true, 
 );
 
 ```
-
-TODO: Add specific `useDocument` / `useCollection` hooks for resources
-
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

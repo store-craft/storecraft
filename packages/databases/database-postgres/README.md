@@ -41,14 +41,15 @@ const app = new App(
   })
 )
 .withStorage(new NodeLocalStorage('storage'))
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
- 
-const server = http.createServer(app.handler).listen(
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
+
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 

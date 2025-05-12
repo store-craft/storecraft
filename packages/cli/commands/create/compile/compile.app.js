@@ -36,7 +36,7 @@
  * 
  * @import { Anthropic } from '@storecraft/core/ai/models/chat/anthropic';
  * @import { Gemini } from '@storecraft/core/ai/models/chat/gemini';
- * @import { Groq } from '@storecraft/core/ai/models/chat/groq';
+ * @import { GroqCloud } from '@storecraft/core/ai/models/chat/groq-cloud';
  * @import { Mistral } from '@storecraft/core/ai/models/chat/mistral';
  * @import { OpenAI } from '@storecraft/core/ai/models/chat/openai';
  * @import { XAI } from '@storecraft/core/ai/models/chat/xai';
@@ -72,8 +72,14 @@ import { collect_storage } from '../collect/collect.storage.js'
 import { collect_ai_chat } from '../collect/collect.ai.chat.js'
 import { collect_ai_vector_store } from '../collect/collect.ai.vector-store.js'
 import { collect_ai_embedder } from '../collect/collect.ai.embedder.js'
+import { 
+  collect_vector_store_and_embedder 
+} from '../collect/collect.ai.vector-store-and-embedder.js'
 import { collect_auth_providers } from '../collect/collect.auth-providers.js'
-import { dedup_object_array, dedup_value_array, extract_env_variables } from './compile.utils.js'
+import { 
+  dedup_object_array, dedup_value_array, 
+  extract_env_variables 
+} from './compile.utils.js'
 
 
 /**
@@ -85,11 +91,12 @@ import { dedup_object_array, dedup_value_array, extract_env_variables } from './
  * @prop {Awaited<ReturnType<typeof collect_platform>>} platform
  * @prop {Awaited<ReturnType<typeof collect_storage>>} storage
  * @prop {Awaited<ReturnType<typeof collect_ai_chat>>} ai_chat
- * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
- * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
+ * @prop {Awaited<ReturnType<typeof collect_vector_store_and_embedder>>} ai_vector_store_and_embedder
  * @prop {Awaited<ReturnType<typeof collect_auth_providers>>} auth_providers
- */
+*/
 
+// * @prop {Awaited<ReturnType<typeof collect_ai_embedder>>} ai_embedder
+// * @prop {Awaited<ReturnType<typeof collect_ai_vector_store>>} ai_vector_store
 
 /**
  * @param {Awaited<ReturnType<collect_platform>>} platform 
@@ -345,9 +352,9 @@ export const infer_database = info => {
 
     case 'libsql-local':
       return {
-        cls: `Turso`,
+        cls: `LibSQL`,
         imports: [
-          `import { Turso } from '@storecraft/database-turso';`
+          `import { LibSQL } from '@storecraft/database-turso';`
         ],
         deps: [
           '@storecraft/database-turso'
@@ -448,6 +455,7 @@ export const infer_storage = info => {
           info.config, 
           /** @satisfies {typeof S3CompatibleStorage.EnvConfig} */ (
             {
+              endpoint: 'S3_ENDPOINT',
               accessKeyId: 'S3_ACCESS_KEY_ID',
               bucket: 'S3_BUCKET',
               region: 'S3_REGION',
@@ -633,18 +641,18 @@ export const infer_ai_chat = (info) => {
         )
       }
     }
-    case 'groq': {
+    case 'groq-cloud': {
       return {
         cls: `Groq`,
         imports: [
-          `import { Groq } from '@storecraft/core/ai/models/chat/groq';`
+          `import { GroqCloud } from '@storecraft/core/ai/models/chat/groq-cloud';`
         ],
         deps: [
           '@storecraft/core'
         ],
         env: extract_env_variables(
           info.config, 
-          /** @satisfies {typeof Groq.GroqEnvConfig} */ (
+          /** @satisfies {typeof GroqCloud.GroqEnvConfig} */ (
             {
               api_key: 'GROQ_API_KEY'
             }
@@ -908,7 +916,7 @@ export const infer_ai_vector_store = (info) => {
 
 
 /**
- * @param {Awaited<ReturnType<collect_payments>>} info 
+ * @param {Awaited<ReturnType<typeof collect_payments>>} info 
  */
 export const infer_payments = info => {
   return info.map(
@@ -970,6 +978,18 @@ export const infer_payments = info => {
                 }
               )
             )
+          }
+        }
+
+        case 'dummy': {
+          return {
+            cls: `DummyPayments`,
+            imports: [
+              `import { DummyPayments } from '@storecraft/core/payments/dummy'`
+            ],
+            deps: [
+              '@storecraft/core'
+            ],
           }
         }
       }
@@ -1108,9 +1128,8 @@ const compose_instance_with_config = (cls_name, config={}, extra_kvs={}) => {
  * @param {number} idx 
  */
 export const counter = (pre, idx) => {
-  return idx==0 ? pre : `${pre}-${idx}`;
+  return idx==0 ? pre : `'${pre}-${idx}'`;
 }
-
 
 
 /**
@@ -1125,8 +1144,8 @@ export const compile_app = (meta) => {
   const mailer = infer_mailer(meta.mailer);
   const payments = infer_payments(meta.payments);
   const ai_chat = infer_ai_chat(meta.ai_chat);
-  const ai_embedder = infer_ai_embedder(meta.ai_embedder);
-  const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store);
+  const ai_embedder = infer_ai_embedder(meta.ai_vector_store_and_embedder?.ai_embedder);
+  const ai_vector_store = infer_ai_vector_store(meta.ai_vector_store_and_embedder?.ai_vector_store);
   const auth_providers = infer_auth_providers(meta.auth_providers);
 
   let code = `new App(
@@ -1148,14 +1167,14 @@ ${compose_instance_with_config(mailer.cls, meta.mailer.config)}
 ${
   meta.payments.map(
     (m, idx) => {
-      return `'${counter(m.id, idx)}': ${compose_instance_with_config(payments[idx].cls, m.config)},`
+      return `${counter(m.id, idx)}: ${compose_instance_with_config(payments[idx].cls, m.config)},`
     }
   ).join('\n')
 }
 })
 .withExtensions(
   {
-    'postman': new PostmanExtension()
+    postman: new PostmanExtension()
   }
 )`;
 
@@ -1168,13 +1187,16 @@ ${compose_instance_with_config(ai_chat.cls, meta.ai_chat.config)}
 
   if(ai_embedder && ai_vector_store) {
     const embedder_inst = compose_instance_with_config(
-      ai_embedder.cls, meta.ai_embedder.config
+      ai_embedder.cls, 
+      meta.ai_vector_store_and_embedder.ai_embedder.config
     );
 
     code += `
 .withVectorStore(
 ${compose_instance_with_config(
-  ai_vector_store.cls, meta.ai_vector_store.config, {embedder: embedder_inst}
+  ai_vector_store.cls, 
+  meta.ai_vector_store_and_embedder.ai_vector_store.config, 
+  { embedder: embedder_inst }
 )}
 )`;    
   }
@@ -1185,50 +1207,53 @@ ${compose_instance_with_config(
 ${
   meta.auth_providers.map(
     (m, idx) => {
-      return `'${m.id}': ${compose_instance_with_config(auth_providers[idx].cls, m.config)},`
+      return `${m.id}: ${compose_instance_with_config(auth_providers[idx].cls, m.config)},`
     }
   ).join('\n')
 }
-})`;    
+})`;
   }
 
+  code += `
+.init();  
+`
 
   return {
     code,
     imports: dedup_value_array([
-      ai_chat.imports, 
-      ai_embedder.imports, 
-      ai_vector_store.imports, 
-      platform.imports, 
-      database.imports, 
-      storage.imports, 
-      mailer.imports, 
-      payments.map(p => p.imports),
+      ai_chat?.imports, 
+      ai_embedder?.imports, 
+      ai_vector_store?.imports, 
+      platform?.imports, 
+      database?.imports, 
+      storage?.imports, 
+      mailer?.imports, 
+      payments?.map(p => p.imports),
       (auth_providers ?? []).map(p => p.imports),
       `import { App } from '@storecraft/core'`,
       `import { PostmanExtension } from '@storecraft/core/extensions/postman'`,
     ]),
     deps: dedup_value_array([
-      ai_chat.deps, 
-      ai_embedder.deps, 
-      ai_vector_store.deps, 
-      platform.deps, 
-      database.deps, 
-      storage.deps, 
-      mailer.deps, 
-      payments.map(p => p.deps),
+      ai_chat?.deps, 
+      ai_embedder?.deps, 
+      ai_vector_store?.deps, 
+      platform?.deps, 
+      database?.deps, 
+      storage?.deps, 
+      mailer?.deps, 
+      payments?.map(p => p.deps),
       (auth_providers ?? []).map(p => p.deps),
       '@storecraft/core',
     ]),
     env: dedup_object_array([
-      ai_chat.env, 
-      ai_embedder.env, 
-      ai_vector_store.env, 
-      platform.env, 
-      database.env, 
-      storage.env, 
-      mailer.env,
-      ...payments.map(p => p.env),
+      ai_chat?.env, 
+      ai_embedder?.env, 
+      ai_vector_store?.env, 
+      platform?.env, 
+      database?.env, 
+      storage?.env, 
+      mailer?.env,
+      ...payments?.map(p => p.env),
       ...(auth_providers ?? []).map(p => p.env),
       meta.config.env  
     ])

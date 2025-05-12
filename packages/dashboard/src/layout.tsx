@@ -16,6 +16,8 @@ import useDarkMode from './hooks/use-dark-mode'
 import { useScrollDelta } from '@/hooks/use-scroll-delta'
 import { CgTemplate } from "react-icons/cg";
 import { createPortal } from './comps/portal-creator'
+import { RiRobot2Line } from 'react-icons/ri'
+import { Marquee } from './comps/marquee'
 
 const menu: MenuType = {
   info: {
@@ -51,10 +53,6 @@ const menu: MenuType = {
         extra : { active: 'bg-pink-600 dark:bg-pink-600/90', hover: 'hover:bg-amber-200' } 
       },
       { 
-        name: 'Payment Gateways', icon: <MdPayment/>, 
-        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
-      },
-      { 
         name: 'Discounts', icon: <TbDiscount2 className='--text-lg'/>, 
         extra : { active: 'bg-pink-600', hover: 'hover:bg-teal-200' } 
       },
@@ -67,6 +65,15 @@ const menu: MenuType = {
         extra : { 
           active: 'bg-orange-400 dark:bg-orange-400/70', hover: 'hover:bg-teal-200',
         } 
+      },
+      { 
+        name: 'Payment Gateways', icon: <MdPayment/>, 
+        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
+      },
+      { 
+        name: 'AI Chats', slug: 'chats',
+        icon: <RiRobot2Line/>, 
+        extra : { active: 'bg-pink-600', hover: 'hover:bg-amber-200' } 
       },
     ]
   },
@@ -124,19 +131,20 @@ const Layout = (
 <div 
   className={`w-full h-full  ${darkMode ? 'dark' : ''}`}
   data-color-mode={darkMode ? 'dark' : 'light'}>
+  
   <div 
     className={`relative flex flex-row font-inter 
-      shelf-body-bg
-      w-full h-full sm:h-full ${className}
-      `} {...rest}
+      shelf-body-bg w-full h-full sm:h-full ${className}`} 
+      {...rest}
       // @ts-ignore
       ssstyle={{height: '100dvh'}}>
 
     <MainPortal.Portal />        
     <div 
       className={`fixed left-0 top-0 w-full h-full bg-teal-900/10 
-                  z-50 transition-all md:hidden
-                ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`} 
+        z-50 transition-all md:hidden
+        ${menuOpen ? 'block backdrop-blur-sm' : 'hidden backdrop-blur-0'}`
+      } 
       onClick={onCloseClick}/>
 
     {/* side menu   */}
@@ -161,11 +169,11 @@ const Layout = (
             }
           }
           className='bg-gradient-to-r 
-                    from-slate-100 to-white 
-                    dark:from-slate-800 dark:to-slate-800
-                    shadow-md 
-                    shadow-gray-800 h-full rounded-tr-3xl 
-                    rounded-br-3xl' 
+            from-slate-100 to-white 
+            dark:from-slate-800 dark:to-slate-800
+            shadow-md 
+            shadow-gray-800 h-full rounded-tr-3xl 
+            rounded-br-3xl' 
         />
       </Bling>
     </div>
@@ -173,16 +181,15 @@ const Layout = (
     {/* main content */}
     <div 
       className='relative flex-1 h-full flex flex-col 
-        mx-0 sm:mx-3 md:mx-6 overflow-auto'>
-
+         overflow-auto'>
+      
       <ActionBar 
         className={
           `w-full 
           shelf-action-bar
-          h-12 backdrop-blur-sm
+          h-fit backdrop-blur-sm
           absolute left-0 top-0 z-40 
           border-b dark:border-b-slate-700 
-          px-3
           transition-transform 
           duration-500 ${open_class}`
         } 
@@ -193,9 +200,12 @@ const Layout = (
       <div 
         ref={ref_scroll_element} 
         className='relative w-full 
+        px-0 sm:px-3 md:px-6
           h-full pt-16 pb-5 overflow-y-auto scrollbar-none '>
         <div 
-          className='bg-gradient-to-tl from-kf-50/50 to-slate-50/10
+          className='
+          --bg-red-400
+            --bg-gradient-to-tl --from-kf-50/50 --to-slate-50/10
             dark:from-transparent/0 dark:to-transparent/0   
             px-3 sm:px-5 lg:px-10 py-3 sm:py-5 lg:py-8 
             rounded-3xl text-sm font-medium 

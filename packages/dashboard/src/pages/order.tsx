@@ -419,18 +419,18 @@ export default (
     className='mt-5' 
     collectionId={'orders'}/> 
   <RegularDocumentActions 
-      id={doc?.id}
-      onClickSave={isEditMode ? savePromise : undefined}
-      onClickCreate={isCreateMode ? savePromise : undefined}
-      onClickDelete={!isCreateMode ? deletePromise : undefined} 
-      onClickDuplicate={!isCreateMode ? duplicate_mod : undefined} 
-      onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
-      className='mt-5 '/>
+    id={doc?.id}
+    onClickSave={isEditMode ? savePromise : undefined}
+    onClickCreate={isCreateMode ? savePromise : undefined}
+    onClickDelete={!isCreateMode ? deletePromise : undefined} 
+    onClickDuplicate={!isCreateMode ? duplicate_mod : undefined} 
+    onClickReload={!isCreateMode ? (async () => reload(false)) : undefined}
+    className='mt-5 '/>
   <CreateDate 
-      changes_made={hasChanged} ref={ref_head}  
-      key={doc?.updated_at}
-      time={doc?.created_at} 
-      className='mt-8' />            
+    changes_made={hasChanged} ref={ref_head}  
+    key={doc?.updated_at}
+    time={doc?.created_at} 
+    className='mt-8' />            
   <ShowIf show={(hasLoaded && isEditMode) || isCreateMode} >
     <div className='w-full mx-auto '>
       <ErrorMessage 

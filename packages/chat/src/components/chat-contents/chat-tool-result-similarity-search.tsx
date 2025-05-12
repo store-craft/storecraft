@@ -1,9 +1,11 @@
-import { content_tool_result, InferToolReturnSchema } from "@storecraft/core/ai";
-import { TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
+import { 
+  type content_tool_result, type InferToolReturnSchema 
+} from "@storecraft/core/ai";
+import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
-import { withDiv } from "../common.types.js";
+import { type withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { ProductCardView } from "./chat-tool-result-search-products.js";
 import { CollectionCardView } from "./chat-tool-result-fetch-collections.js";
@@ -70,13 +72,18 @@ export const ToolResultContent_SimilaritySearch = (
   const items = data.result;
 
   return (
-    <div className='flex flex-row w-full gap-2 --overflow-x-hidden 
-                  overflow-x-auto h-full max-h-96 pr-40 pb-5'
+    <div 
+      className='flex flex-row w-full gap-2 --overflow-x-hidden 
+        overflow-x-auto h-full max-h-96 pr-40 pb-5'
       style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
       {
         items.map(
           (item, ix) => (
-            <Card key={ix} card={{loading: loading, border: true}} className='w-fit h-full max-h-96' >
+            <Card 
+              key={ix} 
+              card={{loading: loading, border: true}} 
+              className='w-fit h-full max-h-96' 
+            >
               <SimilaritySearchItemView 
                 key={item.content?.id ?? ix} 
                 item={item} 

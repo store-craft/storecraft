@@ -21,14 +21,14 @@ export const create = (app) => {
   s.before(
     async () => { 
       await app.init();
-      assert.ok(app.ready);
-      app.rest_controller.logger.active=false;
+      assert.ok(app.isready);
+      app.__show_me_everything.rest_controller.logger.active=false;
     }
   );
 
   s.after(
     async () => { 
-      app.rest_controller.logger.active=true;
+      app.__show_me_everything.rest_controller.logger.active=true;
     }
   );
 
@@ -40,7 +40,7 @@ export const create = (app) => {
       lastname: 'Doe',
     }
 
-    const response = await app.rest_controller.handler(
+    const response = await app.__show_me_everything.rest_controller.handler(
       new Request(
         'https://localhost/api/dashboard',
         {
@@ -73,7 +73,7 @@ export const create = (app) => {
     }
 
     const version = '1.0.20'
-    const response = await app.rest_controller.handler(
+    const response = await app.__show_me_everything.rest_controller.handler(
       new Request(
         'https://localhost/api/dashboard/' + version,
         {
@@ -110,7 +110,7 @@ export const create = (app) => {
       lastname: 'Doe',
     }
 
-    const response = await app.rest_controller.handler(
+    const response = await app.__show_me_everything.rest_controller.handler(
       new Request(
         'https://localhost/api/reference/settings',
         {
@@ -137,7 +137,7 @@ export const create = (app) => {
       user
     );
 
-    const response = await app.rest_controller.handler(
+    const response = await app.__show_me_everything.rest_controller.handler(
       new Request(
         'https://localhost/api/reference/settings',
         {
@@ -156,7 +156,7 @@ export const create = (app) => {
     const actual_config = await response.json();
     const expected_config = {
       ...app.config,
-      core_version: app.version,
+      core_version: app.info.core_version,
     }
 
     assert.equal(
@@ -198,7 +198,7 @@ export const create = (app) => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

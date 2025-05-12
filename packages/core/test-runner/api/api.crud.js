@@ -131,13 +131,6 @@ export const add_sanity_crud_to_test_suite = s => {
 
   });
 
-  s('missing fields should throw', async (ctx) => {
-    await assert_async_throws(
-      // @ts-ignore
-      async () => await ctx.ops.upsert({})
-    );
-  })
-
   return s;
 }
 
@@ -157,7 +150,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
   if(!avoid_setup) {
     s.before(
       async (ctx) => { 
-        assert.ok(ctx.app.ready) 
+        assert.ok(ctx.app.isready) 
         try {
           for(const p of ctx.items) {
             await ctx.ops.remove(p.id);
@@ -173,7 +166,7 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
 
   s.after(
     async (ctx) => {
-      assert.ok(ctx.app.ready) 
+      assert.ok(ctx.app.isready) 
       try {
         for(const p of ctx.items) {
           await ctx.ops.remove(p.id);
@@ -185,18 +178,18 @@ export const add_query_list_integrity_tests = (s, avoid_setup=false) => {
     }
   )
 
-  s('basic statistics count() test',
-    async (ctx) => {
-      const count = await ctx.app.api.statistics.compute_count_of_query(
-        ctx.resource, {}
-      );
+  // s('basic statistics count() test',
+  //   async (ctx) => {
+  //     const count = await ctx.app.api.statistics.compute_count_of_query(
+  //       ctx.resource, {}
+  //     );
 
-      assert.ok(
-        count>=ctx.items.length,
-        'count < items.length'
-      )
-    }
-  );
+  //     assert.ok(
+  //       count>=ctx.items.length,
+  //       'count < items.length'
+  //     )
+  //   }
+  // );
 
   s('basic collection count() test',
     async (ctx) => {

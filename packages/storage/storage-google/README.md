@@ -48,9 +48,8 @@ const app = new App()
       private_key_id: process.env.GS_PRIVATE_KEY_ID
     }
   )
-);
+).init();
   
-await app.init();
 ```
 
 ## config

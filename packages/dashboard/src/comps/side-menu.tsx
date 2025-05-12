@@ -112,7 +112,7 @@ const SideMenu = (
                           (
                             <div 
                               className='rounded-md border dark:border-none p-[3px] 
-                                        shelf-border-color-soft ' 
+                                shelf-border-color-soft ' 
                               children={item.icon} />
                           )
                         } 
@@ -137,7 +137,7 @@ const SideMenu = (
   {
 
   }
-  <Version className='shrink-0 px-5' />
+  {/* <Version className='shrink-0 px-5' /> */}
 </div>
   )
 }

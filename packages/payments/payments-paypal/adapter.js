@@ -26,13 +26,13 @@ import html_buy_ui from './adapter.html.js';
 export class Paypal {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfigProd = /** @type{const} */ ({
+  static EnvConfigProd = /** @type {const} */ ({
     client_id: `PAYPAL_CLIENT_ID_PROD`,
     secret: 'PAYPAL_SECRET_PROD',
   });
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfigTest = /** @type{const} */ ({
+  static EnvConfigTest = /** @type {const} */ ({
     client_id: `PAYPAL_CLIENT_ID_TEST`,
     secret: 'PAYPAL_SECRET_TEST',
   });
@@ -56,19 +56,19 @@ export class Paypal {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     const is_prod = Boolean(this.config.env==='prod');
-    this.config.client_id ??= app.platform.env[
+    this.config.client_id ??= app.env[
       is_prod ? Paypal.EnvConfigProd.client_id : Paypal.EnvConfigTest.client_id
-    ] ?? app.platform.env['PAYPAL_CLIENT_ID'];
+    ] ?? app.env['PAYPAL_CLIENT_ID'];
 
-    this.config.secret ??= app.platform.env[
+    this.config.secret ??= app.env[
       is_prod ? Paypal.EnvConfigProd.secret : Paypal.EnvConfigTest.secret
-    ] ?? app.platform.env['PAYPAL_SECRET'];
+    ] ?? app.env['PAYPAL_SECRET'];
 
     const is_valid = this.config.client_id && this.config.secret;
 
     if(!is_valid) {
       throw new StorecraftError(
-        `Payment gateway ${this.info.name ?? 'unknown'} has invalid config !!! 
+        `Payment gateway ${this.info?.name ?? 'unknown'} has invalid config !!! 
         Missing client_id or secret`
       )
     }

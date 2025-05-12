@@ -60,22 +60,26 @@ export const TopActions = forwardRef(
   return (
 <div className={className}>
   <div className={`--border-x  --bg-kf-50 w-full text-grey-800 
-                  flex flex-row justify-between items-center px-0 --border-t`}>
-    <Link to={createLink} draggable='false' className="m-2">
-      <div className={isCollectionEmpty ? 'animate-[wave_1.5s_ease-in-out_infinite]' : ''}>
-        <BlingButton2
-          className='h-9 w-16 text-base rounded-lg' 
-          stroke='border-2' 
-          children='add'
-          icon={
-            <IoCreateOutline 
+    flex flex-row justify-between items-center px-0 --border-t`}>
+    {
+      <Link to={createLink} draggable='false' className="m-2">
+        {createLink &&
+        <div className={isCollectionEmpty ? 'animate-[wave_1.5s_ease-in-out_infinite]' : ''}>
+          <BlingButton2
+            from='from-pink-500/60 dark:from-pink-600'
+            to='to-kf-500/60 dark:to-kf-500'
+            className='h-9 w-16 text-base rounded-lg' 
+            stroke='border-2' 
+            children='add'
+            icon={
+              <IoCreateOutline 
                 className='inline shelf-text-label-color 
-                          text-xl text-grey-800'/>
-          }
-        />
-      </div>
-
-    </Link>            
+                  text-xl text-grey-800'/>
+            }
+          />
+        </div>}
+      </Link>            
+    }
     <BlingInput 
       className='m-1 flex-1 h-fit max-w-[20rem]' 
         rounded='rounded-md'
@@ -87,9 +91,9 @@ export const TopActions = forwardRef(
 
     <IoReloadSharp 
       className={' bg-kf-500 text-3xl mx-3 \
-          cursor-pointer transition-all duration-300 rounded-full \
-            md:hover:bg-pink-500 text-white \
-            hover:p-1 ' + (isLoading ? 'animate-spin p-1 bg-pink-500' : 'p-1.5') }
+        cursor-pointer transition-all duration-300 rounded-full \
+      md:hover:bg-pink-500 text-white \
+        hover:p-1 ' + (isLoading ? 'animate-spin p-1 bg-pink-500' : 'p-1.5') }
       onClick={reload} 
      />
   </div>
@@ -112,26 +116,31 @@ export const BottomActions = (
   
   return (
   <div className={`h-fit --bg-slate-50 py-3 w-full flex
-                   flex-row justify-between items-center px-3 
-                   ${className}`}>
+    flex-row justify-between items-center px-3 
+    ${className}`}>
     <PromisableLoadingButton 
-        Icon={<MdNavigateNext className='rotate-180 scale-150 cursor-pointer' />} 
-        text='' className='text-lg' onClick={prev} />
+      Icon={<MdNavigateNext 
+        className='rotate-180 scale-150 cursor-pointer' />
+      } 
+      text='' 
+      className='text-lg' 
+      onClick={prev} />
     <select 
-        name='limit' 
-        onChange={_onLimitChange} value={limit} 
-        className='m-1 h-8 px-4 rounded-md text-sm 
-                  bg-slate-50 dark:bg-slate-800 
-                  --border focus:outline-none'>
+      name='limit' 
+      onChange={_onLimitChange} value={limit} 
+      className='m-1 h-8 px-4 rounded-md text-sm 
+        bg-slate-50 dark:bg-slate-800 
+        --border focus:outline-none'>
       <option value='5'>5</option>
       <option value='10'>10</option>
       <option value='15'>15</option>
       <option value='20'>20</option>
     </select>                    
     <PromisableLoadingButton 
-        Icon={<MdNavigateNext className='scale-150' />} text=''
-        className='text-lg cursor-pointer' 
-        onClick={next} />
+      Icon={<MdNavigateNext className='scale-150' />} 
+      text=''
+      className='text-lg cursor-pointer' 
+      onClick={next} />
   </div>
   )
 }

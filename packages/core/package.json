@@ -1,12 +1,14 @@
 {
   "name": "@storecraft/core",
-  "version": "1.0.49",
+  "version": "1.2.5",
   "description": "Core Package for storecraft",
-  "license": "MIT",
+  "license": "MIT (With special clause. You cannot sell storecraft or offer a cloud service based on it without a special license)",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "engines": {
-    "node": "v16.14.0 || v17.1.0 || v18.20.0 || >=v20.10.0"
+    "node": "v16.14.0 || v17.1.0 || v18.20.0 || >=v20.10.0",
+    "deno": "*",
+    "bun": "*"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,11 @@
     "commerce",
     "dashboard",
     "code",
-    "storecraft"
+    "storecraft",
+    "store",
+    "ai",
+    "agents",
+    "shopping"
   ],
   "main": "index.js",
   "type": "module",
@@ -173,9 +179,9 @@
       "import": "./ai/models/chat/mistral/index.js",
       "types": "./ai/models/chat/mistral/types.d.ts"
     },
-    "./ai/models/chat/groq": {
-      "import": "./ai/models/chat/groq/index.js",
-      "types": "./ai/models/chat/groq/types.d.ts"
+    "./ai/models/chat/groq-cloud": {
+      "import": "./ai/models/chat/groq-cloud/index.js",
+      "types": "./ai/models/chat/groq-cloud/types.d.ts"
     },
     "./ai/models/chat/xai": {
       "import": "./ai/models/chat/xai/index.js",
@@ -243,9 +249,10 @@
   "scripts": {
     "test": "npm run core:test",
     "sc-publish": "npm publish",
-    "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test && npm version patch --force",
+    "prepublishOnly": "npm run core:gen:zod && npm run core:gen:open-api && npm run core:test",
     "core:test": "uvu -c",
-    "core:gen:zod": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
+    "core:gen:zod_api": "npx ts-to-zod@latest ./api/types.api.d.ts ./api/types.autogen.zod.api.ts && mv ./api/types.autogen.zod.api.ts ./api/types.autogen.zod.api.js",
+    "core:gen:zod": "npm run core:gen:zod_api",
     "core:gen:vql": "node ./vql/bool-ql/compile.js",
     "core:gen:open-api": "node ./rest/docs.openapi.gen.js"
   },

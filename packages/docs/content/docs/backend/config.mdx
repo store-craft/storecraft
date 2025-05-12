@@ -32,6 +32,7 @@ import type { StorecraftConfig } from '@storecraft/core';
   rows={
     [
       ['dashboard_version', 'string'],
+      ['chat_version', 'string'],
       ['auth_admins_emails', 'string[]'],
       ['auth_secret_access_token', 'string'],
       ['auth_secret_refresh_token', 'string'],
@@ -56,7 +57,15 @@ import type { StorecraftConfig } from '@storecraft/core';
 
 ### dashboard_version
 
-The `storecraft` dashboard default version, if absent will default to `latest` version.
+The `storecraft` dashboard default version, if absent will default to 
+the same version as the version of storecraft `core`. It is not recommended to
+change this value unless you are sure of what you are doing.
+
+### chat_version
+
+The `storecraft` chat default version, if absent will default to 
+the same version as the version of storecraft `core`. It is not recommended to
+change this value unless you are sure of what you are doing.
 
 ### auth_admins_emails
 

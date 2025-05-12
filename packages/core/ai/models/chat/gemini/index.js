@@ -17,10 +17,10 @@ export class Gemini extends OpenAI {
   constructor(config) {
     super(
       {
+        model: 'gemini-2.0-flash',
         ...config,
-        api_key: config.api_key,
         endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-        model: config.model ?? 'gemini-2.0-flash',
+        // @ts-ignore
         api_version: ''
       }
     )
@@ -28,7 +28,8 @@ export class Gemini extends OpenAI {
 
   /** @type {OpenAI["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[Gemini.GeminiEnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[Gemini.GeminiEnvConfig.api_key]; 
   }
 
 }

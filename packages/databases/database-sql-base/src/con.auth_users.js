@@ -134,13 +134,6 @@ const list = (driver) => {
         with_media(eb, eb.ref('auth_users.id'), driver.dialectType),
       ]),
       query, table_name
-      // .where(
-      //   (eb) => {
-      //     return query_to_eb(eb, query, table_name);
-      //   }
-      // )
-      // .orderBy(query_to_sort(query, 'auth_users'))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
     )
     .execute();
 

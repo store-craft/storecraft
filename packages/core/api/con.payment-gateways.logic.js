@@ -19,13 +19,13 @@ const is_function = o => {
 export const get_payment_gateway = (app) => 
   /**
    * @description `Get` payment gateway `info` and `config` by it's `handle`
-   * @param {keyof T["gateways"]} gateway_handle 
+   * @param {keyof T["__show_me_everything"]["gateways"]} gateway_handle 
    * @returns {Promise<PaymentGatewayItemGet>}
    */
   async (gateway_handle) => {
     
     const handle = /** @type {string} */(gateway_handle);
-    const pg = app.gateways?.[handle];
+    const pg = app.__show_me_everything.gateways?.[handle];
 
     assert(
       pg,
@@ -49,7 +49,7 @@ export const list_payment_gateways = (app) =>
    * @returns {Promise<PaymentGatewayItemGet[]>}
    */
   async () => {
-  return Object.entries(app.gateways ?? {}).map(
+  return Object.entries(app.__show_me_everything.gateways ?? {}).map(
     ([handle, pg]) => (
       {
         config: pg.config,
@@ -68,13 +68,13 @@ export const list_payment_gateways = (app) =>
 export const webhook = (app) => 
   /**
    * @description `Get` payment gateway `info` and `config` by it's `handle`
-   * @param {keyof T["gateways"]} gateway_handle 
+   * @param {keyof T["__show_me_everything"]["gateways"]} gateway_handle 
    * @param {ApiRequest} request
    * @param {ApiResponse} [response]
    */
   async (gateway_handle, request, response) => {
     const handle = /** @type {string} */(gateway_handle);
-    const pg = app.gateways?.[handle];
+    const pg = app.__show_me_everything.gateways?.[handle];
 
     assert(
       pg,
@@ -132,7 +132,7 @@ export const payment_status_of_order = (app) =>
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateways?.[gateway_handle];
+    const gateway = app.__show_me_everything.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
 
@@ -158,7 +158,7 @@ export const payment_buy_ui = (app) =>
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateways?.[gateway_handle];
+    const gateway = app.__show_me_everything.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
     assert(
@@ -197,7 +197,7 @@ export const invoke_payment_action_on_order = (app) =>
     assert(order, `Order ${order_id} not found`, 400);
 
     const gateway_handle = order.payment_gateway?.gateway_handle;
-    const gateway = app.gateways?.[gateway_handle];
+    const gateway = app.__show_me_everything.gateways?.[gateway_handle];
 
     assert(gateway, `gateway ${gateway_handle} not found`, 400);
 

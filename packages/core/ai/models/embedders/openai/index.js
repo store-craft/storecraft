@@ -43,12 +43,12 @@ export class OpenAIEmbedder {
    * @param {config} [config={}] 
    */
   constructor(config={}) {
-    this.config = {
+    this.config = /** @type {config} */({
+      model: 'text-embedding-3-small',
+      endpoint: 'https://api.openai.com/',
+      api_version: 'v1',
       ...config,
-      model: config.model ?? 'text-embedding-3-large',
-      endpoint: config.endpoint ?? 'https://api.openai.com/',
-      api_version: config.api_version ?? 'v1'
-    }
+    })
 
     this.#embeddings_url = new URL(
       strip_leading(this.config.api_version + '/embeddings'), 
@@ -59,7 +59,8 @@ export class OpenAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[OpenAIEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[OpenAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */
@@ -74,6 +75,14 @@ export class OpenAIEmbedder {
 
   /** @type {Impl["generateEmbeddings"]} */
   generateEmbeddings = async (params) => {
+
+    if(this.config.api_key === undefined) {
+      console.warn(
+        'OpenAI API key is missing. Please set the OPENAI_API_KEY environment variable \
+        or programatically in the constructor config.'
+      );
+      return undefined;
+    }
 
     const body = (/** @type {RequestBody} */ (
       {

@@ -10,7 +10,6 @@ import {
 
 /**
  * @description Base `notifications` **CRUD**
- * 
  * @extends {collection_base<NotificationTypeUpsert, NotificationType>}
  */
 export default class Notifications extends collection_base {

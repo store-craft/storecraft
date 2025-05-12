@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/dashboard",
-  "version": "1.0.38",
+  "version": "1.2.5",
   "description": "Storecraft Official Dashboard",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -18,6 +18,7 @@
   ],
   "type": "module",
   "module": "./dist/lib/src/index.js",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/lib/src/index.d.ts",
@@ -39,10 +40,9 @@
     "dashboard:preview": "vite preview",
     "dashboard:analyze-lib": "npx vite-bundle-visualizer@latest -c vite.lib.config.ts --sourcemap -t treemap",
     "dashboard:analyze-website": "npx vite-bundle-visualizer@latest -c vite.config.ts --sourcemap -t treemap",
-    "prepublishOnly": "npm version patch --force && npm run dashboard:build",
-    "sc-publish": "npm publish"
+    "prepublishOnly": "npm run dashboard:build",
+    "sc-publish": "npm publish --access public"
   },
-  "sideEffects": false,
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
     "@storecraft/core": "^1.0.0",

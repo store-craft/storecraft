@@ -37,7 +37,7 @@ const infer_content_type = (name) => {
 export class GoogleStorage {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     bucket: 'GS_BUCKET',
     client_email: 'GS_CLIENT_EMAIL',
     private_key: 'GS_PRIVATE_KEY',
@@ -63,10 +63,17 @@ export class GoogleStorage {
     if(!app)
       return this;
 
-    this.#_config.bucket ??= app.platform.env[GoogleStorage.EnvConfig.bucket];
-    this.#_config.client_email ??= app.platform.env[GoogleStorage.EnvConfig.client_email];
-    this.#_config.private_key ??= app.platform.env[GoogleStorage.EnvConfig.private_key];
-    this.#_config.private_key_id ??= app.platform.env[GoogleStorage.EnvConfig.private_key_id];
+    this.#_config.bucket ??= 
+      app.env[GoogleStorage.EnvConfig.bucket];
+
+    this.#_config.client_email ??= 
+      app.env[GoogleStorage.EnvConfig.client_email];
+
+    this.#_config.private_key ??= 
+      app.env[GoogleStorage.EnvConfig.private_key];
+      
+    this.#_config.private_key_id ??= 
+      app.env[GoogleStorage.EnvConfig.private_key_id];
 
     return this; 
   }

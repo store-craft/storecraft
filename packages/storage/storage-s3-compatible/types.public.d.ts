@@ -10,7 +10,7 @@ export type Config = {
   /** If missing, will be inferred by env variable `S3_SECRET_ACCESS_KEY` */
   secretAccessKey?: string;
   /** If missing, will be inferred by env variable `S3_REGION` */
-  region?: 'auto' | AWSRegion;
+  region?: 'auto' | string;
   forcePathStyle?: boolean;
 }
 
@@ -22,9 +22,11 @@ export type R2Config = Omit<Config, 'region' | 'forcePathStyle' | 'endpoint'> & 
 };
 
 
-export type AwsS3Config = Omit<Config, 'endpoint'>;
+export type AwsS3Config = Omit<Config, 'endpoint'> & {
+  region?: AWSRegion;
+};
 
-type AWSRegion = 
+export type AWSRegion = 
   | "us-east-1"
   | "us-east-2"
   | "us-west-1"

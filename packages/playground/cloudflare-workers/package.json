@@ -1,20 +1,31 @@
 {
-  "name": "calm-term-c64e",
-  "version": "0.0.0",
-  "private": true,
+  "name": "my-storecraft-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250430.0",
+    "@types/node": "^22.15.3",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.13.2"
+  },
   "scripts": {
     "deploy": "npx wrangler deploy",
     "dev": "npx wrangler dev --remote",
-    "start": "npx wrangler dev",
-    "cf-typegen": "npx wrangler types"
+    "start": "npx wrangler dev --remote",
+    "cf-typegen": "npx wrangler types",
+    "migrate": "node ./migrate.js"
   },
-  "devDependencies": {
-    "typescript": "^5.5.2",
-    "wrangler": "^3.60.3",
-    "@types/node": "^20.11.0"
-  }, 
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "<div style=\"text-align:center\">   <img src='https://storecraft.app/storecraft-color.svg'         width='90%' /> </div><hr/><br/>",
+  "type": "module",
   "dependencies": {
-    "@storecraft/core": "^1.0.0",
-    "@storecraft/database-cloudflare-d1": "^1.0.0"
+    "@storecraft/core": "^1.0.49",
+    "@storecraft/database-cloudflare-d1": "^1.0.21",
+    "@storecraft/mailer-providers-http": "^1.0.17",
+    "@storecraft/payments-stripe": "^1.0.17",
+    "@storecraft/storage-s3-compatible": "^1.0.18"
   }
 }

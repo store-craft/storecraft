@@ -1,4 +1,4 @@
-# Storecraft AWS Lambda Platform support
+# Storecraft AWS Lambda Platform support (Experimental)
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
@@ -32,16 +32,12 @@ const app = new App(
   .withPlatform(new AWSLambdaPlatform())
   .withDatabase(new MongoDB())
   .withStorage(new S3())
+  .init();
 
 
 export const handler = async (
     event: LambdaEvent, lambdaContext?: LambdaContext
   ): Promise<APIGatewayProxyResult> {
-
-  // will be init only once
-  await app.init();
-
-  // react
   return app.handler(event);
 }
 
@@ -163,14 +159,10 @@ export const app = new App(
   {
     'dummy_payments': new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
   }
-);
+).init();
 
 
 export const handler = async (event: LambdaEvent, context: LambdaContext): Promise<APIGatewayProxyResult> => {
-  // will only init once
-  await app.init();
-
-  // // handler
   const response = await app.handler(event, context);
   return response;
 }

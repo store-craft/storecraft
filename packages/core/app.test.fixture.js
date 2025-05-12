@@ -15,15 +15,13 @@ import { NodeLocalStorage } from './storage/node/index.js';
  * @param {boolean} [print_banner=true]
  */
 export const create_app = async (print_banner=true) => {
-  const app = new App(
-    {
-      auth_admins_emails: [admin_email],
-      auth_secret_access_token: 'auth_secret_access_token',
-      auth_secret_refresh_token: 'auth_secret_refresh_token',
-      auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
-      auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
-    }
-  )
+  const app = new App({
+    auth_admins_emails: [admin_email],
+    auth_secret_access_token: 'auth_secret_access_token',
+    auth_secret_refresh_token: 'auth_secret_refresh_token',
+    auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
+    auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+  })
   .withStorage(
     new NodeLocalStorage('storage-test')
   )
@@ -34,22 +32,18 @@ export const create_app = async (print_banner=true) => {
   .withMailer(
     new DummyMailer()
   )
-  .withExtensions(
-    {
-      'postman': new PostmanExtension(),
-      dummy: new DummyExtension()
-    }
-  )
-  .withPaymentGateways(
-    {
-      dummy: new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
-      'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
-    }
-  )
+  .withExtensions({
+    'postman': new PostmanExtension(),
+    dummy: new DummyExtension()
+  })
+  .withPaymentGateways({
+    dummy: new DummyPayments({ intent_on_checkout: 'AUTHORIZE' }),
+    'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
+  })
   .withTaxes(new UniformTaxes(10))
+  .init(print_banner);
  
-  await app.init(print_banner);
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app.__show_me_everything.db, false);
   
-  return app;
+  return app.__show_me_everything.app;
 }

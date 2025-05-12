@@ -22,9 +22,8 @@ const app = new App()
 .withStorage(
   new NodeLocalStorage(join(homedir(), 'storage'))
 )
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
 ```
 
 Then, you can upload with
@@ -57,9 +56,8 @@ const app = new App()
 .withStorage(
   new DenoLocalStorage(join(homedir(), 'storage'))
 )
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
 ```
 
 Then, you can upload with
@@ -91,10 +89,8 @@ const app = new App()
 .withDatabase(new MongoDB())
 .withStorage(
   new BunLocalStorage(join(homedir(), 'storage'))
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
 ```
 
 Then, you can upload with

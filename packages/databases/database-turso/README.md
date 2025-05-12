@@ -20,7 +20,7 @@ import http from "node:http";
 import { App } from '@storecraft/core'
 import { NodePlatform } from '@storecraft/core/platform/node';
 import { NodeLocalStorage } from '@storecraft/core/storage/node'
-import { Turso, LibSQLVectorStore } from '@storecraft/database-turso'
+import { LibSQL, LibSQLVectorStore } from '@storecraft/database-turso'
 import { migrateToLatest } from '@storecraft/database-turso/migrate.js'
 
 const app = new App(
@@ -30,7 +30,7 @@ const app = new App(
 )
 .withPlatform(new NodePlatform())
 .withDatabase(
-  new Turso(
+  new LibSQL(
     { 
       url: 'file:local.db',
     }
@@ -44,16 +44,15 @@ const app = new App(
       url: 'file:local-vector.db'
     }
   )
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
-await app.vectorstore.createVectorIndex();
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 
@@ -127,16 +126,15 @@ const app = new App(
       authToken: process.env.LIBSQL_API_TOKEN,
     }
   )
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
-await app.vectorstore.createVectorIndex();
+await migrateToLatest(app.__show_me_everything.db, false);
+await app.__show_me_everything.vector_store.createVectorIndex();
 
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 

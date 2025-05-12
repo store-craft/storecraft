@@ -11,13 +11,15 @@ import {
 } from './con.shared.js'
 import { isDef } from './utils.index.js';
 import { App } from '../index.js';
-import { is_product_filter, is_order_filter, DiscountMetaEnum } from './types.api.enums.js';
+import { 
+  is_product_filter, is_order_filter, DiscountMetaEnum 
+} from './types.api.enums.js';
 
 
 /**
  * @param {App} app
  */
-export const db = app => app.db.resources.discounts;
+export const db = app => app.__show_me_everything.db.resources.discounts;
 
 /**
  * @param {App} app

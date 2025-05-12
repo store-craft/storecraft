@@ -47,7 +47,7 @@ const parse_json_safely = json => {
 export class LibSQLVectorStore {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     authToken: 'LIBSQL_VECTOR_AUTH_TOKEN',
     url: 'LIBSQL_VECTOR_URL',
   });
@@ -102,11 +102,13 @@ export class LibSQLVectorStore {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.authToken ??= app.platform.env[LibSQLVectorStore.EnvConfig.authToken] 
-        ?? app.platform.env['LIBSQL_AUTH_TOKEN'];
+    this.config.authToken ??= 
+      app.env[LibSQLVectorStore.EnvConfig.authToken] 
+        ?? app.env['LIBSQL_AUTH_TOKEN'];
 
-    this.config.url ??= app.platform.env[LibSQLVectorStore.EnvConfig.url] 
-        ?? app.platform.env['LIBSQL_URL'];
+    this.config.url ??= 
+      app.env[LibSQLVectorStore.EnvConfig.url] 
+        ?? app.env['LIBSQL_URL'] ?? 'file:data.db';
   }
 
   /** @type {VectorStore["embedder"]} */
@@ -180,6 +182,13 @@ export class LibSQLVectorStore {
         )
       }
     );
+
+    if(!result) {
+      console.warn(
+        'LibSQLVectorStore::upsertDocuments() - no result from embedder'
+      );
+      return;
+    }
 
     const vectors = result.content;
 
@@ -274,10 +283,11 @@ export class LibSQLVectorStore {
 
   /**
    * 
+   * @param {Record<string, any>} [params={}] 
    * @param {boolean} [delete_index_if_exists_before=false] 
    * @returns {Promise<boolean>}
    */
-  createVectorIndex = async (delete_index_if_exists_before=false) => {
+  createVectorIndex = async (params={}, delete_index_if_exists_before=false) => {
 
     /** @type {string[]} */
     const batch = [];
@@ -292,6 +302,9 @@ export class LibSQLVectorStore {
     );
 
     const result = await this.client.batch(batch);
+
+    // console.log({result});
+
     return true;
   }
 

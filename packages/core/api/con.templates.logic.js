@@ -12,7 +12,7 @@ import {
 import { App } from "../index.js";
 
 /** @param {App} app */
-export const db = app => app.db.resources.templates;
+export const db = app => app.__show_me_everything.db.resources.templates;
 
 /**
  * @param {App} app

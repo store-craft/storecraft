@@ -125,15 +125,6 @@ const list = (driver) => {
       query, table_name
     ).execute();
 
-      // .where(
-      //   (eb) => {
-      //     return query_to_eb(eb, query, table_name);
-      //   }
-      // )
-      // .orderBy(query_to_sort(query, 'shipping_methods'))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) 
       items.reverse();
     

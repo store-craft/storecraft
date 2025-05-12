@@ -14,7 +14,10 @@ const schema_fields = [
     } 
   },
   { 
-    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView,
+    comp_params: {
+      className: 'font-mono', 
+    }
   },
   { 
     key: undefined, name: 'Actions', 
@@ -49,9 +52,8 @@ export default ({}) => {
         resource={resource}/>
     </ShowIf>
     <ShowIf show={error} children={error?.toString()}/>
-      <div className='w-full rounded-md overflow-hidden border 
-                      shelf-border-color shadow-md mt-5 
-                      dark:shadow-slate-900 '>      
+      <div className='w-full rounded-md overflow-hidden 
+        store-table-wrapper mt-5'>      
         <TopActions 
           isCollectionEmpty={false}
           ref={ref_actions} 

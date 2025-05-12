@@ -14,7 +14,7 @@ export const setup_sdk = (app) => {
       endpoint: 'http://localhost'
     },
     (input, init) => {
-      return app.rest_controller.handler(
+      return app.__show_me_everything.rest_controller.handler(
         new Request(input, init),
       )
     }

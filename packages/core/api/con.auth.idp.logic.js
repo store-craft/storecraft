@@ -22,13 +22,13 @@ export const ATTRIBUTE_PICTURE = 'PICTURE'
 export const create_auth_uri = (app) => 
   /**
    * @description Get Identity provider's URI for web apps
-   * @param {Omit<OAuthProviderCreateURIParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
+   * @param {Omit<OAuthProviderCreateURIParams, 'provider'> & { provider: keyof T["__show_me_everything"]["auth_providers"] }} params 
    * @returns {Promise<OAuthProviderCreateURIResponse>}
    */
   async (params) => {
 
     const handle = String(params?.provider);
-    const provider = app.auth_providers?.[handle];
+    const provider = app.__show_me_everything.auth_providers?.[handle];
 
     assert(
       provider,
@@ -58,13 +58,13 @@ export const create_auth_uri = (app) =>
 export const sign_with_identity_provider = (app) => 
   /**
    * @description Signin / Signup with Identity Provider
-   * @param {Omit<SignWithOAuthProviderParams, 'provider'> & { provider: keyof T["auth_providers"] }} params 
+   * @param {Omit<SignWithOAuthProviderParams, 'provider'> & { provider: keyof T["__show_me_everything"]["auth_providers"] }} params 
    * @returns {Promise<ApiAuthResult>}
    */
   async (params) => {
 
     const handle = String(params?.provider);
-    const provider = app.auth_providers?.[handle];
+    const provider = app.__show_me_everything.auth_providers?.[handle];
     
     assert(
       provider,
@@ -203,7 +203,7 @@ export const identity_providers = (app) =>
    * @return {Promise<OAuthProvider[]>}
    */
   async () => {
-    return Object.entries(app.auth_providers ?? {}).map(
+    return Object.entries(app.__show_me_everything.auth_providers ?? {}).map(
       ([handle, value]) => (
         {
           provider: handle,

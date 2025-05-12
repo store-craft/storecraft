@@ -27,7 +27,7 @@ export const create = app => {
     file_name(import.meta.url), 
   );
   
-  s.before(async () => { assert.ok(app.ready) });
+  s.before(async () => { assert.ok(app.isready) });
   
   s('signup admin + events', async () => {
 
@@ -604,9 +604,9 @@ export const create = app => {
       const config = {...base_config};
       delete config[k];
 
-      await assert_async_throws(
+      assert.throws(
         () => new App(config)
-        .withPlatform(app.platform)
+        .withPlatform(app.__show_me_everything.platform)
         .init(false),
         `missing ${k}`
       );
@@ -626,7 +626,7 @@ export const create = app => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
   }

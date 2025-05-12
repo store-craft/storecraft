@@ -221,16 +221,6 @@ const list = (driver) => {
       query, table_name
     ).execute();
 
-
-      // .where(
-      //   (eb) => {
-      //     return query_to_eb(eb, query, table_name);
-      //   }
-      // )
-      // .orderBy(query_to_sort(query, table_name))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) 
       items.reverse();
 
@@ -345,7 +335,8 @@ const get_default_auto_generated_storefront = (driver) => {
         ).as('posts'),
   
         stringArrayFrom(
-          eb.selectFrom('products')
+          eb
+          .selectFrom('products')
           .innerJoin(
             'entity_to_tags_projections', 
             'entity_to_tags_projections.entity_id', 

@@ -8,12 +8,11 @@ export const HEADER_PRESIGNED = 'X-STORECRAFT-STORAGE-PRESIGNED';
 
 /**
  * @description prefer signed url get by default
- * 
  * @param {URLSearchParams} search_params
  */
-export const does_prefer_signed = search_params => {
+export const does_prefer_signed = (search_params) => {
   return (
-    search_params?.get('signed')?.trim() ?? 'true'
+    search_params?.get('signed')?.trim() ?? 'false'
   ) !== 'false';
 }
 
@@ -84,7 +83,7 @@ export const create_routes = (app) => {
       const file_key = req?.params?.['*'];
       if(!file_key) {
         // list them
-        return await app.storage.list();
+        return await app.__show_me_everything.storage.list();
       }
 
       if(

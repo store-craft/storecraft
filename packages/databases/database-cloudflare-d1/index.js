@@ -24,7 +24,7 @@ const assert = (b, msg) => {
 export class D1_HTTP extends SQL {
 
   /** @satisfies {ENV<D1ConfigHTTP>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     account_id: 'CF_ACCOUNT_ID',
     api_token: 'D1_API_TOKEN',
     database_id: 'D1_DATABASE_ID',
@@ -49,10 +49,10 @@ export class D1_HTTP extends SQL {
   init = (app) => {
     const dialect = (/** @type {D1_HTTP_Dialect} */ (this.config.dialect));
 
-    dialect.config.account_id ??= app.platform.env[D1_HTTP.EnvConfig.account_id];
-    dialect.config.api_token ??= app.platform.env[D1_HTTP.EnvConfig.api_token] 
-      ?? app.platform.env['D1_API_KEY'];
-    dialect.config.database_id ??= app.platform.env[D1_HTTP.EnvConfig.database_id];
+    dialect.config.account_id ??= app.env[D1_HTTP.EnvConfig.account_id];
+    dialect.config.api_token ??= app.env[D1_HTTP.EnvConfig.api_token] 
+      ?? app.env['D1_API_KEY'];
+    dialect.config.database_id ??= app.env[D1_HTTP.EnvConfig.database_id];
       
     super.init(app);
   }
@@ -85,7 +85,7 @@ export class D1_WORKER extends SQL {
     const dialect = (/** @type {D1_Worker_Dialect} */ (this.config.dialect));
 
     // We might have the db bound to `DB` at the worker `ENV`
-    dialect.config.db ??= (/** @type {D1Database} */(/** @type {unknown} */ (app.platform.env[D1_WORKER.ENV_BINDING])));
+    dialect.config.db ??= (/** @type {D1Database} */(/** @type {unknown} */ (app.__show_me_everything.platform.env[D1_WORKER.ENV_BINDING])));
       
     super.init(app);
   }

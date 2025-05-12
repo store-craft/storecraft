@@ -3,7 +3,7 @@
     <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' 
         width='100%' />
   </div>
-  Commerce as Code
+  Agentic Commerce as Code Backend
 </div><hr/><br/>
 
 
@@ -17,13 +17,16 @@
 
 # The <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
-Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
+Hi 👋, `Storecraft` is an AI agentic next generation Commerce As Code javascript backend.
 
-⭐ run on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, workers, aws-lambda, google-functions), serverless / serverful
+⭐ AI first, agentic, commerce as code with agents, chat endpoint, that can serve your customers, and your team.
+Supports most of the popular LLMs, and vector stores for similarity search.
 
-⭐ connect to any [database](https://storecraft.app/docs/backend/databases/sqlite) (mongo, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+⭐ runs on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, cloudflare workers, aws-lambda, google-functions), serverless / serverful
 
-⭐ use [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
+⭐ connects to any [database](https://storecraft.app/docs/backend/databases/sqlite) (mongo, libsql, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+
+⭐ uses [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
 
 ⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
 
@@ -35,90 +38,97 @@ Hi 👋, `Storecraft` is a next generation Commerce As Code javascript backend.
 
 <hr/>
 
-
-[![Watch on Youtube](https://img.youtube.com/vi/OO4arXfO75U/0.jpg)](https://www.youtube.com/watch?v=OO4arXfO75U)
-
 ## **GET STARTED WITH CLI NOW** 👇
 
 ```bash
 npx storecraft create
 ```
 
-Storecraft emphasizes modular commerce as code to achieve business logic,
+This is all the code you need to get started with your own storecraft app.
 
 ```js
-import { App } from '@storecraft/core'
-import { NodePlatform } from '@storecraft/core/platform/node'
-import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
-import { R2 } from '@storecraft/storage-s3-compatible'
-
-const app = new App(
-  {
-    auth_admins_emails: ['john@doe.com']
-  }
-)
+const app = new App({
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
+})
 .withPlatform(new NodePlatform())
-.withDatabase(new MongoDB({ db_name: 'test' }))
-.withStorage(new R2())
-.withPaymentGateways(
-  {
-    'stripe': new Stripe(
-      { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
-      }
-    )
-  }
-).on(
-  'auth/signup',
+.withDatabase(new LibSQL())
+.withStorage(new NodeLocalStorage('storage'))
+.withMailer(new Resend())
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
+.on(
+  'order/checkout/complete',
   async (event) => {
-    const user: Partial<AuthUserType> = event.payload;
-    // Here you can send an onboarding email for example
+    // send a team slack message
   }
-).on(
-  'orders/checkout/complete',
-  async (event) => {
-    const order_data: OrderData = event.payload;
-    // Here send an email with order details to customer
-  }
-);
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
- 
-const server = http.createServer(app.handler).listen(
+await migrateToLatest(app._.db, false);
+await app._.vector_store?.createVectorIndex();
+
+http
+.createServer(app.handler)
+.listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
-);
+); 
 
 ```
 
 **Will produce**
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/docs/main/storecraft-terminal.png' 
+  <img src='https://storecraft.app/docs/storecraft-terminal-2.png' 
       width='100%' />
 </div><hr/><br/>
 
-# Dashboard
+# Chat with the `storeraft` AI agent
 
-Located at `/api/dashboard`
+Located at `/chat`
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/main.webp' 
+  <img src='https://storecraft.app/ai-2.gif' 
+      width='100%' />
+</div><hr/><br/>
+
+
+# Dashboard
+
+Located at `/dashboard`
+
+<div style='text-align: center'>
+  <img src='https://storecraft.app/landing/main.png' 
       width='100%' />
 </div><hr/><br/>
 
 # API Reference
 
-Located at `/api/reference` (powered by [Scalar](https://scalar.com))
+Located at `/api` (powered by [Scalar](https://scalar.com))
 
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/reference_api.webp' 
+  <img src='https://storecraft.app/landing/reference_api.png' 
       width='100%' />
 </div><hr/><br/>
 
@@ -129,8 +139,12 @@ Located at `/api/reference` (powered by [Scalar](https://scalar.com))
       width='100%' />
 </div><hr/><br/>
 
+# As seen on MongoDB TV stream
 
-# packages
+[![Watch on Youtube](https://img.youtube.com/vi/OO4arXfO75U/0.jpg)](https://www.youtube.com/watch?v=OO4arXfO75U)
+
+
+# Dvelopment
 
 This is a mono repo, where each folder in the `packages` folder is a package, that is published `@npm`.
 
@@ -179,7 +193,7 @@ Support for
 - SQL Base ([@storecraft/database-sql-base](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-sql-base/))
 - Neon (Cloud Postgres, [@storecraft/database-neon](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-neon/))
 - PlanetScale (Cloud Mysql, [@storecraft/database-planetscale](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-planetscale/))
-- Turso (Cloud Sqlite, [@storecraft/database-turso](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-turso/))
+- Turso / Libsql (Local and Cloud Sqlite, [@storecraft/database-turso](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-turso/))
 - D1 (Cloud Sqlite, [@storecraft/database-cloudflare-d1](https://github.com/store-craft/storecraft/tree/main/packages/databases/database-cloudflare-d1/))
 
 ### 📦 Storage
@@ -193,12 +207,12 @@ Support for,
 - Google Storage ([@storecraft/storage-google](https://github.com/store-craft/storecraft/tree/main/packages/storage/storage-google/))
 
 ### 📧 Email Providers
-- node smtp support [@storecraft/mailer-smtp](https://github.com/store-craft/storecraft/tree/main/packages/mailers/mailer-smtp/)
 - Http Mail services [@storecraft/mailer-providers-http](https://github.com/store-craft/storecraft/tree/main/packages/mailers/mailer-providers-http/) 
   - mailchimp support
   - mailgun support
   - resend support
   - sendgrid support
+- node smtp support [@storecraft/mailer-smtp](https://github.com/store-craft/storecraft/tree/main/packages/mailers/mailer-smtp/)
 
 ### 💳 Payments 
 
@@ -211,7 +225,15 @@ Support for,
 The official dashboard
 - Learn how to use [here](https://storecraft.app/docs/dashboard/overview)
 - The [code](https://github.com/store-craft/storecraft/tree/main/packages/dashboard/), 
-  - mount is as a component
+  - mount as a component, or
+  - consume from cdn
+
+### Chat
+
+The official Chat
+- Learn how to use [here](https://storecraft.app/docs/chat/overview)
+- The [code](https://github.com/store-craft/storecraft/tree/main/packages/chat/), 
+  - mount as a component, or
   - consume from cdn
 
 ### sdks
@@ -221,7 +243,7 @@ The official dashboard
 
 ### Test Runner
 
-Test your app and database integrations with
+Test your app, database, storage and more integrations with
 
 [@storecraft/core/test-runner](https://github.com/store-craft/storecraft/tree/main/packages/core/test-runner/) 
 
@@ -242,6 +264,43 @@ CLI [code](https://github.com/store-craft/storecraft/tree/main/packages/cli/)
 
 [Here](https://github.com/store-craft/storecraft/tree/main/packages/playground/) 
 
+### Releasing
+
+The source of truth for the versioning and publishing is the mono-repo version.
+All the published packages are synced to the mono-repo version. Packages in
+the mono-repo source code might have different versions but it doesn't matter
+for the published packages.
+
+#### Versioning
+
+All versions are synced to the mono-repo version, and are published to npm.
+Each of the commands:
+
+```bash
+npm run release:version:patch
+npm run release:version:minor
+npm run release:version:major
+```
+
+Will,
+
+- Only update the version of the mono-repo.
+- Add a git tag of the version.
+
+#### Publishing
+
+When running the command: 
+
+```bash
+npm run release:publish
+```
+
+It will,
+
+- Update the version of all the packages in the mono-repo to the same version as the mono-repo.
+- Publish all the packages to `npm` with the same version as the mono-repo.
+
+> This can be done in a CI/CD pipeline, or manually.
 
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

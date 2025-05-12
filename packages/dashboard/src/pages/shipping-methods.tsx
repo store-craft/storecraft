@@ -16,12 +16,15 @@ const schema_fields: TableSchemaViewField[] = [
   { 
     key: 'price', name: 'Price', comp: Span, 
     comp_params: {
-      className: 'font-semibold', 
+      className: 'font-mono', 
       extra: 'max-w-[10rem] md:max-w-[18rem]'
     } 
   },
   { 
-    key: 'updated_at', name: 'Last Updated', comp: TimeStampView 
+    key: 'updated_at', name: 'Last Updated', comp: TimeStampView ,
+    comp_params: {
+      className: 'font-mono', 
+    }
   },
   { 
     key: undefined, name: 'Actions', 
@@ -53,9 +56,8 @@ export default ({}) => {
       hasLoaded={hasLoaded} 
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()}/>
-    <div className='w-full rounded-md overflow-hidden border 
-                    shelf-border-color shadow-md mt-5
-                    dark:shadow-slate-900'>      
+    <div className='w-full rounded-md overflow-hidden 
+      store-table-wrapper mt-5'>      
       <TopActions 
         isCollectionEmpty={resource_is_probably_empty}
         ref={ref_actions} 

@@ -18,15 +18,12 @@ import { CloudflareWorkersPlatform } from '@storecraft/core/platform/cloudflare-
 import { D1 } from '@storecraft/database-cloudflare-d1';
 import { R2 } from '@storecraft/storage-s3-compatible';
 
-const app = new App(
-    config
-  )
+const app = new App(config)
   .withPlatform(new CloudflareWorkersPlatform())
   .withDatabase(new D1())
   .withStorage(new R2())
+  .init();
 
-await app.init();
- 
 ```
 
 ## instructions
@@ -128,10 +125,8 @@ export default {
           db: env.D1
         } 
       )
-    );
+    ).init();
 
-    app = await app.init();
-    
     const response = await app.handler(request);
 
     return response;

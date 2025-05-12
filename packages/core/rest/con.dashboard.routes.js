@@ -46,11 +46,11 @@ const html_esm = (version='latest') => `
     <meta charset="UTF-8" />
     <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Storecraft - Next Gen Commerce-As-Code</title>
+    <title>Storecraft Dashboard</title>
     <script 
     id='_storecraft_script_' 
     type="module">
-    import { mountStorecraftDashboard } from 'https://cdn.jsdelivr.net/npm/@storecraft/dashboard@${version}/dist/lib/src/index.min.js';
+    import { mountStorecraftDashboard } from 'https://www.unpkg.com/@storecraft/dashboard@${version}/dist/lib/src/index.js';
     mountStorecraftDashboard(
       document.getElementById('root'), false
     );
@@ -63,7 +63,7 @@ const html_esm = (version='latest') => `
 </html>
 `
 
-const favicon = `
+export const favicon = `
 <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
   <defs>
     <linearGradient id="gradient-0-0" gradientUnits="userSpaceOnUse" x1="128" y1="0" x2="128" y2="256" xlink:href="#gradient-0"/>
@@ -127,7 +127,6 @@ const favicon = `
 
 
 /**
- * 
  * @param {App} app
  */
 export const create_routes = (app) => {
@@ -138,7 +137,7 @@ export const create_routes = (app) => {
     '/',
     async (req, res) => {
       res.headers.append('Cache-Control', 'stale-while-revalidate')
-      res.sendHtml(html_umd('latest'));
+      res.sendHtml(html_umd(app.config.dashboard_version ?? 'latest'));
     }
   );
 

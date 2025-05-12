@@ -33,11 +33,11 @@ export const validate_checkout = app =>
 async (checkout) => {
 
   const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
-  const shipping_method = await app.db.resources.shipping_methods.get(
+  const shipping_method = await app.__show_me_everything.db.resources.shipping_methods.get(
     shipping_id
   );
 
-  const snaps_products = await app.db.resources.products.getBulk(
+  const snaps_products = await app.__show_me_everything.db.resources.products.getBulk(
     checkout.line_items.map(li => li.id)
   );
 
@@ -138,7 +138,7 @@ async (order) => {
     order.shipping_method, 
     order.address,
     order?.contact?.customer_id,
-    app.taxes
+    app.__show_me_everything.taxes
   );
 
   // console.log(pricing)
@@ -166,7 +166,7 @@ export const create_checkout = app =>
  * 5. `upsert` the draft `order` into the database.
  * 
  * @param {CheckoutCreateType} order_checkout
- * @param {keyof T["gateways"]} gateway_handle chosen payment gateway
+ * @param {keyof T["__show_me_everything"]["gateways"]} gateway_handle chosen payment gateway
  * @returns {Promise<Partial<OrderData>>}
  */
 async (order_checkout, gateway_handle) => {
@@ -178,7 +178,7 @@ async (order_checkout, gateway_handle) => {
   );
 
   // get gateway and verify
-  const gateway = app.gateways?.[handle];
+  const gateway = app.__show_me_everything.gateways?.[handle];
 
   assert(gateway, `gateway ${handle} not found`, 400);
 
@@ -284,7 +284,7 @@ async (checkoutId, client_payload) => {
 
   assert(order, 'checkout-not-found', 400);
 
-  const gateway = app.gateways?.[
+  const gateway = app.__show_me_everything.gateways?.[
     order?.payment_gateway?.gateway_handle
   ]
 

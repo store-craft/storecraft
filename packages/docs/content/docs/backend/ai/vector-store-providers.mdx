@@ -1,0 +1,110 @@
+# Storecraft Vector Store providers
+
+Storecraft AI agent uses Vector stores to store embedding of products, discounts and more to index and perform semantic searches using natural language.
+
+Storecraft supports the following AI chat providers:
+- [MongoDB Vector Store](https://mongodb.com/)
+- [LibSQL / Turso Vector Store](https://www.google.com/)
+- [Cloudflare Vectorize](https://cloudflare.com/)
+- [Pinecone Vector store](https://pinecone.com/)
+
+## MongoDB Vector Store
+
+First, install the MongoDB driver:
+
+```bash
+npm install @storecraft/database-mongodb
+```
+
+Then, use the following code to create a MongoDB vector store:
+
+```ts
+import { App } from '@storecraft/core';
+import { MongoVectorStore } from "@storecraft/database-mongodb";
+import { OpenAIEmbedder } from '@storecraft/core/ai/models/embedders/openai';
+
+new App()
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new MongoVectorStore({
+    embedder: new OpenAIEmbedder(),
+    dimensions: 1536,
+    similarity: 'cosine',
+  })
+)
+```
+
+You can also configure with a MongoDB connection string, db name and more.
+
+## LibSQL Vector Store
+
+You can use the LibSQL vector store to store embeddings in a SQLite database. Very convenient,
+and also very fast. It can also be used with Turso, which is a distributed SQLite database.
+
+First, intall the LibSQL driver:
+
+```bash
+npm install @storecraft/database-turso
+```
+
+Then, use the following code to create a MongoDB vector store:
+
+```ts
+import { App } from '@storecraft/core';
+import { LibSQLVectorStore } from '@storecraft/database-turso'
+import { OpenAIEmbedder } from '@storecraft/core/ai/models/embedders/openai';
+
+new App()
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+    dimensions: 1536,
+    similarity: 'cosine',
+  })
+)
+```
+
+## Cloudflare Vectorize vector store
+
+You can use the Cloudflare Vectorize vector store to store embeddings in a SQLite database. Very convenient.
+
+```ts
+import { App } from '@storecraft/core';
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare";
+import { Vectorize } from '@storecraft/core/ai/models/vector-stores/vectorize';
+
+new App()
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new Vectorize({
+    embedder: new CloudflareEmbedder({ model: '@cf/baai/bge-large-en-v1.5'}),
+  })
+)
+```
+
+## Pinecone vector store
+
+You can use the Cloudflare Vectorize vector store to store embeddings in a SQLite database. Very convenient.
+
+```ts
+import { App } from '@storecraft/core';
+import { PineconeEmbedder } from '@storecraft/core/ai/models/embedders/pinecone';
+import { Pinecone } from '@storecraft/core/ai/models/vector-stores/pinecone';
+
+new App()
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new Pinecone({
+    embedder: new PineconeEmbedder(),
+  })
+)
+```

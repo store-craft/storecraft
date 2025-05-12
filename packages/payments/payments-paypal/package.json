@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/payments-paypal",
-  "version": "1.0.17",
+  "version": "1.2.5",
   "description": "Official Paypal integration with Storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,8 +21,7 @@
   "types": "types.public.d.ts",
   "scripts": {
     "payments-paypal:test": "uvu -c",
-    "test": "npm run payments-paypal:test",
-    "prepublishOnly": "npm version patch --force"
+    "test": "npm run payments-paypal:test"
   },
   "dependencies": {},
   "devDependencies": {

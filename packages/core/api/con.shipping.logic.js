@@ -10,7 +10,7 @@ import { to_handle } from './utils.func.js';
 import { App } from '../index.js';
 
 /** @param {App} app */
-export const db = app => app.db.resources.shipping_methods;
+export const db = app => app.__show_me_everything.db.resources.shipping_methods;
 
 /**
  * @param {App} app

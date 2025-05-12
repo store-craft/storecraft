@@ -1,0 +1,257 @@
+# Cloudflare Stack
+
+> The easiest way is using the CLI `npx storecraft create`
+
+## Install Packages
+
+If you prefer to manually setup storecraft on cloudflare then follow the instructions below.
+
+First install the following packages
+
+```bash
+npm i @storecraft/core 
+npm i @storecraft/database-cloudflare-d1
+npm i @storecraft/payments-stripe
+npm i @storecraft/storage-s3-compatible
+npm i @storecraft/mailer-providers-http
+npm i -D dotenv
+```
+
+## Create Cloudflare resources
+
+Create the following resources at cloudflare for 
+- **D1** database
+- **R2** storage
+- **Vectorize** vector store
+- Cloudflare **AI** for embedding generation
+
+> You can use the `npx wrangler` command to reate the resources
+
+Record, the following values in your `.env` file
+
+```bash
+
+# Cloudflare account id
+CF_ACCOUNT_ID="*****"
+
+# Cloudflare AI key
+CF_AI_API_KEY="*****"
+
+# Cloudflare Vectorize key
+CF_VECTORIZE_API_KEY="*****"
+
+# D1 database id
+D1_DATABASE_ID="****"
+# D1 Api token
+D1_API_TOKEN="*****"
+
+# R2 config
+S3_BUCKET="*****"
+S3_ACCESS_KEY_ID="*****"
+S3_SECRET_ACCESS_KEY="*****"
+
+# optional
+RESEND_API_KEY="*****"
+
+OPENAI_API_KEY="*****"
+
+STRIPE_PUBLISHABLE_KEY="*****"
+STRIPE_SECRET_KEY="*****"
+
+# storecraft JWT secrets
+SC_AUTH_SECRET_ACCESS_TOKEN="V+1UNzPtaLjMrXVfc3epMhUuzZm7sB8drj8P99GDPV9HgCNUTgnuVW/ZksIQiknzx8a81Cg6JfU2NTKJL/MSqA=="
+SC_AUTH_SECRET_REFRESH_TOKEN="eHE8ly3SIRpgDdyQN1npyUnf1j2+N4amQx6yug8G8UWtN7WA21djR70MbJSIF+NhhRu4CwuAmcvFuniIB7v+jg=="
+SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN="8JxZP+hR+mRWNcXSIU5OkXolL9RcLNjTzITiZzi4dLFwklZcmOLW9344Ca4YiFM4OKPhg93gTslAXrxnC018Fg=="
+SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN="69Pyl4H13Odn7c6r9GOeaEOEhbIJHsEdmeXTyznYmEsdOhwDjiGmeF3pfLLwQ6p69B42KqIIWxD/PVuJDoZM2g=="
+
+```
+
+## Create a worker
+
+run,
+
+```bash  
+npx wrangler init
+```
+
+This will create a new `wrangler.toml` file.
+Add the following to the `wrangler.toml` file
+
+```toml
+main = "src/index.ts"
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "my-db"
+database_id = "<YOUR DATABASE ID>"
+
+[vars]
+OPENAI_API_KEY="*****"
+CF_AI_API_KEY="*****"
+CF_ACCOUNT_ID="*****"
+CF_VECTORIZE_API_KEY="*****"
+S3_BUCKET="bucket"
+S3_ACCESS_KEY_ID="*****"
+S3_SECRET_ACCESS_KEY="*****"
+RESEND_API_KEY="*****"
+STRIPE_PUBLISHABLE_KEY="*****"
+STRIPE_SECRET_KEY="*****"
+SC_AUTH_SECRET_ACCESS_TOKEN="V+1UNzPtaLjMrXVfc3epMhUuzZm7sB8drj8P99GDPV9HgCNUTgnuVW/ZksIQiknzx8a81Cg6JfU2NTKJL/MSqA=="
+SC_AUTH_SECRET_REFRESH_TOKEN="eHE8ly3SIRpgDdyQN1npyUnf1j2+N4amQx6yug8G8UWtN7WA21djR70MbJSIF+NhhRu4CwuAmcvFuniIB7v+jg=="
+SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN="8JxZP+hR+mRWNcXSIU5OkXolL9RcLNjTzITiZzi4dLFwklZcmOLW9344Ca4YiFM4OKPhg93gTslAXrxnC018Fg=="
+SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN="69Pyl4H13Odn7c6r9GOeaEOEhbIJHsEdmeXTyznYmEsdOhwDjiGmeF3pfLLwQ6p69B42KqIIWxD/PVuJDoZM2g=="
+D1_DATABASE_ID="mydb"
+D1_API_TOKEN="*****"
+```
+
+## Create migration code
+
+Create a new file `migrate.js`
+
+```ts
+import 'dotenv/config';
+import { OpenAI } from "@storecraft/core/ai/models/chat/openai"
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare"
+import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize"
+import { NodePlatform } from "@storecraft/core/platform/node"
+import { D1_HTTP } from "@storecraft/database-cloudflare-d1"
+import { R2 } from "@storecraft/storage-s3-compatible"
+import { Resend } from "@storecraft/mailer-providers-http/resend"
+import { Stripe } from "@storecraft/payments-stripe"
+import { App } from "@storecraft/core"
+import { PostmanExtension } from "@storecraft/core/extensions/postman"
+import { migrateToLatest } from '@storecraft/database-cloudflare-d1/migrate.js';
+
+export const app = new App({
+  general_store_name: "my-storecraft-app",
+  auth_admins_emails: ["john@storecraft.app"],
+  general_store_support_email:
+    "support@storecraft.app",
+})
+  .withPlatform(new NodePlatform({}))
+  .withDatabase(new D1_HTTP({}))
+  .withStorage(new R2({}))
+  .withMailer(new Resend({}))
+  .withPaymentGateways({
+    stripe: new Stripe({
+      stripe_intent_create_params: {
+        currency: "USD",
+      },
+    }),
+  })
+  .withExtensions({
+    postman: new PostmanExtension(),
+  })
+  .withAI(new OpenAI({ model: "gpt-4" }))
+  .withVectorStore(
+    new Vectorize({
+      embedder: new CloudflareEmbedder({
+        model: "@cf/baai/bge-large-en-v1.5",
+      }),
+    }),
+  ).init();
+
+await migrateToLatest(app.__show_me_everything.db, true);
+await app.__show_me_everything.vector_store?.createVectorIndex();
+```
+
+Now, run the migration code with
+
+```bash
+node ./migrate.js
+```
+
+Verify that the migration was successful.
+
+## Main worker code
+
+Create a new file `src/index.ts`
+
+```ts
+import { OpenAI } from "@storecraft/core/ai/models/chat/openai"
+import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare"
+import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize"
+import { CloudflareWorkersPlatform } from "@storecraft/core/platform/cloudflare-workers"
+import {
+  type ExportedHandler,
+  type ExecutionContext,
+  type Request,
+  type Response,
+} from "@cloudflare/workers-types"
+import { D1_WORKER } from "@storecraft/database-cloudflare-d1"
+import { R2 } from "@storecraft/storage-s3-compatible"
+import { Resend } from "@storecraft/mailer-providers-http/resend"
+import { Stripe } from "@storecraft/payments-stripe"
+import { App } from "@storecraft/core"
+import { PostmanExtension } from "@storecraft/core/extensions/postman"
+
+export default {
+  /**
+   * This is the standard fetch handler for a Cloudflare Worker
+   *
+   * @param request - The request submitted to the Worker from the client
+   * @param env - The interface to reference bindings declared in wrangler.toml
+   * @param ctx - The execution context of the Worker
+   * @returns The response to be sent back to the client
+   */
+  async fetch(
+    request: Request,
+    env,
+    ctx,
+  ): Promise<Response> {
+    const app = new App({
+      general_store_name: "my-storecraft-app",
+      auth_admins_emails: ["john@storecraft.app"],
+      general_store_support_email:
+        "support@storecraft.app",
+    })
+      .withPlatform(
+        new CloudflareWorkersPlatform({ env }),
+      )
+      .withDatabase(new D1_WORKER({}))
+      .withStorage(new R2({}))
+      .withMailer(new Resend({}))
+      .withPaymentGateways({
+        stripe: new Stripe({
+          stripe_intent_create_params: {
+            currency: "USD",
+          },
+        }),
+      })
+      .withExtensions({
+        postman: new PostmanExtension(),
+      })
+      .withAI(new OpenAI({ model: "gpt-4" }))
+      .withVectorStore(
+        new Vectorize({
+          embedder: new CloudflareEmbedder({
+            model: "@cf/baai/bge-large-en-v1.5",
+          }),
+        }),
+      ).init();
+
+    const response = await app.handler(request)
+
+    return response
+  },
+} satisfies ExportedHandler<Env>
+```
+
+## Preview worker locally
+
+run the following command to preview the worker locally
+
+```bash
+npx wrangler dev --remote
+```
+
+A url should be generated, use it to preview the worker
+- **http://localhost:port/dashboard** - see dashboard
+- **http://localhost:port/chat** - chat with the bot
+- **http://localhost:port/api** - api docs
+
+
+Viola, You should see the following,
+
+<Image src={`/storecraft-terminal.png`} className='w-full' 
+       label={undefined}/>

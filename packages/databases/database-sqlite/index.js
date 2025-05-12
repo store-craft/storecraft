@@ -9,13 +9,12 @@ import BetterSQLite from 'better-sqlite3';
 
 
 /**
- * @description `better-sqlite` driver for `storecraft`
- * 
+ * @description `better-sqlite3` driver for `storecraft`
  */
 export class SQLite extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ (
+  static EnvConfig = /** @type {const} */ (
     {
       filepath: 'SQLITE_FILEPATH',
     }
@@ -46,7 +45,7 @@ export class SQLite extends SQL {
 
   /** @type {SQL["init"]} */
   init = (app) => {
-    this.dialect_config.filepath ??= app.platform.env[SQLite.EnvConfig.filepath];
+    this.dialect_config.filepath ??= app.env[SQLite.EnvConfig.filepath];
     super.init(app);
   }
 

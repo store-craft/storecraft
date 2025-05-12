@@ -14,7 +14,7 @@ export { LibSQLVectorStore } from './vector-store/index.js'
 export class Turso extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     authToken: 'LIBSQL_AUTH_TOKEN',
     url: 'LIBSQL_URL'
   });
@@ -43,9 +43,23 @@ export class Turso extends SQL {
     const dialect = /** @type {LibsqlDialect}*/ (this.config.dialect);
     const dconfig = dialect.config;
     
-    dconfig.authToken ??= app.platform.env[Turso.EnvConfig.authToken];
-    dconfig.url ??= app.platform.env[Turso.EnvConfig.url];
+    // optional
+    dconfig.authToken ??= app.env[Turso.EnvConfig.authToken];
+    // mandatory
+    dconfig.url ??= (app.env[Turso.EnvConfig.url] ?? 'file:data.db');
+
+    if (!dconfig.url) {
+      console.warn(
+        'LibSQL URL is missing. Please set the LIBSQL_URL environment variable \
+        or programatically in the constructor config. \
+        url was set to local file `file:data.db` instead'
+      );
+      dconfig.url = 'file:data.db';
+    }
         
     super.init(app);
   }
 }
+
+
+export const LibSQL = Turso;

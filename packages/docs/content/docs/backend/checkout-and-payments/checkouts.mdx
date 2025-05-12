@@ -13,9 +13,7 @@ const app = new App(config)
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
 .withTaxes(new UniformTaxes(18))
-
-await app.init();
-
+.init();
 ```
 
 > Don't forget to consult the REST API Checkout Documentation

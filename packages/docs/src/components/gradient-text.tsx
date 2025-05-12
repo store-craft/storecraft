@@ -6,7 +6,10 @@ export const CommonGradientText = (
 ) => {
   return (
   <GradientText 
-    className={className + ' bg-gradient-to-br from-gray-800 dark:from-white dark:to-kf-600/30'} 
+    className={
+      className + 
+      ' bg-gradient-to-br from-gray-800 to-kf-500/100 dark:from-white dark:to-kf-600/30'
+    } 
     {...rest} 
   />
   )

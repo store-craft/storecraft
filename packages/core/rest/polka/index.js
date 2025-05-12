@@ -102,6 +102,10 @@ export class Polka extends Trouter {
     this.attach = async (req, res) => await this.handler(req, res);
   }
 
+  remove_route_by_original_registered_route(route='') {
+    super.remove_route_by_original_registered_route(route);
+  }
+
   /**
    * @typedef {(RegExp | string | IPolka<Req, Res> | Middleware<Req, Res>)} Every
    * @param {Every} base 

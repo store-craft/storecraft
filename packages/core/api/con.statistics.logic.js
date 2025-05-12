@@ -70,7 +70,7 @@ async (from_day, to_day) => {
       new Date(new Date(to_day).getTime() - 90 * DAY)
   );
 
-  const orders = await app.db.resources.orders.list(
+  const orders = await app.__show_me_everything.db.resources.orders.list(
     {
       sortBy: ['created_at'],
       order: 'asc',
@@ -230,7 +230,7 @@ async (from_day, to_day) => {
 
 }
 
-/** @type {(keyof App["db"]["resources"])[]} */
+/** @type {(keyof App["__show_me_everything"]["db"]["resources"])[]} */
 const tables = [
   'auth_users',
   'tags',
@@ -253,7 +253,7 @@ const tables = [
 export const compute_count_of_query = app => 
  /**
   * @description Compute the count `statistics` of a table with `query`
-  * @param {Exclude<keyof App["db"]["resources"], 'search'>} [table] which 
+  * @param {Exclude<keyof App["__show_me_everything"]["db"]["resources"], 'search'>} [table] which 
   * `table` to get count of query
   * @param {ApiQuery} [query] The `query` used for counting
   * @returns {Promise<number>}
@@ -265,7 +265,7 @@ export const compute_count_of_query = app =>
     );
 
     /** @type {db_crud} */
-    const db = app.db?.resources?.[table];
+    const db = app.__show_me_everything.db?.resources?.[table];
 
     return db.count(query);
   }

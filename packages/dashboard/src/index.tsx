@@ -58,7 +58,8 @@ export const Dashboard = (
     }, [isAuthenticated]
   );
 
-  console.log('isAuthenticated', isAuthenticated)
+  console.log('isAuthenticated', isAuthenticated);
+
   return (
 <div className='bg-gray-800 w-screen ' style={{height: '100dvh'}} >
   <div className='w-full h-full' style={{zoom: 0.9}} >
@@ -75,7 +76,8 @@ export const Dashboard = (
       (
         <Login 
           trigger={trigger} 
-          is_backend_endpoint_editable={is_backend_endpoint_editable} />
+          is_backend_endpoint_editable={is_backend_endpoint_editable} 
+        />
       )
     }
   </div>

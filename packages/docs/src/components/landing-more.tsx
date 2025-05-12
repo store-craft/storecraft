@@ -2,7 +2,7 @@ import { CopyableView } from "./copyable-view";
 import { FaTerminal } from "react-icons/fa6";
 
 
-export const code = `
+export const code2 = `
 const app = new App({
   general_store_name: "my-storecraft-app",
   auth_admins_emails: ["john@doe.com"],
@@ -17,13 +17,48 @@ const app = new App({
     const order: orderData = event.payload;
     // send email here
   }
-)
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
 
 http.createServer(app.handler).listen();
-`
+`;
+
+export const code = `
+const app = new App({
+  auth_admins_emails: ['tomer.shalev@gmail.com'],
+  general_store_name: 'Wush Wush Games',
+  // ... MORE Mandatory CONFIG
+})
+.withPlatform(new NodePlatform())
+.withDatabase(new LibSQL())
+.withStorage(new NodeLocalStorage())
+.withMailer(new Resend())
+.withPaymentGateways({
+  paypal: new Paypal(),
+  stripe: new Stripe(),
+})
+.withExtensions({
+  postman: new PostmanExtension(),
+})
+.withAI(
+  new OpenAI({ model: 'gpt-4o-mini'})
+)
+.withVectorStore(
+  new LibSQLVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
+)
+.withAuthProviders({
+  google: new GoogleAuth(),
+})
+.on(
+  'order/checkout/complete',
+  async (event) => {
+    // send a team slack message
+  }
+).init();
+`;
 
 export const code_payment = `
 const app = new App(config)
@@ -32,7 +67,7 @@ const app = new App(config)
 .withStorage(new GoogleStorage())
 .withPaymentGateways(
   {
-    'stripe': new Stripe(
+    stripe: new Stripe(
       { 
         publishable_key: '****', 
         secret_key: '****', 
@@ -40,7 +75,7 @@ const app = new App(config)
       }
     ),
   }
-)
+).init();
 `;
 
 
@@ -52,16 +87,16 @@ export const NPX = (
 
   return (
 <div {...rest}>
-<CopyableView 
+  <CopyableView 
     value={
       <div className='flex flex-row gap-1 items-center'>
-        <FaTerminal className='text-base inline'/>npx storecraft create
+        <FaTerminal className=' inline'/>npx storecraft create
       </div>
     } 
     copyValue='npx storecraft create'
     process_before_copy={undefined} 
     className={`
-      text-gray-200
+      text-gray-200 h-5 sm:h-fit
       shadow-[0px_0px_6px] shadow-pink-500/90
       from-black/60 bg-gradient-to-br to-black 
       rounded-lg flex flex-row justify-between items-center w-fit font-mono`

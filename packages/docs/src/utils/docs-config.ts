@@ -42,27 +42,33 @@ export default {
           path: `content/docs/start-here/installation.mdx`
         },
         {
-          title: "Example Nodejs & SQLite",
+          title: "Nodejs + LibSQL + AI",
           route: `setup/local-sqlite`,
           path: `content/docs/start-here/local-node-sqlite.mdx`
         },
         {
-          title: "Example Nodejs & MongoDB",
+          title: "Cloudflare D1 + R2 + AI + Workers",
+          route: `setup/cloudflare-stack`,
+          path: `content/docs/start-here/cloudflare-stack.mdx`
+        },
+        {
+          title: "Nodejs + MongoDB",
           route: `setup/local-node-mongodb`,
           path: `content/docs/start-here/local-node-mongodb.mdx`
         },
         {
-          title: "Example Google Functions & MongoDB",
+          title: "Google Functions + MongoDB",
           route: `setup/google-functions-mongo`,
           path: `content/docs/start-here/google-functions-mongo.mdx`
         },
 
       ]
     },
+
     {
       title: 'Backend',
       icon: {
-        name: 'FaServer',
+        name: 'FaLaptopCode',
         params: {}
       },
       empty: true,
@@ -187,11 +193,6 @@ export default {
               path: 'content/docs/backend/platforms/deno.mdx'
             },
             {
-              title: 'AWS API Gateway',
-              route: 'backend/platforms/aws-api-gateway',
-              path: 'content/docs/backend/platforms/aws-api-gateway.mdx'
-            },
-            {
               title: 'Cloudflare Workers',
               route: 'backend/platforms/cloudflare-workers',
               path: 'content/docs/backend/platforms/cloudflare-workers.mdx'
@@ -200,6 +201,11 @@ export default {
               title: 'Google Functions',
               route: 'backend/platforms/google-functions',
               path: 'content/docs/backend/platforms/google-functions.mdx'
+            },
+            {
+              title: 'AWS API Gateway',
+              route: 'backend/platforms/aws-api-gateway',
+              path: 'content/docs/backend/platforms/aws-api-gateway.mdx'
             },
             {
               title: 'Roll Your Own',
@@ -245,6 +251,33 @@ export default {
             },
           ]
         },                    
+        {
+          title: '🤖 AI',
+          route: 'backend/ai',
+          empty: true,
+          groups: [
+            {
+              title: 'Chat Providers',
+              route: 'backend/ai/chat-providers',
+              path: 'content/docs/backend/ai/chat-providers.mdx'
+            },
+            {
+              title: 'Embedding Providers',
+              route: 'backend/ai/embedding-providers',
+              path: 'content/docs/backend/ai/embedding-providers.mdx'
+            },
+            {
+              title: 'Vector Store Providers',
+              route: 'backend/ai/vector-store-providers',
+              path: 'content/docs/backend/ai/vector-store-providers.mdx'
+            },
+            {
+              title: 'AI Agents',
+              route: 'backend/ai/agents',
+              path: 'content/docs/backend/ai/agents.mdx'
+            },
+          ]
+        },   
         {
           title: '📧 Email',
           route: 'backend/email',
@@ -365,7 +398,7 @@ export default {
     {
       title: 'Dashboard',
       icon: {
-        name: 'MdAdminPanelSettings',
+        name: 'MdOutlineSpaceDashboard',
         params: {}
       },
       empty: true,
@@ -415,14 +448,48 @@ export default {
     },
 
     {
+      title: "AI Chat",
+      icon: {
+        name: 'FaRobot',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      empty: false,
+      route: `chat`,
+      path: `content/docs/chat/intro.mdx`
+
+    },
+
+    {
+      title: "SDK",
+      icon: {
+        name: 'TbSdk',
+        params: { classNames: 'stroke-kf-600'}
+      }, 
+      empty: true,
+      groups: [
+        {
+          title: "Javascript SDK",
+          route: `sdk/js-sdk`,
+          path: `content/docs/sdk/js-sdk.mdx`
+        },
+        {
+          title: "React Hooks SDK",
+          route: `sdk/react-hooks-sdk`,
+          path: `content/docs/sdk/react-hooks-sdk.mdx`
+        },
+      ]
+    },
+
+    {
       title: "REST API",
       icon: {
-        name: 'BiLogoStackOverflow',
+        name: 'TbHttpGet',
         params: { classNames: 'stroke-kf-600'}
       }, 
       padding_override: 'px-0',
       route: 'rest-api/api',
     },
+
     {
       title: "CLI",
       icon: {

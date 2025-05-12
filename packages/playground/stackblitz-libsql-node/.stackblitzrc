@@ -1,0 +1,11 @@
+{
+  "installDependencies": true,
+  "startCommand": "npm start",
+  "env": {
+    "LIBSQL_URL": ":memory:",
+    "SC_AUTH_SECRET_ACCESS_TOKEN": "test", 
+    "SC_AUTH_SECRET_REFRESH_TOKEN": "test",
+    "SC_AUTH_SECRET_CONFIRM_EMAIL_TOKEN": "test",
+    "SC_AUTH_SECRET_FORGOT_PASSWORD_TOKEN": "test"
+  }
+}

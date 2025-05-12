@@ -1,15 +1,13 @@
 /**
- * 
- * @import { LLMHistoryProvider, LLMHistory } from './types.private.js'
+ * @import { 
+ *  HistoryProvider, History, ChatHistoryType
+ * } from './types.private.js'
  */
-
 import { App } from '../../index.js';
-
+import { reduce_text_deltas_into_text } from './content-utils.js';
 
 /**
- * @template {any} [LLMMessageType=any]
- * 
- * @implements {LLMHistoryProvider}
+ * @implements {HistoryProvider}
  */
 export class StorageHistoryProvider {
 
@@ -20,75 +18,95 @@ export class StorageHistoryProvider {
   }
 
   /**
-   * @description Load the chat messages from cache or storage
+   * @description Load the chat messages from 
+   * cache or storage
    * @param {string} threadId 
    * @param {App} app 
-   * @returns {Promise<LLMMessageType[]>}
+   * @returns {Promise<ChatHistoryType>}
    */
   #load_chat = async (threadId, app) => {
+    const new_chat = {
+      messages: [],
+      metadata: {
+        thread_id: threadId,
+        created_at: new Date().toISOString(),
+      }
+    }
+
     try {
-      const key = this.#to_key(threadId);
-      if(this.#cache[key])
-        return this.#cache[key];
-  
-      const stream = await app.storage.getStream(
-        key
+      // const key = this.#to_key(threadId);
+      if(this.#cache[threadId])
+        return this.#cache[threadId];
+
+      const get = await app.api.chats.download(
+        threadId, false
       );
   
-      if(!stream.value)
-          return [];
+      if(!get.stream.value) 
+        return new_chat;
 
       let text = '';
       const decoder = new TextDecoder();
-      for await (const part of stream.value) {
+      for await (const part of get.stream.value) {
         text += decoder.decode(part);
       }
    
       return JSON.parse(text);
 
     } catch(e) {
-      console.log('load chat', e)
-      return [];
+      console.error('load chat error', e)
+      return new_chat;
     }
   }
 
-
-  /** @param {string} threadId */
-  #to_key = (threadId) => `chats/${threadId}.json`;
-
-  /** @type {LLMHistoryProvider["load"]} */
+  /** @type {HistoryProvider["load"]} */
   load = async (threadId, app) => {
 
-    const key = this.#to_key(threadId);
+    // const key = this.#to_key(threadId);
+    const chat = await this.#load_chat(threadId, app);
 
-    const messages = await this.#load_chat(threadId, app);
-
-    /** @type {LLMHistory<LLMMessageType>} */
+    /** @type {History} */
     const history = {
 
       threadId,
 
       add: (...messages_delta) => {
-        messages.push(...messages_delta);
+        chat.messages.push(...messages_delta);
 
         return history;
       },
 
-      commit: async () => {
-        this.#cache[key] = messages;
+      commit: async (metadata) => {
+        if(metadata) {
+          chat.metadata = {
+            ...chat.metadata,
+            ...metadata
+          }
+        }
 
-        await app.storage.putArraybuffer(
-          key,
-          /** @type {ArrayBuffer} */
-          ((new TextEncoder()).encode(
-            JSON.stringify(messages)
-          ).buffer)
+        // reduce text deltas into text
+        chat.messages = chat.messages.map(
+          (m) => ({
+            ...m,
+            contents: reduce_text_deltas_into_text(m.contents)
+          })
         );
-        
+
+        this.#cache[threadId] = chat;
+
+        await app.api.chats.upload(
+          threadId,
+          chat
+        );
+
         return history;
       },
 
-      toArray: () => [...messages]
+      toArray: () => [...chat.messages],
+
+      metadata: () => ({
+        ...chat.metadata
+      })
 
     }
 

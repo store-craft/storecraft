@@ -14,7 +14,7 @@ import { convert_to_base64 } from "./adapter.utils.js";
 export class SendGrid {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     apikey: 'SENDGRID_API_KEY'
   });
 
@@ -32,7 +32,8 @@ export class SendGrid {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.platform.env[SendGrid.EnvConfig.apikey];
+    this.config.apikey ??= 
+      app.env[SendGrid.EnvConfig.apikey];
   };
 
   /**

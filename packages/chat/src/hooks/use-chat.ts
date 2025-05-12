@@ -73,11 +73,11 @@ const usePreference = create_local_storage_hook<string | undefined>(
  * @description `chat` hook
  * 
  */
-export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
+export const useChat = (config: ChatHookConfig) => {
   const { sdk } = useStorecraft();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ChatError>();
-  const [threadId, setThreadId] = useState<string | undefined>(config.threadId);
+  const [threadId, setThreadId] = useState<string | undefined>(config?.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const {state: preference, setState: setPreference} = usePreference();
 
@@ -91,7 +91,7 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
   useEffect(
     () => {
       if(threadId) {
-        put_db(threadId, messages);
+        // put_db(threadId, messages);
       }
     }, [threadId, messages]
   );
@@ -191,13 +191,12 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
 
         {
           // test
-          err_index+=1;
-          if(err_index==2)
-            throw 'error'
-          
+          // err_index+=1;
+          // if(err_index==2)
+          //   throw 'error'
         }
         const {
-          threadId: thread_id,
+          threadId: recieved_thread_id,
           generator
         } = await sdk.ai.streamSpeak(
           'store',
@@ -207,11 +206,11 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           }
         );
   
-        if(!thread_id) {
+        if(!recieved_thread_id) {
           throw new Error('Thread ID is missing from the backend');
         }
 
-        setThreadId(thread_id);
+        setThreadId(recieved_thread_id);
 
         const acc: content[] = [];
   
@@ -222,14 +221,17 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
           
           setMessages(
             (ms) => {
-              const base = ms.at(-1)?.role==='assistant' ? ms.slice(0, -1) : ms;
-              return [
+              const base = ms.at(-1)?.role==='assistant' ? 
+                ms.slice(0, -1) : ms;
+              const new_msgs = [
                 ...base,
                 {
                   role: 'assistant',
                   contents: agg
                 }
-              ]
+              ] as ChatMessage[];
+              put_db(recieved_thread_id, new_msgs);
+              return new_msgs;
             }
           );
         }
@@ -253,7 +255,30 @@ export const useChat = (config: ChatHookConfig = { threadId: undefined}) => {
       setLoading(true);
 
       try {
-        const messages = thread_id ? (await get_db(thread_id)) : [];
+        // const messages = thread_id ? (await get_db(thread_id)) : [];
+
+        let messages = []
+        if(thread_id) {
+          const from_idb = await get_db(thread_id);
+          if(from_idb) {
+            messages = from_idb;
+          } else {
+            try {
+              const from_storage = await sdk.chats.download(
+                thread_id, false
+              );
+              if(from_storage) {
+                messages = from_storage.messages;
+                // sync to idb
+                await put_db(thread_id, messages);
+              }
+            } catch (e) {
+              console.log(
+                `error loading ${thread_id} from server`, e
+              );
+            }
+          }
+        }
 
         setMessages(messages ?? []);
         setThreadId(thread_id);

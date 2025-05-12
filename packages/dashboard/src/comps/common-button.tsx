@@ -217,7 +217,9 @@ export type BlingButtonParams = InternalBlingParams & {
 
 export const BlingButton = (
   { 
-    from, to, rounded='rounded-lg', stroke='border-2', 
+    from='from-pink-500/60 dark:from-pink-600',
+    to='to-kf-500/60 dark:to-kf-500',
+    rounded='rounded-lg', stroke='border-2', 
     children, text='what', className='h-10', 
     btnClassName='', ...rest 
   }: BlingButtonParams
@@ -225,15 +227,15 @@ export const BlingButton = (
 
   return (
 <Bling 
-    from={from} to={to} 
-    rounded={rounded} 
-    stroke={stroke} 
-    className={className} >
+  from={from} to={to} 
+  rounded={rounded} 
+  stroke={stroke} 
+  className={className} >
   <button 
-      className={`h-full w-full align-middle text-center px-3 
-                  rounded-md shelf-button-color-soft cursor-pointer
-                  whitespace-nowrap ${btnClassName}`} 
-      children={children ?? text} {...rest}/>
+    className={`h-full w-full align-middle text-center px-3 
+                rounded-md shelf-button-color-soft cursor-pointer
+                whitespace-nowrap ${btnClassName}`} 
+    children={children ?? text} {...rest}/>
 </Bling>            
   )
 }

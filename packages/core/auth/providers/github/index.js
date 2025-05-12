@@ -34,8 +34,8 @@ export class GithubAuth {
 
   /** @type {AuthProvider["init"]} */
   init = (app) => {
-    this.config.client_id ??= app.platform.env[GithubAuth.EnvConfig.client_id];
-    this.config.client_secret ??= app.platform.env[GithubAuth.EnvConfig.client_secret];
+    this.config.client_id ??= app.__show_me_everything.platform.env[GithubAuth.EnvConfig.client_id];
+    this.config.client_secret ??= app.__show_me_everything.platform.env[GithubAuth.EnvConfig.client_secret];
   }
 
   /** @type {AuthProvider<Config>["generateAuthUri"]} */

@@ -1,3 +1,3 @@
-import { mountChat } from ".";
+import { mountStorecraftChat } from ".";
 
-mountChat();
+mountStorecraftChat();

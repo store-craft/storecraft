@@ -187,8 +187,6 @@ class D1Connection {
           : BigInt(meta?.last_row_id),
       rows: (last_result?.results) || [],
       numAffectedRows,
-      // @ts-ignore deprecated in kysely >= 0.23, keep for backward compatibility.
-      numUpdatedOrDeletedRows: numAffectedRows,
     };
 
   } 

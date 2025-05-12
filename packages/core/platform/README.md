@@ -39,13 +39,12 @@ const app = new App(config)
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
   .withStorage(new NodeLocalStorage(join(homedir(), 'tomer')))
-
-await app.init();
+  .init();
  
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
 

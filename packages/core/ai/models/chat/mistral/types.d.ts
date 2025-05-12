@@ -1,4 +1,7 @@
 export type config = {
+  /**
+   * @default 'mistral-large-latest'
+   */
   model?: "mistral-large-latest" | 
           "pixtral-large-latest" | 
           "mistral-saba-latest" | 

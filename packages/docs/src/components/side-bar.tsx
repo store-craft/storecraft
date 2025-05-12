@@ -4,7 +4,13 @@ import { AiOutlineDatabase } from 'react-icons/ai'
 import { MdAdminPanelSettings } from 'react-icons/md'
 import { DiStackoverflow } from 'react-icons/di'
 import { FaServer } from 'react-icons/fa'
-import React, { useCallback, useMemo, useState } from 'react'
+import { FaRobot } from "react-icons/fa";
+import { TbSdk } from "react-icons/tb";
+import { MdHttp } from "react-icons/md";
+import { TbHttpGet } from "react-icons/tb";
+import { MdOutlineSpaceDashboard } from "react-icons/md";
+import { FaLaptopCode } from "react-icons/fa";
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { FaTerminal } from "react-icons/fa6";
 import { MdNavigateNext } from "react-icons/md";
@@ -12,6 +18,8 @@ import Drawer from './drawer'
 import pkg from '@/../package.json' with { type: "json" };
 import { DocGroup } from '@/utils/docs-config'
 import { IconBaseProps } from 'react-icons'
+import ClientOnly from './client-only'
+import { usePathname } from 'next/navigation'
 
 export type HeaderParams = {
     group: DocGroup;
@@ -86,7 +94,19 @@ const Icon = (
       return <FaServer {...rest} />
     case 'FaTerminal':
       return <FaTerminal {...rest} />
-    }
+    case 'FaRobot':
+      return <FaRobot {...rest} />
+    case 'TbSdk':
+      return <TbSdk {...rest} />
+    case 'MdHttp':
+      return <MdHttp {...rest} />
+    case 'TbHttpGet':
+      return <TbHttpGet {...rest} />
+    case 'MdOutlineSpaceDashboard':
+      return <MdOutlineSpaceDashboard {...rest} />
+    case 'FaLaptopCode':
+      return <FaLaptopCode {...rest} />
+  }
 }
 
 const Header = (
@@ -210,6 +230,14 @@ const SideGroup = (
     }, [onClickMenuItem, group, isLeaf]
   );
 
+  useEffect(
+    () => {
+
+    }
+  );
+
+  const pathname = usePathname();
+
   const href = (isLeaf) ? find_next_route(group) : window.location.pathname;
 
   return (
@@ -240,7 +268,8 @@ const SideGroup = (
 
 const SideBar = (
   { 
-    className, onClickMenuItem, link_prefix, selectedSlug, groups=[], 
+    className, onClickMenuItem, 
+    link_prefix, selectedSlug, groups=[], 
     ...rest 
   }: SideBarParams
 ) => {
@@ -271,7 +300,7 @@ const SideBar = (
               href={group.external ?? ((link_prefix ? link_prefix + '/' : '') + find_next_route(group))} 
               title={group.title}
               target={group.external ? '_blank' : ''}
-                >
+            >
               <Header 
                 group={group} 
                 selected={selected_group==index}
@@ -314,21 +343,19 @@ export const SideBarSmall = (
                 ${showMenu ? 'translate-x-0' : '-translate-x-[300px]'}`
               }>
     <SideBar 
-      className={`absolute left-0 p-6 w-full 
-                  h-full overflow-y-auto  text-sm
-                  bg-white dark:bg-gray-900
-                  `
-                }
+      className='absolute left-0 p-6 w-full 
+        h-full overflow-y-auto  text-sm
+      bg-white dark:bg-gray-900'
       link_prefix={link_prefix}
       onClickMenuItem={onClickMenuItem}
       selectedSlug={selectedSlug}
       groups={groups} 
     />
 
-    <div children={`(v${pkg.version})`} 
-          className='absolute bottom-0 font-mono right-0 text-sm
-              text-gray-500/70' />
-
+    <div 
+      children={`(v${pkg.version})`} 
+      className='absolute bottom-0 font-mono right-0 text-sm
+      text-gray-500/70' />
 
     {
       showMenu && 
@@ -340,8 +367,7 @@ export const SideBarSmall = (
   </div>
   <div 
     onClick={_ => onClickMenuItem?.(undefined)}
-    className={
-      `
+    className={`
       fixed w-full h-screen top-0 left-0 z-40 cursor-pointer block md:hidden
       ${showMenu ? 'block bg-black/30 dark:bg-gray-900/30 backdrop-blur-sm' : 'hidden'}
       `

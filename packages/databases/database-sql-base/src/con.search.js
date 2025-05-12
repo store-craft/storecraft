@@ -22,7 +22,8 @@ const tables = [
   'notifications',
   'discounts',
   'orders',
-  'templates'
+  'templates',
+  'chats'
 ]
 
 /**
@@ -42,7 +43,7 @@ const prefix_to_resource = {
   'tag': 'tags',
   'template': 'templates',
   'post': 'posts',
-  
+  'chat': 'chats',
 }
 
 const resource_to_props = {
@@ -58,6 +59,7 @@ const resource_to_props = {
   'tags': ['id', 'handle'],
   'templates': ['id', 'handle', 'title'],
   'posts': ['id', 'handle', 'title'],
+  'chats': ['id', 'customer_email', 'customer_id'],
 }
 
 /**

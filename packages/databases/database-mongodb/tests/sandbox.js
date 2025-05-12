@@ -16,21 +16,21 @@ export const create_app = async () => {
   )
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB({ db_name: 'test'}))
+  .init();
   
-  await app.init();
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app.__show_me_everything.db, false);
   return app;
 }
 
 
 async function test() {
   const app = await create_app();
-
-  const sf = await app.db.resources.storefronts.get_default_auto_generated_storefront()
+  const db = app.__show_me_everything.db;
+  const sf = await db.resources.storefronts.get_default_auto_generated_storefront()
 
   console.log(JSON.stringify(sf, null, 2));
 
-  await app.db.disconnect();
+  await db.disconnect();
 }
 
 test();

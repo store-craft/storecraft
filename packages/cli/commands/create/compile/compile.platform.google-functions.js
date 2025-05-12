@@ -24,7 +24,8 @@ export const compile_google_functions = async (meta) => {
       "type": "module",
       "scripts": {
         "start": "npx functions-framework --target=storecraft",
-        "migrate": `node ./migrate.js`
+        "migrate": `node ./migrate.js`,
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -61,9 +62,6 @@ import { app } from './app.js';
 functions.http(
   'storecraft',
   async (req, res) => {
-    // runs once
-    await app.init();
-
     // handler
     return app.handler(req, res);
   }
@@ -100,6 +98,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

@@ -39,8 +39,8 @@ export class FacebookAuth {
 
   /** @type {AuthProvider["init"]} */
   init = (app) => {
-    this.config.app_id ??= app.platform.env[FacebookAuth.EnvConfig.app_id];
-    this.config.app_secret ??= app.platform.env[FacebookAuth.EnvConfig.app_secret];
+    this.config.app_id ??= app.__show_me_everything.platform.env[FacebookAuth.EnvConfig.app_id];
+    this.config.app_secret ??= app.__show_me_everything.platform.env[FacebookAuth.EnvConfig.app_secret];
   }
 
   /** @type {AuthProvider<Config>["generateAuthUri"]} */

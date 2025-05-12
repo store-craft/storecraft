@@ -13,6 +13,7 @@ export const cORSOptionsSchema = z.object({
 export const storecraftAppPublicInfoSchema = z.object({
   core_version: z.string().describe("Core engine version"),
   dashboard_default_version: z.string().describe("Default dashboard version"),
+  chat_version: z.string().describe("Default chat version"),
   store_description: z.string().describe("Store description"),
   store_name: z.string().describe("Store name"),
   store_website: z.string().describe("Store website"),
@@ -219,6 +220,19 @@ export const tagTypeSchema = baseTypeSchema.extend({
 });
 
 export const tagTypeUpsertSchema = tagTypeSchema
+  .omit({ id: true, handle: true })
+  .extend(withOptionalHandleOrIDSchema.shape);
+
+export const chatTypeSchema = baseTypeSchema.extend({
+  customer_id: z.string().optional().describe("The customer `id`"),
+  customer_email: z.string().optional().describe("The customer `email`"),
+  extra: z
+    .record(z.any().describe("Extra metadata coming from consumer."))
+    .optional()
+    .describe("Extra metadata coming from consumer."),
+});
+
+export const chatTypeUpsertSchema = chatTypeSchema
   .omit({ id: true, handle: true })
   .extend(withOptionalHandleOrIDSchema.shape);
 
@@ -1223,7 +1237,12 @@ export const storecraftConfigSchema = z.object({
     .string()
     .optional()
     .describe("The `storecraft` dashboard default version")
-    .default("`latest`"),
+    .default("the same version of `core` version"),
+  chat_version: z
+    .string()
+    .optional()
+    .describe("The `storecraft` AI Chat default version")
+    .default("the same version of `core` version"),
   general_store_name: z
     .string()
     .optional()

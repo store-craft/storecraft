@@ -11,11 +11,14 @@
  * } from "./platform/types.public.js";
  * @import { mailer } from "./mailer/types.public.js";
  * @import { tax_provider } from "./tax/types.public.js";
- * @import { PayloadForUpsert } from "./pubsub/types.public.js";
+ * @import { 
+ *  events, PayloadForUpsert, PubSubEvent, 
+ *  PubSubSubscriber 
+ * } from "./pubsub/types.public.js";
  * @import { ChatAI, VectorStore } from "./ai/core/types.private.js";
  * @import { Agent } from "./ai/agents/types.js";
  * @import { AuthProvider } from "./auth/types.js";
- * 
+ * @import { OmitAppBuild, InitializedStorecraftApp } from "./types.public.js";
  */
 import { create_rest_api } from './rest/index.js';
 import { create_api } from './api/index.js'
@@ -35,35 +38,30 @@ import { assert } from './api/utils.func.js';
 
 /**
  * @typedef {{
- *  'notifications': NotificationsExtension,
- *  [h: string]: extension
+ *  'notifications'?: NotificationsExtension,
  * }} BaseExtensions
  */
 
 /**
  * @typedef {{
- *  'store': StoreAgent<any>,
-*   [h: string]: Agent
+ *  'store'?: StoreAgent<any>,
 * }} BaseAgents
  */
 
-let ms_init_start = 0;
-
 /**
  * @description This is the main `storecraft` **App**
- * 
  * @template {PlatformAdapter} [Platform=PlatformAdapter]
  * @template {db_driver} [Database=db_driver]
  * @template {storage_driver} [Storage=storage_driver]
  * @template {mailer} [Mailer=mailer]
  * @template {Record<string, payment_gateway>} [PaymentMap=Record<string, payment_gateway>] 
  * `payments` map type
- * @template {BaseExtensions} [ExtensionsMap=BaseExtensions]
+ * @template {Record<string, extension<any>>} [ExtensionsMap=(Record<string, extension<any>> & BaseExtensions)]
  * `extensions` map type
  * @template {tax_provider} [Taxes=tax_provider]
  * @template {ChatAI} [AiProvider=ChatAI]
  * @template {VectorStore} [VectorStoreProvider=VectorStore]
- * @template {BaseAgents} [AgentsMap=(BaseAgents)]
+ * @template {Record<string, Agent>} [AgentsMap=(Record<string, Agent> & BaseAgents)]
  * @template {Record<string, AuthProvider>} [AuthProvidersMap=Record<string, AuthProvider>]
  */
 export class App {
@@ -171,13 +169,16 @@ export class App {
    */ 
   #is_ready;
 
+  /** @type {number} */
+  #ms_init_start;
+
   /**
    * @param {StorecraftConfig} [config] config The Storecraft Application config
    */
   constructor(
     config={}
   ) {
-    ms_init_start = Date.now();
+    this.#ms_init_start = Date.now();
     this.#config = config;
     this.#is_ready = false;
     // @ts-ignore
@@ -191,7 +192,7 @@ export class App {
     this.#pubsub = new PubSub(this);
     
     // add extra events for orders state
-    this.pubsub.on(
+    this.#pubsub.on(
       'orders/upsert',
       async (event) => {
         const order_before = event.payload.previous;
@@ -220,75 +221,43 @@ export class App {
         // console.log('has_checkout_updated', has_checkout_updated)
 
         if(has_checkout_updated) {
-          await this.pubsub.dispatch(
+          await this.#pubsub.dispatch(
             `orders/checkout/${order_after.status.checkout.name2}`,
             payload
           );
-          await this.pubsub.dispatch('orders/checkout/update', payload);
+          await this.#pubsub.dispatch('orders/checkout/update', payload);
         }
 
         if(has_fulfillment_updated) {
-          await this.pubsub.dispatch(
+          await this.#pubsub.dispatch(
             `orders/fulfillment/${order_after.status.fulfillment.name2}`,
             payload
           );
-          await this.pubsub.dispatch('orders/fulfillment/update', payload);
+          await this.#pubsub.dispatch('orders/fulfillment/update', payload);
         }
 
         if(has_payment_updated) {
-          await this.pubsub.dispatch(
+          await this.#pubsub.dispatch(
             `orders/payments/${order_after.status.payment.name2}`,
             payload
           );
-          await this.pubsub.dispatch('orders/payments/update', payload);
+          await this.#pubsub.dispatch('orders/payments/update', payload);
         }
       }
     );
 
   } 
 
-
-  /**
-   * @return {PaymentMap}
-   */
-  type_g() {
-    return undefined;
-  }
-
-  /**
-   * @description Get `storecraft` version
-   */
-  get version() {
-    return pkg.version;
-  }
-
-  /**
-   * @description Get `storecraft` app public information
-   */
-  get info() {
-    return {
-      core_version: this.version,
-      dashboard_default_version: this.config.dashboard_version,
-      store_description: this.config.general_store_description,
-      store_name: this.config.general_store_name,
-      store_website: this.config.general_store_website,
-      store_support_email: this.config.general_store_support_email,
-      store_logo_url: this.config.general_store_logo_url,
-      confirm_email_base_url: this.config.general_confirm_email_base_url,
-      forgot_password_confirm_base_url: this.config.general_forgot_password_confirm_base_url,
-    }
-  }
-
   /**
    * @description After init, we inspect for missing config values and try to 
    * find them in platform environment.
    */
   #settle_config_after_init() {
-    if(!this.platform) {
+    if(!this.#platform) {
       throw new Error('Storecraft:: No Platform Found !!')
     }
 
-    const env = this.platform.env;
+    const env = this.#platform.env;
 
     this.#config = {
       auth_secret_access_token: env?.[App.EnvConfig.auth_secret_access_token],
@@ -297,7 +266,8 @@ export class App {
       auth_secret_forgot_password_token: env?.[App.EnvConfig.auth_secret_forgot_password_token],
       auth_admins_emails: env?.[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
-      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
+      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(
+        env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
       storage_rewrite_urls: env?.[App.EnvConfig.storage_rewrite_urls],
       general_store_name: env?.[App.EnvConfig.general_store_name],
       general_store_website: env?.[App.EnvConfig.general_store_website],
@@ -308,8 +278,9 @@ export class App {
       general_forgot_password_confirm_base_url: env?.[
         App.EnvConfig.general_forgot_password_confirm_base_url
       ],
-      dashboard_version: 'latest',
-      ...this.config,
+      dashboard_version: pkg.version,
+      chat_version: pkg.version,
+      ...this.#config,
     }
 
     assert(
@@ -335,49 +306,28 @@ export class App {
 
   } 
 
-  print_banner(host='', version=(pkg.version ?? '1.0.0')) {
-    const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
-    const c = {
-      red: '\x1b[1;31m',
-      magenta: `\x1b[1;35m`,
-      yellow: `\x1b[33m`,
-      reset: `\x1b[0m`,
-    }
-  
-    let final = c.magenta + '\n';
-    final += banner3;
-    final += `${c.red}\nv${version}`
-    final += `\n
-  ${c.red}Dashboard:      ${c.reset + host}/api/dashboard    
-  ${c.red}API Reference:  ${c.reset + host}/api/reference    
-  ${c.red}Website:        ${c.reset}https://storecraft.app
-  ${c.red}GitHub:         ${c.reset}https://github.com/store-craft/storecraft
-  ${c.yellow}Statistics:     ${c.reset}initialized in ${(Date.now() - ms_init_start)}ms
-      `;
-
-    console.log(final);
-  }
-
   /**
-   * @param {boolean} [print_banner=true] 
    * @description Initialize the Application
+   * @param {boolean} [print_banner=true] 
+   * @returns {InitializedStorecraftApp<App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >>
+   * }
    */
-  async init(print_banner=true) {
-    if(this.ready) 
-      return Promise.resolve(this);
+  init(print_banner=false) {
+    if(this.isready) 
+      return this;
     
-    /** @type {App} */
-    const app_casted = (/** @type {never} */ (this));
-
     try{
       // first let's settle config
       this.#settle_config_after_init();
 
       // settle database
-      this.db?.init?.(app_casted);
+      this.#db_driver?.init?.(this);
 
       // settle storage
-      this.storage?.init?.(app_casted);
+      this.#storage?.init?.(this);
 
       // settle programmatic API
       // we do not cast the app here, because we need to pass the original
@@ -385,80 +335,92 @@ export class App {
       this.api = create_api(this);
 
       // settle REST-API
-      this.#rest_controller = create_rest_api(app_casted, this.config);
+      this.#rest_controller = create_rest_api(
+        this, this.#config
+      );
   
       // settle extensions
-      for(const ext_handle in this.extensions) {
-        const ext = this.extensions?.[ext_handle];
-        ext?.onInit?.(app_casted);
+      for(const ext_handle in this.#extensions) {
+        const ext = this.#extensions?.[ext_handle];
+        ext?.onInit?.(this);
       }
 
       // settle payment gateways
-      for(const handle in this.gateways) {
-        const gateway = this.gateways?.[handle];
-        gateway?.onInit?.(app_casted);
+      for(const handle in this.#payment_gateways) {
+        const gateway = this.#payment_gateways?.[handle];
+        gateway?.onInit?.(this);
       }
 
       // settle ai provider
       if(this.#ai_chat_provider) {
-        this.#ai_chat_provider.onInit(app_casted);
+        this.#ai_chat_provider.onInit(this);
       }
 
       // settle base agents
       if(this.#ai_chat_provider) {
         // @ts-ignore
         this.withAgents({
-          store: new StoreAgent({chat_ai_provider: this.#ai_chat_provider})
+          store: new StoreAgent({
+            chat_ai_provider: this.#ai_chat_provider
+          })
         });
 
         for(const handle in this.#agents) {
           const ag = this.#agents[handle];
-          ag?.init?.(app_casted);
+          ag?.init?.(this);
         }
       }
   
       // settle payment gateways
-      for(const handle in this.auth_providers) {
-        const ap = this.auth_providers[handle];
-        ap?.init?.(app_casted);
+      for(const handle in this.#auth_providers) {
+        const ap = this.#auth_providers[handle];
+        ap?.init?.(this);
       }
 
       // settle vector store events
-      if(this.vectorstore) {
-        this.vectorstore.onInit(app_casted);
-        this.vectorstore?.embedder?.onInit(app_casted);
-        this.pubsub.on(
+      if(this.#vector_store) {
+        this.#vector_store.onInit(this);
+        this.#vector_store?.embedder?.onInit(this);
+        this.#pubsub.on(
           'products/upsert',
           async (evt) => {
-            await save_product(evt.payload.current, this.vectorstore);
+            await save_product(
+              evt.payload.current, this.#vector_store
+            );
           }
         );
 
-        this.pubsub.on(
+        this.#pubsub.on(
           'collections/upsert',
           async (evt) => {
-            await save_collection(evt.payload.current, this.vectorstore);
+            await save_collection(
+              evt.payload.current, this.#vector_store
+            );
           }
         );
 
-        this.pubsub.on(
+        this.#pubsub.on(
           'discounts/upsert',
           async (evt) => {
-            await save_discount(evt.payload.current, this.vectorstore);
+            await save_discount(
+              evt.payload.current, this.#vector_store
+            );
           }
         );
 
-        this.pubsub.on(
+        this.#pubsub.on(
           'shipping/upsert',
           async (evt) => {
-            await save_shipping_method(evt.payload.current, this.vectorstore);
+            await save_shipping_method(
+              evt.payload.current, this.#vector_store
+            );
           }
         );
 
       }
 
       // settle mailer
-      this.mailer?.onInit?.(app_casted);
+      this.#mailer?.onInit?.(this);
   
       this.#is_ready = true;
 
@@ -475,20 +437,13 @@ export class App {
   }
 
   /** 
-   * @description Get the REST API controller 
-   */
-  get rest_controller() { 
-    return this.#rest_controller; 
-  }
-
-  /** 
    * @description Update new payment gateways and rewrite types 
    * @template {PlatformAdapter} P
    * @param {P} platform 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  P, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withPlatform(platform) {
@@ -500,20 +455,13 @@ export class App {
   } 
 
   /** 
-   * @description Get the native platform object 
-   */
-  get platform() { 
-    return this.#platform; 
-  }
-
-  /** 
    * @description Update **AI** chat provider, some of the builtins
    * @template {ChatAI} P
    * @param {P} ai 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  Taxes, P, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withAI(ai) {
@@ -525,21 +473,13 @@ export class App {
   } 
 
   /** 
-   * @description Get the AI provider
-   */
-  get ai_chat_provider() { 
-    return this.#ai_chat_provider; 
-  }
-  
-  
-  /** 
    * @description Update `agents`
    * @template {Record<string, Agent>} P
    * @param {P} agents 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  Taxes, AiProvider, VectorStoreProvider, P & BaseAgents
-   *  >
+   *  >>
    * }
    */
   withAgents(agents) {
@@ -554,20 +494,13 @@ export class App {
   } 
   
   /** 
-   * @description Get the `agents`
-   */
-  get agents() {
-    return this.#agents; 
-  }
-
-  /** 
    * @description Update new payment gateways and rewrite types 
    * @template {VectorStore} P
    * @param {P} store 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  Taxes, AiProvider, P, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withVectorStore(store) {
@@ -579,148 +512,98 @@ export class App {
   } 
 
   /** 
-   * @description Get the Vector Store
-   */
-  get vectorstore() { 
-    return this.#vector_store; 
-  }
-
-  /** 
    * @description Update new payment gateways and rewrite types 
    * @template {db_driver} D
    * @param {D} database 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, D, Storage, Mailer, PaymentMap, ExtensionsMap, Taxes, 
    *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withDatabase(database) {
     // @ts-ignore
     this.#db_driver = database;
-
     // @ts-ignore
     return this;
   }   
-
-  /** 
-   * @description Get the Database driver 
-   */
-  get db() { 
-    return this.#db_driver; 
-  }
 
   /** 
    * @description Update new payment gateways and rewrite types 
    * @template {storage_driver} S
    * @param {S} storage 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, S, Mailer, PaymentMap, ExtensionsMap, Taxes, 
    *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withStorage(storage) {
     // @ts-ignore
     this.#storage = storage;
-
     // @ts-ignore
     return this;
   }   
-
-  /** 
-   * @description Get the native storage object 
-   */
-  get storage() { 
-    return this.#storage; 
-  }
 
   /** 
    * @description Update new payment gateways and rewrite types 
    * @template {mailer} M
    * @param {M} mailer 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, M, PaymentMap, ExtensionsMap, 
    *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withMailer(mailer) {
     // @ts-ignore
     this.#mailer = mailer;
-
     // @ts-ignore
     return this;
   }   
 
   /** 
-   * 
-   * @description Mailer driver 
-   */
-  get mailer() { 
-    return this.#mailer; 
-  }
-
-  /** 
    * @description Update new tax provider
    * @template {tax_provider} T
    * @param {T} taxes 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  T, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withTaxes(taxes) {
     // @ts-ignore
     this.#taxes = taxes;
-
     // @ts-ignore
     return this;
-  }
-
-  /** 
-   * 
-   * @description Get the taxes provider
-   */
-  get taxes() { 
-    return this.#taxes; 
   }
 
   /** 
    * @description Add payment gateways
    * @template {Record<string, payment_gateway>} N
    * @param {N} gateways 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, N, ExtensionsMap, Taxes, 
    *  AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withPaymentGateways(gateways) { 
     // @ts-ignore
     this.#payment_gateways = gateways; 
-
     // @ts-ignore
     return this;
-  }
-
-  /** 
-   * 
-   * @description Get the payment gateways 
-   */
-  get gateways() { 
-    return this.#payment_gateways; 
   }
 
   /** 
    * @description Add custom extensions
    * @template {Record<string, extension>} E
    * @param {E} extensions 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, E & BaseExtensions, 
    *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
-   *  >
+   *  >>
    * }
    */
   withExtensions(extensions) { 
@@ -729,41 +612,125 @@ export class App {
       ...this.#extensions,
       ...extensions
     }; 
-
     // @ts-ignore
     return this;
-  }
-
-  /** 
-   * @description extensions
-   */
-  get extensions() { 
-    return this.#extensions; 
   }
 
   /** 
    * @description Add Auth Providers for social login
    * @template {Record<string, AuthProvider>} A
    * @param {A} providers 
-   * @returns {App<
+   * @returns {OmitAppBuild<App<
    *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
    *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, A
-   *  >
+   *  >>
    * }
    */
   withAuthProviders(providers) { 
     // @ts-ignore
     this.#auth_providers = providers;
-
     // @ts-ignore
     return this;
   }
 
-  /** 
-   * @description extensions
+  /**
+   * @description Subscribe to a `storecraft` event
+   * @template {PubSubEvent | string} [E=PubSubEvent]
+   * @param {E} event
+   * @param {E extends PubSubEvent ? 
+   *  PubSubSubscriber<events[E]> : 
+   *  PubSubSubscriber<any>
+   * } callback
+   * @returns {OmitAppBuild<App<
+   *  Platform, Database, Storage, Mailer, PaymentMap, ExtensionsMap, 
+   *  Taxes, AiProvider, VectorStoreProvider, AgentsMap, AuthProvidersMap
+   *  >>
+   * }
    */
-  get auth_providers() { 
-    return this.#auth_providers; 
+  on = (event, callback) => {
+    this.#pubsub.on(event, callback);
+    return this;
+  }
+
+  /**
+   * @description Get the app's entire resources
+   * objects. Using this is not recommended, but it can be useful.
+   * using the database directly, for example, will not validate
+   * types with zod and the pubsub system will not be used.
+   * Use it to exploit the full power of the app.
+   */
+  get __show_me_everything() {
+    return {
+      app: this,
+      auth_providers: this.#auth_providers,
+      rest_controller: this.#rest_controller,
+      agents: this.#agents,
+      ai_chat_provider: this.#ai_chat_provider,
+      vector_store: this.#vector_store,
+      platform: this.#platform,
+      db: this.#db_driver,
+      storage: this.#storage,
+      mailer: this.#mailer,
+      taxes: this.#taxes,
+      gateways: this.#payment_gateways,
+      extensions: this.#extensions,
+      pubsub: this.#pubsub,
+      config: this.#config,
+    }
+  }
+
+  /**
+   * @description Get the app's entire resources
+   * objects. Using this is not recommended, but it can be useful.
+   * using the database directly, for example, will not validate
+   * types with zod and the pubsub system will not be used.
+   * Use it to exploit the full power of the app.
+   */
+  get _() {
+    return this.__show_me_everything;
+  }
+
+  /**
+   * @description Get `storecraft` app public information
+   */
+  get info() {
+    return {
+      core_version: pkg.version,
+      dashboard_default_version: this.#config.dashboard_version,
+      chat_default_version: this.#config.chat_version,
+      store_description: this.#config.general_store_description,
+      store_name: this.#config.general_store_name,
+      store_website: this.#config.general_store_website,
+      store_support_email: this.#config.general_store_support_email,
+      store_logo_url: this.#config.general_store_logo_url,
+      confirm_email_base_url: this.#config.general_confirm_email_base_url,
+      forgot_password_confirm_base_url: 
+        this.#config.general_forgot_password_confirm_base_url,
+    }
+  }
+
+  print_banner(host='', version=(pkg.version ?? 'unknown-version')) {
+    const banner3 = '   _______________  ____  ______   __________  ___    ____________\r\n  \/ ___\/_  __\/ __ \\\/ __ \\\/ ____\/  \/ ____\/ __ \\\/   |  \/ ____\/_  __\/\r\n  \\__ \\ \/ \/ \/ \/ \/ \/ \/_\/ \/ __\/    \/ \/   \/ \/_\/ \/ \/| | \/ \/_    \/ \/   \r\n ___\/ \/\/ \/ \/ \/_\/ \/ _, _\/ \/___   \/ \/___\/ _, _\/ ___ |\/ __\/   \/ \/    \r\n\/____\/\/_\/  \\____\/_\/ |_\/_____\/   \\____\/_\/ |_\/_\/  |_\/_\/     \/_\/     \r\n                                                                  '
+    const c = {
+      red: '\x1b[1;31m',
+      magenta: `\x1b[1;35m`,
+      yellow: `\x1b[33m`,
+      reset: `\x1b[0m`,
+    }
+  
+    let final = c.magenta + '\n';
+    final += banner3;
+    final += `${c.red}\nv${version}`
+    final += `\n
+${c.reset + c.yellow}⟡ ${c.reset + c.red}Dashboard       ${c.reset + host}/dashboard    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}AI Chat ✨      ${c.reset + host}/chat    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}API Reference   ${c.reset + host}/api    
+${c.reset + c.yellow}⟡ ${c.reset + c.red}Website         ${c.reset}https://storecraft.app
+${c.reset + c.yellow}⟡ ${c.reset + c.red}GitHub          ${c.reset}https://github.com/store-craft/storecraft ⭐
+${c.yellow}⭑ ${c.reset + c.yellow}Statistics      ${c.reset}initialized in ${(Date.now() - this.#ms_init_start)}ms
+      `;
+
+    console.log(final);
   }
 
   /** 
@@ -773,7 +740,6 @@ export class App {
     return this.#pubsub; 
   }
 
-
   /** 
    * @description Config 
    */
@@ -782,9 +748,16 @@ export class App {
   }
 
   /**
+   * @description The app's platform environment variables
+   */
+  get env() {
+    return this.#platform?.env;
+  }
+
+  /**
    * @description Is the app ready ?
    */
-  get ready() { 
+  get isready() { 
     return this.#is_ready; 
   }
 
@@ -810,24 +783,11 @@ export class App {
     // @ts-ignore
     context = context ?? {};
     const request = await this.#platform.encode(native_request, context);
-    const response_web = await this.rest_controller.handler(request);
+    const response_web = await this.#rest_controller.handler(request);
     const response = await this.#platform.handleResponse(
       response_web, context
     );
     return response;
-  }
-
-
-  /**
-   * @description Quickly attach an `event` subscriber. 
-   * This is just a quick way to interface into {@link PubSub}
-   * @type {PubSub["on"]}
-   */
-  on = (event, callback) => {
-    this.pubsub.on(event, callback);
-
-    // @ts-ignore
-    return this;
   }
 
 }

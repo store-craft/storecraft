@@ -7,7 +7,7 @@ import { App } from '../index.js';
 import { assert, parse_json_safely } from './utils.func.js';
 
 /** @param {App} app */
-export const db = app => app.db.resources.search;
+export const db = app => app.__show_me_everything.db.resources.search;
 
 /**
  * @param {App} app
@@ -18,7 +18,7 @@ export const quicksearch = (app) =>
  * @param {ApiQuery} query
  */
 (query) => {
-  return app.db.resources.search.quicksearch(
+  return app.__show_me_everything.db.resources.search.quicksearch(
     {
       expand: ['*'],
       ...query
@@ -42,7 +42,7 @@ export const similarity = (app) =>
    */
   async (query) => {
     assert(
-      app.vectorstore,
+      app.__show_me_everything.vector_store,
       'Similarity / Semantic Search is only available for apps with vector-store'
     );
 
@@ -59,7 +59,7 @@ export const similarity = (app) =>
       allowed_similarity_search_namspaces.slice(2) : 
       pre_namespaces;
 
-    const items = await app.vectorstore.similaritySearch(
+    const items = await app.__show_me_everything.vector_store.similaritySearch(
       query.q, query.limit ?? 5, namespaces
     );
 
@@ -81,8 +81,8 @@ export const similarity = (app) =>
     return {
       items: items_result,
       context: {
-        metric: app.vectorstore.metric,
-        dimensions: app.vectorstore.dimensions
+        metric: app.__show_me_everything.vector_store.metric,
+        dimensions: app.__show_me_everything.vector_store.dimensions
       }
     };
   }

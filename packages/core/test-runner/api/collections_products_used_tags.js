@@ -55,7 +55,7 @@ export const create = app => {
 
   s.before(
     async () => { 
-      assert.ok(app.ready);
+      assert.ok(app.isready);
 
       try {
 
@@ -120,7 +120,7 @@ export const create = app => {
     const { create_app } = await import('../../app.test.fixture.js');
     const app = await create_app(false);
     const s = create(app);
-    s.after(async () => { await app.db.disconnect() });
+    s.after(async () => { await app.__show_me_everything.db.disconnect() });
     s.run();
   } catch (e) {
     console.log(e)

@@ -24,7 +24,8 @@ export const create_search_index = (data) => {
   let s = /** @type {string[]} */([]);
 
   s.push(
-    ...(data?.tags ?? []).map(t => `tag:${t}`)
+    ...(data?.tags ?? []),
+    ...(data?.tags ?? []).map(t => `tag:${t}`),
   );
 
   if(

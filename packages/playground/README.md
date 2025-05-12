@@ -6,6 +6,7 @@
 </div><hr/><br/>
 
 This folder contains some examples for various platforms
+- stackblitz (in memory libsql with node)
 - node
 - deno
 - bun

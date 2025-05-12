@@ -21,6 +21,7 @@ import Notifications from './src/notifications.js'
 import Storage from './src/storage.js'
 import AI from './src/ai.js'
 import Search from './src/search.js'
+import Chats from './src/chats.js'
 import { 
   fetchApiWithAuth, fetchOnlyApiResponseWithAuth 
 } from './src/utils.api.fetch.js'
@@ -45,7 +46,8 @@ export class StorecraftSDK {
    */  
   constructor(config, fetcher) {
     this.#config = config;
-    this.#fetcher = fetcher ?? ((input, init) => fetch(input, init));
+    this.#fetcher = fetcher ?? 
+      ((input, init) => fetch(input, init));
 
     this.ai = new AI(this);
     this.search = new Search(this);
@@ -68,6 +70,7 @@ export class StorecraftSDK {
     this.reference = new Reference(this);
     this.notifications = new Notifications(this);
     this.emails = new Email(this);
+    this.chats = new Chats(this);
   }
 
   get fetcher() {
@@ -111,16 +114,30 @@ export class StorecraftSDK {
   }
 
   /**
+   * @description Update / override config with
+   * new properties.
    * @param {StorecraftSDKConfig} [config] 
    */  
   updateConfig(config) {
     this.#config = {
-      ...config
+      ...(this.#config ?? {}),
+      ...(config ?? {})
     };
   }
 
+  /**
+   * @description get the current config
+   */
   get config() {
     return this.#config
+  }
+
+  /**
+   * @description set a config
+   * @param {StorecraftSDKConfig} config 
+   */  
+  set config(config) {
+    this.#config = config;
   }
 }
 
@@ -136,6 +153,7 @@ export const validateConfig = (config) => {
  */  
 export const create = (config) => { 
   const sdk = new StorecraftSDK(config);
+  
   return sdk;
 }
 

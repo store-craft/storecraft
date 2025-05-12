@@ -38,11 +38,11 @@ const LineitemsTable = (
   // console.log('items', items)
   
   return (
-<div className='w-full flex flex-row mt-3'>
-  <table className='w-full border-collapse text-left'>
+<div className='w-full flex flex-row mt-3 rounded-md '>
+  <table className='w-full border-collapse text-left border shelf-border-color border-dashed'>
     <thead className='w-full'>
       <tr className='w-full'>
-        <th children='Product'  />
+        <th children='Product' className='pl-1 pt-1'  />
         <th children='Price' />
         <th children='Quantity' />
         <th children='' className='text-right' />
@@ -53,7 +53,7 @@ const LineitemsTable = (
       items.map(
         (it, ix) => (
           <tr key={ix} 
-              className='--text-gray-500 border w-full border-pink-500'>
+              className='w-full border-b shelf-border-color border-dashed'>
             <td className='pl-1  max-w-[100px] sm:max-w-[200px] pr-5' >
               <div className='overflow-x-auto --text-black whitespace-nowrap 
                               scrollbar-thin'>
@@ -243,8 +243,13 @@ const OrderLineItems = (
   <BlingButton 
     children='Browse products'
     className='text-sm h-10 w-40 mx-auto cursor-pointer' 
-    onClick={() => ref_overlay.current.show()} />
-  <p children='or' 
+    from='from-pink-500/60 dark:from-pink-600'
+    to='to-kf-500/60 dark:to-kf-500'
+    onClick={() => ref_overlay.current.show()} 
+  />
+
+  {
+  /* <p children='or' 
      className='text-center text-gray-300 mt-5 text-3xl font-semibold' />
   <p children='Manual Add' 
      className='mt-3 text-center text-gray-400 text-lg font-semibold' />
@@ -279,16 +284,17 @@ const OrderLineItems = (
     children='Add'
     className='flex-1 h-10 text-sm font-semibold mt-3 \
       block sm:hidden shadow-md' 
-    onClick={onManualAdd} />
+    onClick={onManualAdd} /> */
+  }
 
   <Overlay ref={ref_overlay} >
     <BrowseProducts 
       onSave={onBrowseAdd} 
       onCancel={() => ref_overlay.current.hide()} />
   </Overlay>
-  <HR className='mt-5' />
-  <p children='Items' 
-     className='mt-3 text-gray-400 text-lg font-semibold' />
+  {/* <HR className='mt-5' /> */}
+  {/* <p children='Items' 
+     className='mt-3 text-gray-400 text-lg font-semibold' /> */}
   <LineitemsTable 
     items={items} 
     context={context}

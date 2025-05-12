@@ -15,7 +15,7 @@ import pg from 'pg';
 export class Postgres extends SQL {
 
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     pool_config: {
       host: 'POSTGRES_HOST',
       port: 'POSTGRES_PORT',
@@ -48,16 +48,16 @@ export class Postgres extends SQL {
   /** @type {SQL["init"]} */
   init = (app) => {
     this.pg_config.pool_config.host ??= 
-      app.platform.env[Postgres.EnvConfig.pool_config.host];
+      app.env[Postgres.EnvConfig.pool_config.host];
 
     this.pg_config.pool_config.port ??= 
-      parseFloat(app.platform.env[Postgres.EnvConfig.pool_config.port]);
+      parseFloat(app.env[Postgres.EnvConfig.pool_config.port]);
 
     this.pg_config.pool_config.user ??= 
-      app.platform.env[Postgres.EnvConfig.pool_config.user];
+      app.env[Postgres.EnvConfig.pool_config.user];
 
     this.pg_config.pool_config.password ??= 
-      app.platform.env[Postgres.EnvConfig.pool_config.password];
+      app.env[Postgres.EnvConfig.pool_config.password];
       
     super.init(app);
     }

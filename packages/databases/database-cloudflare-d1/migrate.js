@@ -3,7 +3,6 @@ import { AggregateDialect } from "@storecraft/database-sql-base/kysely.aggregate
 import { get_migrations } from "@storecraft/database-sql-base/migrate.js";
 import { prepare_and_bind } from "@storecraft/database-sql-base/utils.js";
 import { Kysely, Migrator } from "kysely";
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from "node:url";
 
@@ -74,7 +73,8 @@ export async function migrateToLatest(
           {
             sql: concat_query,
             parameters: undefined,
-            query: undefined
+            query: undefined,
+            queryId: undefined
           }
         )
       },
@@ -90,7 +90,8 @@ export async function migrateToLatest(
           {
             sql: concat_query,
             parameters: undefined,
-            query: undefined
+            query: undefined,
+            queryId: undefined
           }
         )      
       }

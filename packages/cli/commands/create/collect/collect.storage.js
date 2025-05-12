@@ -143,14 +143,16 @@ const collect_general_config = async (
     case 'aws_s3': {
       /** @type {import('@storecraft/storage-s3-compatible').AwsS3Config} */
       const config = {
-        region: await withCancel(
-          text(
-            { 
-              message: 'S3 Region',
-              defaultValue: 'auto',
-              placeholder: 'auto',
-            }
-          ),
+        region: /** @type {import('@storecraft/storage-s3-compatible').AWSRegion} */(
+          await withCancel(
+            text(
+              { 
+                message: 'S3 Region',
+                defaultValue: 'auto',
+                placeholder: 'auto',
+              }
+            ),
+          )
         ),
         bucket: await withCancel(
           text(

@@ -1,7 +1,8 @@
 {
   "name": "@storecraft/chat",
-  "version": "0.0.1",
-  "description": "Storecraft Official Chat",
+  "version": "1.2.5",
+  "private": false,
+  "description": "Storecraft Official Chat Agent",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
@@ -17,11 +18,12 @@
     "storecraft"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
-      "import": "./dist/lib/index.js",
-      "require": "./dist/lib/index.umd.cjs"
+      "types": "./dist/lib/src/index.d.ts",
+      "import": "./dist/lib/src/index.js",
+      "require": "./dist/lib/src/index.umd.cjs"
     }
   },
   "scripts": {
@@ -30,9 +32,11 @@
     "build": "vite build -c vite.lib.config.ts",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:esm": "npx http-server . -o index.esm.html",
+    "preview:umd": "npx http-server . -o index.umd.html",
     "analyze": "npx vite-bundle-visualizer -c vite.lib.config.ts",
-    "prepublishOnly": "npm version patch --force && npm run build",
-    "sc-publish": "npm publish"
+    "prepublishOnly": "npm run build",
+    "sc-publish": "npm publish --access public"
   },
   "dependencies": {
     "@storecraft/sdk": "^1.0.8",
@@ -59,5 +63,8 @@
     "typescript-eslint": "^8.22.0",
     "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.1"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

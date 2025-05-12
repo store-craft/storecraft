@@ -41,9 +41,7 @@ const app = new App()
       secretAccessKey: process.env.S3_SECRET_KEY
     }
   )
-);
-
-await app.init();
+).init();
 ```
 
 ## config
@@ -84,9 +82,8 @@ const app = new App()
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
     }
   )
-);
+).init();
 
-await app.init();
 ```
 
 ## config
@@ -128,9 +125,7 @@ const app = new App()
       forcePathStyle: true,
     }
   )
-);
-
-await app.init();
+).init();
 ```
 
 ## config

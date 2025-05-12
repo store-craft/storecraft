@@ -430,6 +430,10 @@ export const TemplateTemplate = (
     
     { mode<2 &&
       <div className='w-full flex flex-col gap-5 relative'>
+        {
+          mode==1 && 
+          'The following template'
+        }
         <Editor
           options={{tabSize: 2, minimap: {autohide: true}, ...editor?.options}}
           width={editor?.width ?? '100%'}
@@ -442,6 +446,10 @@ export const TemplateTemplate = (
           // defaultValue="// some comment"
           // onMount={handleEditorDidMount}
         />
+        {
+          mode==1 && 
+          'will render'
+        }
         <iframe 
           srcDoc={preview_compiled} 
           className={
@@ -469,19 +477,20 @@ export const TemplateTemplate = (
         />
         <div className='w-full h-full flex-col items-center'>  
           <div className='flex flex-row items-center text-2xl 
-                        shelf-plain-card-soft justify-between w-full p-3'>
+            shelf-plain-card-soft justify-between w-full p-3'>
             <span children='Preview' />
             <FaRegWindowClose 
-                onClick={() => setMode(0)} 
-                className='cursor-pointer'/>
+              onClick={() => setMode(0)} 
+              className='cursor-pointer'/>
           </div>
           <iframe 
-              width='100%'
-              srcDoc={preview_compiled} 
-              className={
-                ` border shelf-border-color bg-white` 
-              }
-              height="100%" />
+            width='100%'
+            srcDoc={preview_compiled} 
+            className={
+              ` border shelf-border-color bg-white` 
+            }
+            height="100%" 
+          />
         </div>  
       </Splitter>
     }

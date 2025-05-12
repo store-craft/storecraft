@@ -34,12 +34,11 @@ export class GeminiEmbedder {
    * @param {config} [config={}] 
    */
   constructor(config={}) {
-    this.config = {
+    this.config = /** @type {config} */ ({
+      model: 'text-embedding-004',
+      api_version: 'v1beta',
       ...config,
-      model: config.model ?? 'text-embedding-004',
-      api_version: config.api_version ?? 'v1beta'
-    }
-
+    });
   }
 
   /** @type {Impl["tag"]} */
@@ -53,7 +52,8 @@ export class GeminiEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[GeminiEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[GeminiEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["generateEmbeddings"]} */

@@ -38,7 +38,7 @@ const app = new App()
 .withPlatform(new NodePlatform())
 .withDatabase(
   new SQLite({ filepath: ':memory:' })
-);
+).init();
 ```
 
 Simply, import the **api** `test-runner`
@@ -62,13 +62,11 @@ Therefore, if you wanted just to run `authentication` tests, you will
 
 ```ts
 async function test() {
-  await app.init();
-
   // test auth logic
-  api_test_runner.auth.create(app).run();
+  api_test_runner.auth.create(app.__show_me_everything.app).run();
 
   // test crud for products
-  api_test_runner.products_crud.create(app).run();
+  api_test_runner.products_crud.create(app__show_me_everything.app).run();
 }
 ```
 
@@ -82,7 +80,7 @@ async function test() {
 
   Object.entries(api).forEach(
     ([name, runner]) => {
-      runner.create(app).run();
+      runner.create(app.__show_me_everything.app).run();
     }
   );
 }

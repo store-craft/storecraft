@@ -170,8 +170,6 @@ export class LibsqlConnection {
       insertId: last_result?.lastInsertRowid,
       rows: last_result?.rows ?? [],
       numAffectedRows: BigInt(last_result?.rowsAffected ?? 0),
-      // @ts-ignore deprecated in kysely >= 0.23, keep for backward compatibility.
-      numUpdatedOrDeletedRows: last_result?.rowsAffected,
     };
 
   } 

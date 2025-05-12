@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
-import { withDiv } from "../common.types.js";
+import { type withDiv } from "../common.types.js";
 import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image.js";
 import type { ProductType } from "@storecraft/core/api";
@@ -41,11 +41,13 @@ export const ProductCardView = (
   );
 
   return (
-    <div className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 \
-          transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
+    <div 
+      className={'flex flex-col gap-3 items-center p-3 w-44 h-fit duration-300 \
+        transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
-        <div className='absolute inset-0 rounded-md object-cover h-full w-full 
-                  blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
+        <div 
+          className='absolute inset-0 rounded-md object-cover h-full w-full 
+            blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
         <LoadingImage 
           src={item.media?.at(0) ?? 'placeholder'}
           className=' rounded-md object-contain h-full w-full' />
@@ -56,11 +58,11 @@ export const ProductCardView = (
             text-base w-full --max-w-20' />
       <p children={item.price + '$'} 
         className='whitespace-nowrap font-bold text-2xl 
-              text-green-600 font-mono' />
-      <button children='add to cart' 
+        text-green-600 font-mono' />
+      <button children='add to cart (coming soon)' 
         className='uppercase tracking-widest font-bold w-full 
-            dark:bg-pink-500 bg-black text-white
-                  p-2 chat-card border rounded-md text-xs' />
+        dark:bg-pink-500 bg-black text-white
+          p-2 chat-card border rounded-md text-xs' />
     </div>
   )
 }
@@ -112,8 +114,9 @@ export const ProductsBrowserView = (
     <div className='w-full h-fit flex flex-col gap-3'>
 
       {/* Navigator */}
-      <div className='w-full h-fit justify-between flex flex-row 
-              gap-2 items-center opacity-50'>
+      <div 
+        className='w-full h-fit justify-between flex flex-row 
+          gap-2 items-center opacity-50'>
         <MdNavigateNext 
           onClick={prev} title='previous' 
           className='text-3xl rotate-180 cursor-pointer' />
@@ -130,8 +133,9 @@ export const ProductsBrowserView = (
 
 
       {/* Carousel */}
-      <div className='flex flex-row w-full gap-2
-                    overflow-x-auto h-fit pr-40'
+      <div 
+        className='flex flex-row w-full gap-2
+          overflow-x-auto h-fit pr-40'
         style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
         {
           page.map(

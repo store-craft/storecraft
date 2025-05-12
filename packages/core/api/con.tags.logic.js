@@ -10,7 +10,7 @@ import {
 } from './con.shared.js'
 
 /** @param {App} app */
-export const db = app => app.db.resources.tags;
+export const db = app => app.__show_me_everything.db.resources.tags;
 
 /**
  * @param {App} app

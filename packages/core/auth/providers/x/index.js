@@ -36,8 +36,8 @@ export class XAuth {
 
   /** @type {AuthProvider["init"]} */
   init = (app) => {
-    this.config.consumer_api_key ??= app.platform.env[XAuth.EnvConfig.consumer_api_key];
-    this.config.consumer_api_secret ??= app.platform.env[XAuth.EnvConfig.consumer_api_secret];
+    this.config.consumer_api_key ??= app.__show_me_everything.platform.env[XAuth.EnvConfig.consumer_api_key];
+    this.config.consumer_api_secret ??= app.__show_me_everything.platform.env[XAuth.EnvConfig.consumer_api_secret];
   }
 
   /** @type {AuthProvider<Config>["generateAuthUri"]} */

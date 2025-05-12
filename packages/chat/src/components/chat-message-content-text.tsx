@@ -1,5 +1,5 @@
 import { content_text } from "@storecraft/core/ai";
-import type { withDiv } from "./common.types";
+import { type withDiv } from "./common.types";
 import { MDView } from "./md-view";
 import { memo, useMemo } from "react";
 
@@ -31,9 +31,10 @@ export const ChatMessageTextContent = (
     <MDView 
       value={chat.content.content} 
       className='max-w-full w-fit flex-1 prose dark:prose-invert
-                  prose-headings:mt-0 prose-headings:mb-0 
-                  prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
-                  prose-ol:my-0' />
+        prose-headings:mt-0 prose-headings:mb-0 
+        prose-p:mt-0 prose-p:mb-0 prose-ul:my-0
+        prose-ol:my-0' 
+      />
   )
 }
 

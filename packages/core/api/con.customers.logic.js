@@ -16,7 +16,7 @@ import { App } from '../index.js';
 /**
  * @param {App} app
  */
-export const db = app => app.db.resources.customers;
+export const db = app => app.__show_me_everything.db.resources.customers;
 
 /**
  * @param {App} app

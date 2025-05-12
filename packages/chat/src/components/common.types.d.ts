@@ -1,6 +1,9 @@
 import { content, content_delta_text } from "@storecraft/core/ai";
 
-export type withDiv<Params> = React.ComponentProps<'div'> & Params;
+export type withDiv<Params> = Omit<
+  React.ComponentProps<'div'>, 
+  keyof Params
+> & Params;
 
 export type content_multiple_text_deltas = {
   type: 'multiple-text-deltas',

@@ -16,17 +16,14 @@ const app = new App(config)
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
-.withAuthProviders(
-  {
-    google: new GoogleAuth(),
-    github: new GithubAuth(),
-    facebook: new FacebookAuth(),
-    x: new XAuth(),
-    dummy: new DummyAuth(),
-  }
-)
-
-await app.init();
+.withAuthProviders({
+  google: new GoogleAuth(),
+  github: new GithubAuth(),
+  facebook: new FacebookAuth(),
+  x: new XAuth(),
+  dummy: new DummyAuth(),
+})
+.init();
 ```
 
 Then, setup an application in the relevant provider, and set the redirect URL to

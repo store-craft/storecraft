@@ -11,9 +11,7 @@ function MyApp(
 ) {
 
 	return (
-    <ClientOnly>
-		  <Component {...pageProps} className='w-screen h-screen'  />
-    </ClientOnly>
+		<Component {...pageProps} className='w-screen h-screen'  />
 	)
 }
 

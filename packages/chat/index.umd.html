@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft Chat - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      id='_storecraft_script_' 
+      src="/dist/lib/src/index.umd.cjs" >
+    </script>
+    <script>
+      console.log({StorecraftChat});
+
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
+
+      console.log({ threadId });
+
+      StorecraftChat.mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'http://localhost:8000',
+            }
+          }
+        }
+      );
+    </script>
+  </body>
+</html>

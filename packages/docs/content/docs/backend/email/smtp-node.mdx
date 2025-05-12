@@ -54,9 +54,6 @@ const app = new App(config)
 .withDatabase(new MongoDB())
 .withStorage(new GoogleStorage())
 .withMailer(new MailerSmtpNode())
-
-
-await app.init();
-await migrateToLatest(app.db, false);
+.init();
 
 ```

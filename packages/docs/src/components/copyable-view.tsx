@@ -36,7 +36,7 @@ export type CopyableViewParams = {
 
 export const write_clipboard = async (text: string) => {
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard?.writeText(text);
     console.log('Content copied to clipboard');
   } catch (err) {
     console.error('Failed to copy: ', err);
@@ -66,14 +66,14 @@ export const ClipBoardCopy = (
   return (
 <div className={`flex ${config==0 ? 'flex-row' : 'flex-row-reverse'} gap-1`}>
   <RxCopy 
-    className='text-lg cursor-pointer  inline' 
+    className='text-base cursor-pointer flex-inline' 
     onClick={onClickCopy} 
   />
   { 
     copied && 
     <span 
       children='(copied)' 
-      className='text-xs' />      
+      className='--text-xs' />      
   }
 </div>        
   )
@@ -93,10 +93,10 @@ return (
   <div {...rest}>
     <div 
       className='flex flex-row items-center 
-        justify-between px-3 gap-3 w-full'>
+        justify-between px-1.5 sm:px-2 gap-3 w-full'>
       <div
-        className=' overflow-x-scroll
-          p-1 align-middle flex flex-row items-center' 
+        className='overflow-x-scroll
+          p-0 sm:p-1 align-middle flex flex-row items-center' 
         children={value} />
       <ClipBoardCopy 
         value={copyValue ?? String(value)} 

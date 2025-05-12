@@ -64,7 +64,8 @@ export const compile_workers = async (meta) => {
         "dev": "npx wrangler dev --remote",
         "start": "npx wrangler dev --remote",
         "cf-typegen": "npx wrangler types",
-        "migrate": `node ./migrate.js`
+        "migrate": `node ./migrate.js`,
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -124,8 +125,6 @@ export default {
 
     const app = ${app_code}    
 
-    await app.init();
-    
     const response = await app.handler(request);
 
     return response;
@@ -213,6 +212,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

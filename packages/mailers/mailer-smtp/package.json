@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/mailer-smtp",
-  "version": "1.0.16",
+  "version": "1.2.5",
   "description": "Official SMTP email provider for node, deno and bun for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -21,8 +21,7 @@
   "types": "./types.public.d.ts",
   "scripts": {
     "mailer-smtp:test": "uvu -c",
-    "test": "npm run mailer-smtp:test",
-    "prepublishOnly": "npm version patch --force"
+    "test": "npm run mailer-smtp:test"
   },
   "dependencies": {
     "nodemailer": "^6.9.9"

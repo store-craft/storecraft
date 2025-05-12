@@ -13,7 +13,6 @@ import {
 
 /**
  * @description Base `discounts` **CRUD**
- * 
  * @extends {collection_base<DiscountTypeUpsert, DiscountType>}
  */
 export default class Discounts extends collection_base {

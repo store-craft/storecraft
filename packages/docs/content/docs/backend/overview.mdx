@@ -34,25 +34,21 @@ import { NodePlatform } from '@storecraft/core/platform/node'
 import { MongoDB, migrateToLatest } from '@storecraft/database-mongodb'
 import { R2 } from '@storecraft/storage-s3-compatible'
 
-const app = new App(
-  {
-    auth_admins_emails: ['john@doe.com']
-  }
-)
+const app = new App({
+  auth_admins_emails: ['john@doe.com']
+})
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
 .withStorage(new R2())
-.withPaymentGateways(
-  {
-    'stripe': new Stripe(
-      { 
-        publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
-        secret_key: process.env.STRIPE_SECRET_KEY, 
-        webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
-      }
-    )
-  }
-).on(
+.withPaymentGateways({
+  'stripe': new Stripe(
+    { 
+      publishable_key: process.env.STRIPE_PUBLISHABLE_KEY, 
+      secret_key: process.env.STRIPE_SECRET_KEY, 
+      webhook_endpoint_secret: process.env.STRIPE_WEBHOOK_SECRET
+    }
+  )
+}).on(
   'auth/signup',
   async (event) => {
     const user: Partial<AuthUserType> = event.payload;
@@ -64,34 +60,40 @@ const app = new App(
     const order_data: OrderData = event.payload;
     // Here send an email with order details to customer
   }
-);
+).init();
 
-await app.init();
-await migrateToLatest(app.db, false);
+await migrateToLatest(app.__show_me_everything.db, false);
  
-const server = http.createServer(app.handler).listen(
+http.createServer(app.handler).listen(
   8000,
-  () => {
-    console.log(`Server is running on http://localhost:8000`);
-  }
-);
+  () => { app.print_banner('http://localhost:8000') }
+); 
 
 ```
 
 **Will produce**
 
 <Image 
-  src='https://storecraft.app/docs/main/storecraft-terminal.png' 
+  src='/storecraft-terminal-2.png' 
+  className='w-full' 
+  label={undefined}/>
+
+# Ai Chat
+
+Located at `/chat`
+
+<Image 
+  src='/ai-2.gif' 
   className='w-full' 
   label={undefined}/>
 
 
 # Dashboard
 
-Located at `/api/dashboard`
+Located at `/dashboard`
 
 <Image 
-  src='https://storecraft.app/landing/main.webp' 
+  src='/landing/main.png' 
   className='w-full' 
   label={undefined}/>
 
@@ -101,14 +103,14 @@ Located at `/api/reference` (powered by [Scalar](scalar.com))
 
 
 <Image 
-  src='https://storecraft.app/landing/reference_api.webp' 
+  src='/landing/reference_api.png' 
   className='w-full' 
   label={undefined}/>
 
 # CLI (npx storecraft create)
 
 <Image 
-  src='https://storecraft.app/cli.gif' 
+  src='/cli.gif' 
   className='w-full' 
   label={undefined}/>
 

@@ -17,7 +17,7 @@ import { address_to_friendly_name, convert_attachment_to_blob } from "./adapter.
 export class Mailgun {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     apikey: 'MAILGUN_API_KEY'
   });
 
@@ -35,7 +35,8 @@ export class Mailgun {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.platform.env[Mailgun.EnvConfig.apikey];
+    this.config.apikey ??= 
+      app.env[Mailgun.EnvConfig.apikey];
   };
 
   /**

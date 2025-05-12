@@ -11,9 +11,15 @@ export interface StorecraftConfig  {
 
   /**
    * @description The `storecraft` dashboard default version
-   * @default `latest`
+   * @default the same version of `core` version
    */
   dashboard_version?: string;
+
+  /**
+   * @description The `storecraft` AI Chat default version
+   * @default the same version of `core` version
+   */
+  chat_version?: string;
 
   /**
    * @description The store name
@@ -151,6 +157,8 @@ export interface StorecraftAppPublicInfo {
   core_version: string,
   /** @description Default dashboard version */
   dashboard_default_version: string,
+  /** @description Default chat version */
+  chat_version: string,
   /** @description Store description */
   store_description: string,
   /** @description Store name */
@@ -595,6 +603,36 @@ export interface TagType extends BaseType {
  */
 export interface TagTypeUpsert extends Omit<TagType, 'id' | 'handle'>, withOptionalHandleOrID {
 }
+
+// chats metadata
+
+/**
+ * @description Chat metadata type, for observability
+ * and search. The chat data itself is stored in `storage`
+ */
+export interface ChatType extends BaseType {
+  /**
+   * @description The customer `id`
+   * @example `cus_1234567890`
+   */
+  customer_id?: string;
+  /**
+   * @description The customer `email`
+   * @example `john@doe.com`
+   */
+  customer_email?: string;
+  /**
+   * @description Extra metadata coming from consumer.
+   */
+  extra?: Record<string, any>;  
+}
+
+/**
+ * @description Chat upsert type
+ */
+export interface ChatTypeUpsert extends Omit<ChatType, 'id' | 'handle'>, withOptionalHandleOrID {
+}
+
   
 // collections
 

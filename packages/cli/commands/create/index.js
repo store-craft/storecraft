@@ -19,6 +19,7 @@ import { collect_ai_chat } from "./collect/collect.ai.chat.js";
 import { collect_ai_vector_store } from "./collect/collect.ai.vector-store.js";
 import { collect_ai_embedder } from "./collect/collect.ai.embedder.js";
 import { collect_auth_providers } from "./collect/collect.auth-providers.js";
+import { collect_vector_store_and_embedder } from "./collect/collect.ai.vector-store-and-embedder.js";
 
 /**
  * @type {CommandModule}
@@ -39,8 +40,9 @@ export const command_create = {
         database: await collect_database(), 
         storage: await collect_storage(),
         ai_chat: await collect_ai_chat(), 
-        ai_vector_store: await collect_ai_vector_store(),
-        ai_embedder: await collect_ai_embedder(),
+        // ai_vector_store: await collect_ai_vector_store(),
+        // ai_embedder: await collect_ai_embedder(),
+        ai_vector_store_and_embedder: await collect_vector_store_and_embedder(),
         mailer: await collect_mailer(),
         payments: await collect_payments(),
         auth_providers: await collect_auth_providers()

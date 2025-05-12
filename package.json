@@ -1,7 +1,7 @@
 {
-  "name": "store-craft",
+  "name": "store-craft-mono-repo",
   "private": "false",
-  "version": "1.0.0",
+  "version": "1.2.5",
   "description": "Storecraft Mono Repo",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,10 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publishAll": "node ./publish-all.js"
+    "release:publish": "node ./release.publish.js",
+    "release:version:patch": "node ./release.version.js patch",
+    "release:version:minor": "node ./release.version.js minor",
+    "release:version:major": "node ./release.version.js major"
   },
   "author": "",
   "license": "ISC"

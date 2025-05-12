@@ -58,7 +58,8 @@ export class Pinecone {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.platform.env[Pinecone.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[Pinecone.EnvConfig.api_key]; 
   }
 
   /** @type {VectorStore["embedder"]} */

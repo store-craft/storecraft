@@ -8,10 +8,11 @@ export type collections_resources = |
   "collections" | "products" | "tags" | "customers" | 
   "storefronts" | "images" | "posts" | "templates" | 
   "notifications" | "discounts" | "orders" | "shipping" | 
-  "auth/users";
+  "auth/users" | "chats";
 
 export type extra_non_collections_resources = 'payments/gateways' | 'extensions';
-export type queryable_resources = collections_resources | extra_non_collections_resources;
+export type queryable_resources = collections_resources | 
+  extra_non_collections_resources;
 
 export type InferLastSlug<T extends string> = 
   T extends `${string}/${infer Last}` ? 
@@ -24,21 +25,20 @@ type atest = {
 
 type cc = string
 export type ResourcesMap = {
-//   [K in collections_resources]: App["db"]["resources"][K]["$type_get"]
-// } & {
-  'users': App["db"]["resources"]['auth_users']["$type_get"],
-  'shipping': App["db"]["resources"]['shipping_methods']["$type_get"],
-  'orders': App["db"]["resources"]['orders']["$type_get"],
-  'discounts': App["db"]["resources"]['discounts']["$type_get"],
-  'notifications': App["db"]["resources"]['notifications']["$type_get"],
-  'templates': App["db"]["resources"]['templates']["$type_get"],
-  'posts': App["db"]["resources"]['posts']["$type_get"],
-  'images': App["db"]["resources"]['images']["$type_get"],
-  'storefronts': App["db"]["resources"]['storefronts']["$type_get"],
-  'customers': App["db"]["resources"]['customers']["$type_get"],
-  'collections': App["db"]["resources"]['collections']["$type_get"],
-  'products': App["db"]["resources"]['products']["$type_get"],
-  'tags': App["db"]["resources"]['tags']["$type_get"],
+  'users': App["__show_me_everything"]["db"]["resources"]['auth_users']["$type_get"],
+  'shipping': App["__show_me_everything"]["db"]["resources"]['shipping_methods']["$type_get"],
+  'orders': App["__show_me_everything"]["db"]["resources"]['orders']["$type_get"],
+  'discounts': App["__show_me_everything"]["db"]["resources"]['discounts']["$type_get"],
+  'notifications': App["__show_me_everything"]["db"]["resources"]['notifications']["$type_get"],
+  'templates': App["__show_me_everything"]["db"]["resources"]['templates']["$type_get"],
+  'posts': App["__show_me_everything"]["db"]["resources"]['posts']["$type_get"],
+  'images': App["__show_me_everything"]["db"]["resources"]['images']["$type_get"],
+  'storefronts': App["__show_me_everything"]["db"]["resources"]['storefronts']["$type_get"],
+  'customers': App["__show_me_everything"]["db"]["resources"]['customers']["$type_get"],
+  'collections': App["__show_me_everything"]["db"]["resources"]['collections']["$type_get"],
+  'products': App["__show_me_everything"]["db"]["resources"]['products']["$type_get"],
+  'tags': App["__show_me_everything"]["db"]["resources"]['tags']["$type_get"],
+  'chats': App["__show_me_everything"]["db"]["resources"]['chats']["$type_get"],
   'extensions': ExtensionItemGet,
   'gateways': PaymentGatewayItemGet,
 }

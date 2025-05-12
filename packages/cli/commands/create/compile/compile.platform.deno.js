@@ -25,7 +25,8 @@ export const compile_deno = async (meta) => {
       "type": "module",
       "scripts": {
         "start": "deno run --env-file --allow-env --watch -A ./index.ts",
-        "migrate": "deno run --env-file --allow-env -A ./migrate.ts"
+        "migrate": "deno run --env-file --allow-env -A ./migrate.ts",
+        "update:latest": `npx npm-check-updates -u && npm i`
       }
     }
   );
@@ -52,8 +53,6 @@ export const compile_deno = async (meta) => {
 
 const index_js = `
 import { app } from './app.js';
-
-await app.init(false);
 
 Deno.serve(
   {
@@ -88,6 +87,10 @@ Now, open
 - \`http://localhost:8080/api/dashboard\`
 - \`http://localhost:8080/api/reference\`
 
+You can update to a newest version of the packages with
+\`\`\`zsh
+npm run update:latest
+\`\`\`
 
 \`\`\`text
 Author: Tomer Shalev (tomer.shalev@gmail.com)

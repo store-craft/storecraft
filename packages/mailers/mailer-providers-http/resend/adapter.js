@@ -15,7 +15,7 @@ import { address_to_friendly_name, convert_to_base64 } from "./adapter.utils.js"
 export class Resend {
   
   /** @satisfies {ENV<Config>} */
-  static EnvConfig = /** @type{const} */ ({
+  static EnvConfig = /** @type {const} */ ({
     apikey: 'RESEND_API_KEY'
   });
 
@@ -34,7 +34,8 @@ export class Resend {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.platform.env[Resend.EnvConfig.apikey];
+    this.config.apikey ??= 
+      app.env[Resend.EnvConfig.apikey];
   };
 
   /**

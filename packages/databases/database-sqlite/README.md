@@ -38,17 +38,16 @@ const app = new App(
   )
 )
 .withStorage(new NodeLocalStorage())
+.init();
 
-await app.init();
-await migrateToLatest(app.db, false);
- 
-const server = http.createServer(app.handler).listen(
+await migrateToLatest(app.__show_me_everything.db, false);
+
+http.createServer(app.handler).listen(
   8000,
   () => {
-    console.log(`Server is running on http://localhost:8000`);
+    app.print_banner('http://localhost:8000');
   }
 ); 
-
 ```
 
 Storecraft will search the following `env` variables

@@ -7,7 +7,6 @@ import { collection_base, fetchApiWithAuth } from './utils.api.fetch.js';
 
 /**
  * @description Base `storefronts` **CRUD**
- * 
  * @extends {collection_base<StorefrontTypeUpsert, StorefrontType>}
  */
 export default class Storefronts extends collection_base {

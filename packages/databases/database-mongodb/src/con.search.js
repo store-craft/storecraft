@@ -20,7 +20,8 @@ const tables = [
   'notifications',
   'discounts',
   'orders',
-  'templates'
+  'templates',
+  'chats'
 ]
 
 /**
@@ -40,7 +41,23 @@ const prefix_to_resource = {
   'tag': 'tags',
   'template': 'templates',
   'post': 'posts',
-  
+  'chat': 'chats',
+}
+
+const resource_to_props = {
+  'auth_users': ['id', 'handle'],
+  'collections': ['id', 'handle'],
+  'customers': ['id', 'handle'],
+  'discounts': ['id', 'handle', 'title'],
+  'images': ['id', 'handle', 'name'],
+  'orders': ['id'],
+  'products': ['id', 'handle', 'title'],
+  'shipping_methods': ['id', 'handle', 'title'],
+  'storefronts': ['id', 'handle', 'title'],
+  'tags': ['id', 'handle'],
+  'templates': ['id', 'handle', 'title'],
+  'posts': ['id', 'handle', 'title'],
+  'chats': ['id', 'customer_email', 'customer_id'],
 }
 
 /**
@@ -87,10 +104,15 @@ export const quicksearch = (driver) => {
       },
       {
         $project: { 
-          title: 1,
-          handle: 1,
-          // '_relations.search': 1,
           id: 1,
+          handle: 1,
+
+          title: 1,
+          name: 1,
+
+          customer_email: 1,
+          customer_id: 1,
+
           _id: 0
         }
       }

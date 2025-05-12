@@ -140,16 +140,8 @@ const list = (driver) => {
         with_search(eb, eb.ref('customers.id'), driver.dialectType),
       ].filter(Boolean)), 
       query, table_name
-  ).execute();
+    ).execute();
   
-    // .where(
-    //   (eb) => {
-    //     return query_to_eb(eb, query, table_name);
-    //   }
-  // .orderBy(query_to_sort(query, table_name))
-      // .limit(query.limitToLast ?? query.limit ?? 10)
-      // .execute();
-
     if(query.limitToLast) items.reverse();
 
     return sanitize_array(items);
@@ -187,8 +179,6 @@ const list_customer_orders = (driver) => {
       .limit(query.limitToLast ?? query.limit ?? 10),
       query, 'orders'
     ).execute();
-      // .orderBy(query_to_sort(query, 'orders'))
-      // .execute();
 
     if(query.limitToLast) 
       items.reverse();

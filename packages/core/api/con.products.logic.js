@@ -29,7 +29,7 @@ export const isVariant = item => {
 
 
 /** @param {App} app */
-export const db = app => app.db.resources.products;
+export const db = app => app.__show_me_everything.db.resources.products;
 
 
 /**

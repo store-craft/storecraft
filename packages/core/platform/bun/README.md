@@ -18,16 +18,13 @@ import { BunPlatform } from '@storecraft/core/platform/bun';
 import { BunLocalStorage } from '@storecraft/core/storage/bun'
 import { MongoDB } from '@storecraft/database-mongodb'
 
-const app = new App(
-    config
-  )
+const app = new App(config)
   .withPlatform(new NodePlatform())
   .withDatabase(new MongoDB())
   .withStorage(new BunLocalStorage('storage'))
+  .init();
 
-await app.init();
- 
-const server = Bun.serve(
+Bun.serve(
   {
     port: 8000,
     fetch: app.handler

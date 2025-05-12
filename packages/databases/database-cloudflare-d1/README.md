@@ -128,10 +128,8 @@ export default {
           db: env.D1
         } 
       )
-    );
+    ).init();
 
-    app = await app.init();
-    
     const response = await app.handler(request);
 
     return response;

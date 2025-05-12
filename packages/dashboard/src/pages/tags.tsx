@@ -15,7 +15,7 @@ const schema_fields: TableSchemaViewField[] = [
     key: 'values', name: 'Values', 
     comp: SpanArray, 
     comp_params: { 
-      className: 'font-semibold',
+      className: '--font-semibold',
     } 
   },
   { 
@@ -45,9 +45,8 @@ export default ({}) => {
       hasLoaded={hasLoaded} 
       resource={resource}/>
     <ShowIf show={error} children={error?.toString()} />
-    <div className='w-full rounded-md overflow-hidden border 
-                    shelf-border-color shadow-md mt-5
-                    dark:shadow-slate-900'>      
+    <div className='w-full rounded-md overflow-hidden 
+      store-table-wrapper mt-5'>      
       <TopActions 
         isCollectionEmpty={false}
         ref={ref_actions} 

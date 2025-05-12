@@ -59,7 +59,7 @@ export const ProductCardView = (
       <p children={item.price + '$'} 
         className='whitespace-nowrap font-bold text-2xl 
         text-green-600 font-mono' />
-      <button children='add to cart' 
+      <button children='add to cart (coming soon)' 
         className='uppercase tracking-widest font-bold w-full 
         dark:bg-pink-500 bg-black text-white
           p-2 chat-card border rounded-md text-xs' />

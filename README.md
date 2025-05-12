@@ -96,20 +96,21 @@ http
 
 ```
 
-**Will produce**
+**Will produce** a server
 
-<div style='text-align: center'>
+<div style='text-align: center' align="center">
   <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-terminal-2.png' 
-      width='100%' />
+      width='70%' />
 </div><hr/><br/>
 
 # Chat with the `storeraft` AI agent
 
 Located at `/chat`
 
-<div style='text-align: center'>
+<div style='text-align: center' align="center">
   <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/ai-2.gif' 
-      width='100%' />
+      style="margin: auto"
+      width='500px' />
 </div><hr/><br/>
 
 
@@ -134,9 +135,9 @@ Located at `/api` (powered by [Scalar](https://scalar.com))
 
 # CLI (npx storecraft create)
 
-<div style='text-align: center'>
+<div style='text-align: center' align="center">
   <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/cli.gif' 
-      width='100%' />
+      width='80%' />
 </div><hr/><br/>
 
 # As seen on MongoDB TV stream

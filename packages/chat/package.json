@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/chat",
-  "version": "0.0.5",
+  "version": "1.2.0",
   "private": false,
   "description": "Storecraft Official Chat Agent",
   "license": "MIT",

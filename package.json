@@ -17,9 +17,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:publish": "node ./release.publish.js",
-    "release:version:patch": "npm version patch --force && node ./release.git-tag.js",
-    "release:version:minor": "npm version minor --force && node ./release.git-tag.js",
-    "release:version:major": "npm version major --force && node ./release.git-tag.js"
+    "release:version:patch": "node ./release.version.js patch",
+    "release:version:minor": "node ./release.version.js minor",
+    "release:version:major": "node ./release.version.js major"
   },
   "author": "",
   "license": "ISC"

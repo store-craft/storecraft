@@ -1,5 +1,5 @@
 /**
- * @import { App } from '@storecraft/core'
+ * @import { App, StorecraftConfig } from '@storecraft/core'
  * @import { StorecraftAppPublicInfo } from '@storecraft/core/api'
  */
 import { StorecraftSDK } from '../index.js'

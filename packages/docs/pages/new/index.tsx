@@ -44,3 +44,7 @@
 //     </div>
 //   )
 // };
+
+export default () => {
+  return 'hi'
+}

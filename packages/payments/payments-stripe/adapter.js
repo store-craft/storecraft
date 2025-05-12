@@ -43,7 +43,6 @@ export class Stripe {
   /** @type {StripeCls} */ #stripe;
 
   /**
-   * 
    * @param {Config} config 
    */
   constructor(config={}) {
@@ -70,8 +69,10 @@ export class Stripe {
   onInit = (app) => {
     this.config.publishable_key ??=
       app.env[Stripe.EnvConfig.publishable_key];
+
     this.config.secret_key ??= 
       app.env[Stripe.EnvConfig.secret_key];
+      
     this.config.webhook_endpoint_secret ??= 
       app.env[Stripe.EnvConfig.webhook_endpoint_secret];
   }

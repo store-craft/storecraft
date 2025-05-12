@@ -53,7 +53,8 @@ export class PineconeEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.__show_me_everything.platform.env[PineconeEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[PineconeEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

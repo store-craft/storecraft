@@ -61,9 +61,13 @@ export class Vectorize {
 
   /** @type {VectorStore["onInit"]} */
   onInit = (app) => {
-    this.config.account_id ??= app.__show_me_everything.platform.env[Vectorize.EnvConfig.account_id]; 
-    this.config.api_key ??= app.__show_me_everything.platform.env[Vectorize.EnvConfig.api_key] 
-          ?? app.__show_me_everything.platform.env['CF_API_KEY']; 
+    this.config.account_id ??= 
+      app.env[Vectorize.EnvConfig.account_id]; 
+
+    this.config.api_key ??= 
+      app.env[Vectorize.EnvConfig.api_key] 
+        ?? app.env['CF_API_KEY']; 
+        
     // this.config.cf_email = this.config.cf_email ?? app.platform.env[ENV_CF_EMAIL]; 
   }
 

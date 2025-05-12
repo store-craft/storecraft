@@ -35,12 +35,10 @@ export const app = new App({
   general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
 })
 .withPlatform(new NodePlatform())
-.withDatabase(new MongoDB({ db_name: 'test' }))
+.withDatabase(new MongoDB({ db_name: 'test_1_2' }))
 .withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
 .withPaymentGateways({
-  paypal: new Paypal({ env: 'test' }),
-  stripe: new Stripe(),
   dummy_payments: new DummyPayments(),
 })
 .withExtensions({
@@ -51,6 +49,7 @@ export const app = new App({
 )
 .withVectorStore(
   new MongoVectorStore({
+    db_name: 'test_1_2',
     embedder: new OpenAIEmbedder(),
   })
 ).init()

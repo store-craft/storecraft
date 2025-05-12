@@ -5,6 +5,6 @@ import { app } from './app.js';
 http.createServer(app.handler).listen(
   8001,
   () => {
-    console.log(app.print_banner('http://localhost:8001'));
+    app.print_banner('http://localhost:8001');
   }
 ); 

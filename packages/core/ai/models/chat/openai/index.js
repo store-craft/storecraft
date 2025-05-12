@@ -42,7 +42,7 @@ export class OpenAI {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.api_key ??= 
-      app.__show_me_everything.platform.env[OpenAI.EnvConfig.api_key]; 
+      app.env[OpenAI.EnvConfig.api_key]; 
   }
 
   /**

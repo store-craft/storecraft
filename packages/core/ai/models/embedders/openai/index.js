@@ -44,7 +44,7 @@ export class OpenAIEmbedder {
    */
   constructor(config={}) {
     this.config = /** @type {config} */({
-      model: 'text-embedding-3-large',
+      model: 'text-embedding-3-small',
       endpoint: 'https://api.openai.com/',
       api_version: 'v1',
       ...config,
@@ -59,7 +59,8 @@ export class OpenAIEmbedder {
 
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
-    this.config.api_key ??= app.__show_me_everything.platform.env[OpenAIEmbedder.EnvConfig.api_key]; 
+    this.config.api_key ??= 
+      app.env[OpenAIEmbedder.EnvConfig.api_key]; 
   }
 
   /** @type {Impl["tag"]} */

@@ -32,7 +32,8 @@ export class SendGrid {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.env[SendGrid.EnvConfig.apikey];
+    this.config.apikey ??= 
+      app.env[SendGrid.EnvConfig.apikey];
   };
 
   /**

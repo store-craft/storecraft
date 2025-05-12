@@ -60,7 +60,7 @@ export class Anthropic {
   /** @type {Impl["onInit"]} */
   onInit = (app) => {
     this.config.api_key ??= 
-      app.__show_me_everything.platform.env[Anthropic.EnvConfig.api_key]; 
+      app.env[Anthropic.EnvConfig.api_key]; 
   }
 
   /**

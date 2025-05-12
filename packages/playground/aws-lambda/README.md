@@ -1,4 +1,4 @@
-# storecraft aws-lambda playground
+# storecraft aws-lambda playground (experimental)
 
 We followed these guides
 - [Official Guide](https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html#hello_world_prerequisites)

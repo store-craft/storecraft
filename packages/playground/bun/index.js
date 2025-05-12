@@ -8,4 +8,3 @@ Bun.serve({
 });
 
 app.print_banner(`http://localhost:8000`)
-

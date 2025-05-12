@@ -15,6 +15,7 @@ mongo_vectorSearch_pipeline,
  * } from 'mongodb'
  * @import { ENV } from '@storecraft/core';
  */
+import { truncate_or_pad_vector } from '@storecraft/core/ai/models/vector-stores/index.js';
 import { Collection } from 'mongodb';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
@@ -116,7 +117,9 @@ export class MongoVectorStore {
       (doc, ix) => (
         {
           updated_at: new Date().toISOString(),
-          embedding: vectors[ix],
+          embedding: truncate_or_pad_vector(
+            vectors[ix], this.config.dimensions
+          ),
           metadata: doc.metadata,
           pageContent: doc.pageContent,
           [NAMESPACE_KEY]: doc.namespace,
@@ -276,6 +279,9 @@ export class MongoVectorStore {
         );
         if(index) {
           console.log('MongoVectorStore::createVectorIndex - index already exists, skipping');
+          if(disconnect_after_finish)
+            await this.client.close();
+
           return true;
         }
       }

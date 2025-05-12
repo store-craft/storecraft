@@ -36,7 +36,8 @@ export class MailChimp {
 
   /** @type {mailer<Config>["onInit"]} */
   onInit = (app) => {
-    this.config.apikey ??= app.env[MailChimp.EnvConfig.apikey];
+    this.config.apikey ??= 
+      app.env[MailChimp.EnvConfig.apikey];
   };
 
   /**

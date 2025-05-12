@@ -20,44 +20,38 @@ import { Vectorize } from "@storecraft/core/ai/models/vector-stores/vectorize/in
 import { CloudflareEmbedder } from "@storecraft/core/ai/models/embedders/cloudflare/index.js";
 import { OpenAIEmbedder } from "@storecraft/core/ai/models/embedders/openai";
 
-export const app = new App(
-  {
-    auth_secret_access_token: 'auth_secret_access_token',
-    auth_secret_refresh_token: 'auth_secret_refresh_token',
-    auth_admins_emails: ['john@doe.com'],
-    storage_rewrite_urls: undefined,
-    general_store_name: 'Wush Wush Games',
-    general_store_description: 'We sell cool retro video games',
-    general_store_website: 'https://wush.games',
-    general_store_support_email: 'support@storecraft.app',
-    general_confirm_email_base_url: 'https://wush.games/api/auth/confirm-email',
-    general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
-  }
-)
+export const app = new App({
+  auth_secret_access_token: 'auth_secret_access_token',
+  auth_secret_refresh_token: 'auth_secret_refresh_token',
+  auth_secret_confirm_email_token: 'auth_secret_confirm_email_token',
+  auth_secret_forgot_password_token: 'auth_secret_forgot_password_token',
+  auth_admins_emails: ['john@doe.com', 'tomer.shalev@gmail.com'],
+  storage_rewrite_urls: undefined,
+  general_store_name: 'Wush Wush Games',
+  general_store_description: 'We sell cool retro video games',
+  general_store_website: 'https://wush.games',
+  general_store_support_email: 'support@storecraft.app',
+  general_confirm_email_base_url: 'https://wush.games/api/auth/confirm-email',
+  general_forgot_password_confirm_base_url: 'https://wush.games/api/auth/forgot-password-request-confirm'
+})
 .withPlatform(new NodePlatform())
 .withDatabase(new MongoDB({ db_name: 'test' }))
 .withStorage(new NodeLocalStorage('storage'))
 .withMailer(new Resend())
-.withPaymentGateways(
-  {
-    'paypal': new Paypal({ env: 'test' }),
-    'stripe': new Stripe(),
-    'dummy_payments': new DummyPayments(),
-  }
-)
-.withExtensions(
-  {
-    'postman': new PostmanExtension()
-  }
-)
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension()
+})
 .withAI(
   new OpenAI()
 )
 .withVectorStore(
-  new MongoVectorStore(
-    {
-      embedder: new OpenAIEmbedder(),
-    }
-  )
+  new MongoVectorStore({
+    embedder: new OpenAIEmbedder(),
+  })
 ).init()
 

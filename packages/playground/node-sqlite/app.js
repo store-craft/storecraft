@@ -42,25 +42,19 @@ export const app = new App(
 )
 .withStorage(new NodeLocalStorage("storage"))
 .withMailer(new Resend({ apikey: process.env.RESEND_API_KEY }))
-.withPaymentGateways(
-  {
-    'paypal': new Paypal({ env: 'test' }),
-    'stripe': new Stripe(),
-    'dummy_payments': new DummyPayments(),
-  }
-)
-.withExtensions(
-  {
-    'postman': new PostmanExtension()
-  }
-)
+.withPaymentGateways({
+  paypal: new Paypal({ env: 'test' }),
+  stripe: new Stripe(),
+  dummy_payments: new DummyPayments(),
+})
+.withExtensions({
+  postman: new PostmanExtension()
+})
 .withAI(
   new XAI()
 )
 .withVectorStore(
-  new Vectorize(
-    {
-      embedder: new CloudflareEmbedder()
-    }
-  )
+  new Vectorize({
+    embedder: new CloudflareEmbedder()
+  })
 ).init()

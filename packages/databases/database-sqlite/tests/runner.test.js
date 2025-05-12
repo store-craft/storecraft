@@ -5,6 +5,7 @@ import { NodePlatform } from '@storecraft/core/platform/node';
 import { api } from '@storecraft/core/test-runner';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { NodeLocalStorage } from '@storecraft/core/storage/node';
 
 export const create_app = async () => {
   const app = new App(
@@ -18,11 +19,10 @@ export const create_app = async () => {
   )
   .withPlatform(new NodePlatform())
   .withDatabase(
-    new SQLite({ filepath: join(homedir(), 'db.sqlite') })
-  );
+    new SQLite({ filepath: ':memory:' })
+  ).init();
   
-  await app.init();
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app._.db, false);
   
   return app;
 }
@@ -32,11 +32,11 @@ async function test() {
 
   Object.entries(api).slice(0, -1).forEach(
     ([name, runner]) => {
-      runner.create(app).run();
+      runner.create(app._.app).run();
     }
   );
-  const last_test = Object.values(api).at(-1).create(app);
-  last_test.after(async () => { await app.db.disconnect() });
+  const last_test = Object.values(api).at(-1).create(app._.app);
+  last_test.after(async () => { await app._.db.disconnect() });
   last_test.run();
 }
 

@@ -22,6 +22,14 @@ export const create = (app) => {
     file_name(import.meta.url), 
   );
 
+  if(!app._.storage) {
+    console.log(
+      'skipping chat_extra tests, no storage'
+    );
+
+    return s;
+  }
+
   s('upload / download chat', async (ctx) => {
 
     const id = ID('chat');

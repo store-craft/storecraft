@@ -32,10 +32,9 @@ export const create_app = async () => {
       dialect: sqlite_dialect, 
       dialect_type: 'SQLITE'
     })
-  );
+  ).init();
  
-  await app.init();
-  await migrateToLatest(app.db, false);
+  await migrateToLatest(app._.db, false);
   
   return app;
 }
@@ -65,7 +64,8 @@ const resource_to_props = (
 
 async function test() {
   const app = await create_app();
-  const client = app.db.client;
+  const client = app._.db.client;
+  const dialectType = app._.db.dialectType;
   const limit = 0;
   const items = await client.selectNoFrom(
     eb => [
@@ -75,14 +75,14 @@ async function test() {
         .select(resource_to_props.collections)
         .select(
           eb => [
-            with_tags(eb, eb.ref('collections.id'), app.db.dialectType),
-            with_media(eb, eb.ref('collections.id'), app.db.dialectType),
+            with_tags(eb, eb.ref('collections.id'), dialectType),
+            with_media(eb, eb.ref('collections.id'), dialectType),
           ]
         )
         .where('active', '=', 1)
         .orderBy('updated_at', 'asc')
         .limit(limit),
-        app.db.dialectType
+        dialectType
       ).as('collections'),
 
       jsonArrayFrom(
@@ -91,18 +91,18 @@ async function test() {
         .select(resource_to_props.products)
         .select(
           eb => [
-            with_tags(eb, eb.ref('products.id'), app.db.dialectType),
-            with_media(eb, eb.ref('products.id'), app.db.dialectType),
-            products_with_collections(eb, eb.ref('products.id'), app.db.dialectType),
-            products_with_discounts(eb, eb.ref('products.id'), app.db.dialectType),
-            products_with_variants(eb, eb.ref('products.id'), app.db.dialectType),
-            products_with_related_products(eb, eb.ref('products.id'), app.db.dialectType),
+            with_tags(eb, eb.ref('products.id'), dialectType),
+            with_media(eb, eb.ref('products.id'), dialectType),
+            products_with_collections(eb, eb.ref('products.id'), dialectType),
+            products_with_discounts(eb, eb.ref('products.id'), dialectType),
+            products_with_variants(eb, eb.ref('products.id'), dialectType),
+            products_with_related_products(eb, eb.ref('products.id'), dialectType),
           ]
         )
         .where('active', '=', 1)
         .orderBy('updated_at', 'asc')
         .limit(limit),
-        app.db.dialectType
+        dialectType
       ).as('products'),
 
       jsonArrayFrom(
@@ -111,14 +111,14 @@ async function test() {
         .select(resource_to_props.discounts)
         .select(
           eb => [
-            with_tags(eb, eb.ref('discounts.id'), app.db.dialectType),
-            with_media(eb, eb.ref('discounts.id'), app.db.dialectType),
+            with_tags(eb, eb.ref('discounts.id'), dialectType),
+            with_media(eb, eb.ref('discounts.id'), dialectType),
           ]
         )
         .where('active', '=', 1)
         .orderBy('updated_at', 'asc')
         .limit(limit),
-        app.db.dialectType
+        dialectType
       ).as('discounts'),
 
       jsonArrayFrom(
@@ -127,14 +127,14 @@ async function test() {
         .select(resource_to_props.shipping_methods)
         .select(
           eb => [
-            with_tags(eb, eb.ref('shipping_methods.id'), app.db.dialectType),
-            with_media(eb, eb.ref('shipping_methods.id'), app.db.dialectType),
+            with_tags(eb, eb.ref('shipping_methods.id'), dialectType),
+            with_media(eb, eb.ref('shipping_methods.id'), dialectType),
           ]
         )
         .where('active', '=', 1)
         .orderBy('updated_at', 'asc')
         .limit(limit),
-        app.db.dialectType
+        dialectType
       ).as('shipping_methods'),
 
       jsonArrayFrom(
@@ -143,14 +143,14 @@ async function test() {
         .select(resource_to_props.posts)
         .select(
           eb => [
-            with_tags(eb, eb.ref('posts.id'), app.db.dialectType),
-            with_media(eb, eb.ref('posts.id'), app.db.dialectType),
+            with_tags(eb, eb.ref('posts.id'), dialectType),
+            with_media(eb, eb.ref('posts.id'), dialectType),
           ]
         )
         .where('active', '=', 1)
         .orderBy('updated_at', 'asc')
         .limit(limit),
-        app.db.dialectType
+        dialectType
       ).as('posts'),
 
       stringArrayFrom(
@@ -167,7 +167,7 @@ async function test() {
         )
         .select('entity_to_tags_projections.value as tag')
         .groupBy('tag'),
-        app.db.dialectType
+        dialectType
       ).as('all_products_tags')
     ]
   )
@@ -178,7 +178,7 @@ async function test() {
 
 async function test2() {
   const app = await create_app();
-  const client = app.db.client;
+  const client = app._.db.client;
   const items = await client.selectNoFrom(
     eb => Object
     .entries(resource_to_props)
@@ -195,7 +195,7 @@ async function test2() {
           .select(props)
           .orderBy('updated_at', 'asc')
           .limit(0),
-          app.db.dialectType
+          app._.db.dialectType
         ).as(table_name)
       }
     )

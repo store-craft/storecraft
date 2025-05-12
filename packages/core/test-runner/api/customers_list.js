@@ -26,7 +26,8 @@ const items = get_static_ids('cus').map(
     // 5 last items will have the same timestamps
     let jx = Math.min(ix, arr.length - 3);
     return {
-      email: `user_${ix}@sc.com`, firstname: `first name ${ix}`, 
+      email: `user_${ix}@sc.com`, 
+      firstname: `first name ${ix}`, 
       lastname: `last name ${ix}`,
       id,
       created_at: iso(jx + 1),

@@ -1,4 +1,4 @@
-import pkg from '../../package.json'
+import pkg from '@storecraft/core/package.json'
 import { Bling } from '@/comps/common-ui'
 import main_png from './main.png';
 import svg from './favicon.svg'

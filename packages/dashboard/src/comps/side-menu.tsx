@@ -137,7 +137,7 @@ const SideMenu = (
   {
 
   }
-  <Version className='shrink-0 px-5' />
+  {/* <Version className='shrink-0 px-5' /> */}
 </div>
   )
 }

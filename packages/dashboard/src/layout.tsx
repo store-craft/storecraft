@@ -17,6 +17,7 @@ import { useScrollDelta } from '@/hooks/use-scroll-delta'
 import { CgTemplate } from "react-icons/cg";
 import { createPortal } from './comps/portal-creator'
 import { RiRobot2Line } from 'react-icons/ri'
+import { Marquee } from './comps/marquee'
 
 const menu: MenuType = {
   info: {
@@ -130,11 +131,11 @@ const Layout = (
 <div 
   className={`w-full h-full  ${darkMode ? 'dark' : ''}`}
   data-color-mode={darkMode ? 'dark' : 'light'}>
+  
   <div 
     className={`relative flex flex-row font-inter 
-      shelf-body-bg
-      w-full h-full sm:h-full ${className}
-      `} {...rest}
+      shelf-body-bg w-full h-full sm:h-full ${className}`} 
+      {...rest}
       // @ts-ignore
       ssstyle={{height: '100dvh'}}>
 
@@ -180,16 +181,15 @@ const Layout = (
     {/* main content */}
     <div 
       className='relative flex-1 h-full flex flex-col 
-        mx-0 sm:mx-3 md:mx-6 overflow-auto'>
-
+         overflow-auto'>
+      
       <ActionBar 
         className={
           `w-full 
           shelf-action-bar
-          h-12 backdrop-blur-sm
+          h-fit backdrop-blur-sm
           absolute left-0 top-0 z-40 
           border-b dark:border-b-slate-700 
-          px-3
           transition-transform 
           duration-500 ${open_class}`
         } 
@@ -200,6 +200,7 @@ const Layout = (
       <div 
         ref={ref_scroll_element} 
         className='relative w-full 
+        px-0 sm:px-3 md:px-6
           h-full pt-16 pb-5 overflow-y-auto scrollbar-none '>
         <div 
           className='

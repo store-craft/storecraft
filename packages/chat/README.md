@@ -1,4 +1,4 @@
-# **Storecraft** Official Chat
+# **Storecraft** Ai Chat
 
 <div style="text-align:center">
   <img src='https://storecraft.app/storecraft-color.svg' 
@@ -6,20 +6,20 @@
 </div><hr/><br/>
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/main.webp' 
+  <img src='../assets/ai-2.gif' 
       width='100%' />
 </div><hr/><br/>
 
-The Official `storecraft` AI Chat 🏆,
+The Official `storecraft` Ai Chat 🏆,
+
 - Leveraging `static rendering` / `client side rendering` / `swr`
 - Can be deployed into cost effective **CDN**
-- Also available at `jsDelivr` **CDN**
+- Also available at **CDN** like `unpkg` for consuming as a component.
 
-Effectively, **TWO** Build Targets
-1. A `library` with
-  - Chat as `react` functional component
-  - a `mount` function, that you can wrap for any framework of pure DOM.
-2. A website, with configurable backend endpoint.
+Effectively, 
+A `library` with
+- Chat as `react` functional component
+- a `mount` function, that you can wrap for any framework of pure DOM.
 
 Build is handled by `Vite`
 
@@ -44,20 +44,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Simply, run any of the following command
 
 ```bash
-npm run build
+npm run dashboard:build
 ```
 
 Artifacts are in the `dist` folder
 ```txt
 dist
-├── lib
-│   ├── index.js      // ES module
-│   ├── index.cjs     // common js
-│   └── index.umd.cjs // UMD
-│   └── src // folder of ts defintions files
-├── website (for testing)
-│   ├── index.html
-│   └── assets
+├── /lib
+├───└── /src
+│       ├── index.js      // ES module
+│       └── index.umd.cjs // UMD
 
 ```
 
@@ -71,33 +67,108 @@ npm i @storecraft/chat
 
 Then, 
 
-```jsx
+```tsx
 import { Chat } from '@storecraft/chat'
 
 export const Root = () => {
 
   return (
     <div className='w-screen h-screen'>
-      <Chat />
+      <Chat 
+        chat: {
+          threadId: undefined,
+          storecraft_config: {
+            endpoint: 'http://localhost:8000',
+          }
+        }
+      />
     </div>
   )
 } 
 
 ```
 
-## Consuming via `jsDelivr`
+## Consuming via `unpkg` as **UMD** (smaller bundle)
 
 ```html
-<script id='_storecraft_script_' type="module">
-  
-  import { mountChat } from 'https://cdn.jsdelivr.net/npm/@storecraft/chat@latest/dist/lib/index.min.js';
-  
-  mountChat(
-    document.getElementById('root'), false
-  );
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft Chat - Next Gen Commerce-As-Code</title>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+    <script 
+      type="application/javascript"
+      src="https://www.unpkg.com/@storecraft/chat@latest/dist/lib/src/index.umd.cjs">
+    </script>
+    <script>
+      console.log({StorecraftChat});
 
-</script>
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
 
+      console.log({ threadId });
+
+      StorecraftChat.mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'http://localhost:8000',
+            }
+          }
+        }
+      );
+    </script>
+  </body>
+</html>
+```
+
+## Consuming via `unpkg` as **ESM** (bigger bundle)
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" sizes="any" type="image/svg+xml" href="/api/dashboard/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storecraft Chat - Next Gen Commerce-As-Code</title>
+    <script 
+      id='_storecraft_script_' 
+      type="module"
+    >
+      import { mountStorecraftChat } from 'https://www.unpkg.com/@storecraft/chat@latest/dist/lib/src/index.js';
+
+      const { threadId } = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      );
+
+      console.log({ threadId });
+
+      mountStorecraftChat(
+        document.getElementById('root'), 
+        {
+          chat: {
+            threadId: undefined,
+            storecraft_config: {
+              endpoint: 'http://localhost:8000',
+            }
+          }
+        }
+      );
+  </script>
+  </head>
+  <body style="background-color: black">
+    <div id="root"></div>
+  </body>
+</html>
 ```
 
 

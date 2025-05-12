@@ -266,7 +266,8 @@ export class App {
       auth_secret_forgot_password_token: env?.[App.EnvConfig.auth_secret_forgot_password_token],
       auth_admins_emails: env?.[App.EnvConfig.auth_admins_emails]?.split(',')
         .map(s => s.trim()).filter(Boolean) ?? [],
-      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
+      checkout_reserve_stock_on: (/** @type {StorecraftConfig["checkout_reserve_stock_on"]} */(
+        env?.[App.EnvConfig.checkout_reserve_stock_on])) ?? 'never',
       storage_rewrite_urls: env?.[App.EnvConfig.storage_rewrite_urls],
       general_store_name: env?.[App.EnvConfig.general_store_name],
       general_store_website: env?.[App.EnvConfig.general_store_website],

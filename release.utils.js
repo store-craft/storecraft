@@ -1,5 +1,8 @@
-import { exec, execSync } from 'node:child_process';
+import child_process from 'node:child_process';
 import { join } from 'node:path';
+import util from 'node:util';
+const exec = util.promisify(child_process.exec);
+
 
 /**
  * @description Get packages paths relative to root
@@ -35,24 +38,19 @@ export const get_packages = () => [
 .slice(0)
 .map(
   p => join('./packages', p)
-)
-
-
-
-
-const exec_promise = (command='', verbose_output=true) => new Promise(
-  (resolve, reject) => {
-    try {
-      var child = exec(command);
-      if(verbose_output) {
-        child.stdout.pipe(process.stdout)
-        child.stderr.pipe(process.stderr)
-      }
-      child.on('exit', function() {
-        resolve(child.stdout);
-      })              
-    } catch(e) {
-      reject(e)
-    }
-  }
 );
+
+export const exec_command = async (
+  command='', tag='unknown', verbose_output=true
+) => {
+  try {
+    const { stdout, stderr } = await exec(command);
+    if(verbose_output) {
+      stdout && console.log(`${tag} stdout:`, stdout);
+      // stderr && console.error(`${tag} stderr:`, stderr);
+    }
+  } catch(e) {
+    // console.error(`${tag} error:`, e);
+    // throw e;
+  }
+}

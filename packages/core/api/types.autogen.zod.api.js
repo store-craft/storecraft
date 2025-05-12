@@ -13,6 +13,7 @@ export const cORSOptionsSchema = z.object({
 export const storecraftAppPublicInfoSchema = z.object({
   core_version: z.string().describe("Core engine version"),
   dashboard_default_version: z.string().describe("Default dashboard version"),
+  chat_version: z.string().describe("Default chat version"),
   store_description: z.string().describe("Store description"),
   store_name: z.string().describe("Store name"),
   store_website: z.string().describe("Store website"),

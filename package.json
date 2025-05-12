@@ -1,7 +1,7 @@
 {
   "name": "store-craft-mono-repo",
   "private": "false",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "description": "Storecraft Mono Repo",
   "main": "index.js",
   "type": "module",

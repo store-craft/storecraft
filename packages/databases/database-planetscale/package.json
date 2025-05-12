@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-planetscale",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "description": "`Storecraft` database driver for `PlanetScale` (cloud mysql)",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

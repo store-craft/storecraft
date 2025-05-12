@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-mysql",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "description": "Official MySQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",

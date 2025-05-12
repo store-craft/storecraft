@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/chat",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "private": false,
   "description": "Storecraft Official Chat Agent",
   "license": "MIT",
@@ -21,9 +21,9 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
-      "import": "./dist/lib/index.js",
-      "require": "./dist/lib/index.umd.cjs"
+      "types": "./dist/lib/src/index.d.ts",
+      "import": "./dist/lib/src/index.js",
+      "require": "./dist/lib/src/index.umd.cjs"
     }
   },
   "scripts": {

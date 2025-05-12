@@ -99,7 +99,7 @@ http
 **Will produce**
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/docs/storecraft-terminal-2.png' 
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-terminal-2.png' 
       width='100%' />
 </div><hr/><br/>
 
@@ -108,7 +108,7 @@ http
 Located at `/chat`
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/ai-2.gif' 
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/ai-2.gif' 
       width='100%' />
 </div><hr/><br/>
 
@@ -118,7 +118,7 @@ Located at `/chat`
 Located at `/dashboard`
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/main.png' 
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/landing/main.png' 
       width='100%' />
 </div><hr/><br/>
 
@@ -128,14 +128,14 @@ Located at `/api` (powered by [Scalar](https://scalar.com))
 
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/landing/reference_api.png' 
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/landing/reference_api.png' 
       width='100%' />
 </div><hr/><br/>
 
 # CLI (npx storecraft create)
 
 <div style='text-align: center'>
-  <img src='https://storecraft.app/cli.gif' 
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/cli.gif' 
       width='100%' />
 </div><hr/><br/>
 

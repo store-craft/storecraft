@@ -2,7 +2,7 @@
   "name": "@storecraft/core",
   "version": "1.0.49",
   "description": "Core Package for storecraft",
-  "license": "MIT",
+  "license": "MIT (With special clause. You cannot sell storecraft or offer a cloud service based on it without a special license)",
   "author": "Tomer Shalev (https://github.com/store-craft)",
   "homepage": "https://github.com/store-craft/storecraft",
   "engines": {
@@ -19,7 +19,11 @@
     "commerce",
     "dashboard",
     "code",
-    "storecraft"
+    "storecraft",
+    "store",
+    "ai",
+    "agents",
+    "shopping"
   ],
   "main": "index.js",
   "type": "module",

@@ -696,6 +696,7 @@ export class App {
     return {
       core_version: pkg.version,
       dashboard_default_version: this.#config.dashboard_version,
+      chat_default_version: this.#config.chat_version,
       store_description: this.#config.general_store_description,
       store_name: this.#config.general_store_name,
       store_website: this.#config.general_store_website,

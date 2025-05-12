@@ -157,6 +157,8 @@ export interface StorecraftAppPublicInfo {
   core_version: string,
   /** @description Default dashboard version */
   dashboard_default_version: string,
+  /** @description Default chat version */
+  chat_version: string,
   /** @description Store description */
   store_description: string,
   /** @description Store name */

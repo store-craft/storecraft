@@ -49,7 +49,7 @@ export const create = (app) => {
   const create_aug_app = () => {
     return app.withPaymentGateways(
       {
-        ...(app.__show_me_everything.gateways ?? {}),
+        ...(app._.gateways ?? {}),
         'dummy_payments' : new DummyPayments({ intent_on_checkout: 'AUTHORIZE' })
       }
     ).withTaxes(new UniformTaxes(10))

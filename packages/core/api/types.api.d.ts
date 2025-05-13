@@ -2086,7 +2086,7 @@ export interface OrderStatus  {
            PaymentOptionsEnum['failed'] | PaymentOptionsEnum['partially_paid'] | 
            PaymentOptionsEnum['partially_refunded'] | PaymentOptionsEnum['refunded'] |
            PaymentOptionsEnum['requires_auth'] | PaymentOptionsEnum['unpaid'] | 
-           PaymentOptionsEnum['voided'] //| { id: number, name2: string };
+           PaymentOptionsEnum['voided'] | PaymentOptionsEnum['cancelled'] //| { id: number, name2: string };
 
   /**
    * @description `fulfillment` status

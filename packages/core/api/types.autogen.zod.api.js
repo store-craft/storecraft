@@ -1487,6 +1487,7 @@ export const orderStatusSchema = z.object({
       paymentOptionsEnumSchema.shape.requires_auth,
       paymentOptionsEnumSchema.shape.unpaid,
       paymentOptionsEnumSchema.shape.voided,
+      paymentOptionsEnumSchema.shape.cancelled,
     ])
     .describe("`payment` status"),
   fulfillment: z

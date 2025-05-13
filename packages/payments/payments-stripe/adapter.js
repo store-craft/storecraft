@@ -20,15 +20,17 @@ import { Stripe as StripeCls } from 'stripe'
  */
 
 /**
- * @description in a {@link StripeCls.PaymentIntent}, is a `metadata` key-value
- * storage where we store the `order_id` of the `storecraft` order.
+ * @description in a {@link StripeCls.PaymentIntent}, 
+ * is a `metadata` key-value storage where we store the 
+ * `order_id` of the `storecraft` order.
  */
 export const metadata_storecraft_order_id = 'storecraft_order_id'
 
 /**
  * @implements {Impl}
  * 
- * @description **Stripe** gateway (https://docs.stripe.com/payments/place-a-hold-on-a-payment-method)
+ * @description **Stripe** gateway 
+ * (https://docs.stripe.com/payments/place-a-hold-on-a-payment-method)
  */
 export class Stripe {
   
@@ -129,7 +131,6 @@ export class Stripe {
   }
 
   /**
-   * 
    * @type {Impl["invokeAction"]}
    */
   invokeAction(action_handle) {
@@ -148,7 +149,6 @@ export class Stripe {
 
   /**
    * @description (Optional) buy link ui
-   * 
    * @type {Impl["onBuyLinkHtml"]}
    */
   async onBuyLinkHtml(order) {
@@ -160,7 +160,6 @@ export class Stripe {
 
   /**
    * @description on checkout create `hook`
-   * 
    * @type {Impl["onCheckoutCreate"]}
    */
   async onCheckoutCreate(order) {
@@ -184,7 +183,6 @@ export class Stripe {
    * They advocate async flows where confirmation happens async from
    * client side into their servers, and then you are notified via a
    * webhook.
-   * 
    * @type {Impl["onCheckoutComplete"]}  
    */
   async onCheckoutComplete(create_result) {
@@ -228,7 +226,6 @@ export class Stripe {
 
   /**
    * @description Fetch the order and analyze it's status
-   * 
    * @type {Impl["status"]}
    */
   async status(create_result) {
@@ -257,7 +254,10 @@ export class Stripe {
       );
     }
     if(lc?.refunded) {
-      const date = lc?.refunds?.data?.[0]?.created ? (new Date(lc?.refunds?.data?.[0]?.created).toUTCString()) : 'unknown time';
+      const date = lc?.refunds?.data?.[0]?.created ? 
+        (new Date(lc?.refunds?.data?.[0]?.created).toUTCString()) : 
+        'unknown time';
+
       stat.messages.push(
         `**${fmt(lc.amount_refunded)}** was \`REFUNDED\` at \`${date}\``,
       );
@@ -268,7 +268,8 @@ export class Stripe {
       stat.messages.push(
         ...[
           `Intent was \`CANCELLED\` at \`${date}\`.`,
-          o.cancellation_reason && `Cancellation reason is ${o.cancellation_reason}`
+          o.cancellation_reason && 
+            `Cancellation reason is ${o.cancellation_reason}`
         ].filter(Boolean)
       );
     }
@@ -283,9 +284,7 @@ export class Stripe {
   async webhook(request, response) {
     const sig = request.headers.get('Stripe-Signature');
 
-    let event;
-  
-    event = await this.stripe.webhooks.constructEventAsync(
+    let event = await this.stripe.webhooks.constructEventAsync(
       request.rawBody, sig, this.config.webhook_endpoint_secret, undefined,
       StripeCls.createSubtleCryptoProvider()
     );
@@ -293,7 +292,7 @@ export class Stripe {
     /** @type {string} */
     let order_id = undefined;
 
-    /** @type {PaymentOptionsEnum[keyof PaymentOptionsEnum]} */
+    /** @type {typeof PaymentOptionsEnum[keyof typeof PaymentOptionsEnum]} */
     let payment_status = PaymentOptionsEnum.unpaid;
     
     // Handle the event
@@ -309,13 +308,14 @@ export class Stripe {
         if(payment_intent.status==='requires_capture')
           payment_status = PaymentOptionsEnum.authorized;
         else if(payment_intent.status==='canceled')
-          payment_status = PaymentOptionsEnum.unpaid;
+          payment_status = PaymentOptionsEnum.cancelled;
         else if(payment_intent.status==='processing')
           payment_status = PaymentOptionsEnum.unpaid;
         else if(payment_intent.status==='requires_action')
           payment_status = PaymentOptionsEnum.unpaid;
         else if(payment_intent.status==='succeeded')
           payment_status = PaymentOptionsEnum.captured;
+
         break;
       }
       case 'charge.refunded':
@@ -351,9 +351,8 @@ export class Stripe {
 
   /**
    * @description Retrieve latest order payload
-   * 
-   * @param {CheckoutCreateResult} create_result first create result, holds `Stripe` intent
-   * 
+   * @param {CheckoutCreateResult} create_result 
+   * first create result, holds `Stripe` intent
    */
   retrieve_order = (create_result) => {
     return this.stripe.paymentIntents.retrieve(
@@ -368,7 +367,6 @@ export class Stripe {
 
   /**
    * @description todo: logic for if user wanted capture at approval
-   * 
    * @param {CheckoutCreateResult} create_result 
    */
   async cancel(create_result) {
@@ -384,7 +382,6 @@ export class Stripe {
 
   /**
    * @description todo: logic for if user wanted capture at approval
-   * 
    * @param {CheckoutCreateResult} create_result 
    */
   async capture(create_result) {
@@ -400,7 +397,6 @@ export class Stripe {
 
   /**
    * @description todo: logic for if user wanted capture at approval
-   * 
    * @param {CheckoutCreateResult} create_result 
    */
   async refund(create_result) {

@@ -100,7 +100,7 @@ http
 
 <div style='text-align: center' align="center">
   <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-terminal-2.png' 
-      width='70%' />
+      width='90%' />
 </div><hr/><br/>
 
 # Chat with the `storeraft` AI agent

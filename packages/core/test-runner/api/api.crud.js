@@ -62,7 +62,10 @@ export const add_sanity_crud_to_test_suite = s => {
         ctx.events.get_event,
         v => {
           try {
-            assert_partial_v2(v.payload.current, one, 'test get event');
+            assert_partial_v2(
+              v.payload.current, one, 
+              'test get event'
+            );
             is_event_ok = true;
           } catch (e) {}
         }

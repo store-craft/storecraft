@@ -9,6 +9,7 @@ import {
   create_handle, file_name 
 } from './api.utils.js';
 import { App } from '../../index.js';
+import { encode } from '../../crypto/base64.js';
 import esMain from './utils.esmain.js';
 import { add_sanity_crud_to_test_suite } from './api.crud.js';
 
@@ -21,21 +22,24 @@ const items_upsert = [
     title: 'template 1',
     reference_example_input: { key: 'value' },
     template_html: '<html><body>Hello</body></html>',
-    template_text: 'Hello'
+    template_text: 'Hello',
+    template_subject: 'Subject',
   },
   {
     handle: handle_tag(),
     title: 'template 2',
     reference_example_input: { key: 'value' },
     template_html: '<html><body>Hello</body></html>',
-    template_text: 'Hello'
+    template_text: 'Hello',
+    template_subject: 'Subject',
   },
   {
     handle: handle_tag(),
     title: 'template 3',
     reference_example_input: { key: 'value' },
     template_html: '<html><body>Hello</body></html>',
-    template_text: 'Hello'
+    template_text: 'Hello',
+    template_subject: 'Subject',
   },
 ]
 
@@ -49,7 +53,9 @@ export const create = app => {
   const s = suite(
     file_name(import.meta.url), 
     { 
-      items: items_upsert, app, ops: app.api.templates,
+      items: items_upsert, 
+      app, 
+      ops: app.api.templates,
       events: {
         get_event: 'templates/get',
         upsert_event: 'templates/upsert',
@@ -73,6 +79,26 @@ export const create = app => {
   );
 
   add_sanity_crud_to_test_suite(s);
+
+  s('test that driver respects base64 encoding', async (ctx) => {
+    const handle = handle_tag();
+    await app.api.templates.upsert(
+      {
+        handle: handle,
+        title: 'template 3',
+        reference_example_input: { key: 'value' },
+        template_html: 'base64_' + encode('html'),
+        template_text: 'base64_' + encode('text'),
+        template_subject: 'base64_' + encode('subject'),
+      }
+    );
+
+    const template = await app.api.templates.get(handle);
+
+    assert.equal(template.template_html, 'html');
+    assert.equal(template.template_text, 'text');
+    assert.equal(template.template_subject, 'subject');
+  });
 
   return s;
 }

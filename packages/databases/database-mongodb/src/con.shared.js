@@ -23,9 +23,10 @@ import { add_search_terms_relation_on } from './utils.relations.js'
  * @template {Partial<withConcreteIdAndHandle<{}>>} G
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * @param {(input: T) => T} [hook_pre_write=x=>x] 
  * @returns {db_crud<T, G>["upsert"]}
  */
-export const upsert_regular = (driver, col) => {
+export const upsert_regular = (driver, col, hook_pre_write=x=>x) => {
   
   return async (data, search_terms=[]) => {
 
@@ -64,7 +65,7 @@ export const upsert_regular = (driver, col) => {
           await col.insertOne(
             // @ts-ignore
             {
-              ...data,
+              ...hook_pre_write(data),
               _id: data.id ? to_objid(data.id) : undefined,
             },
             { 
@@ -180,9 +181,10 @@ export const expand_to_mongo_projection = (expand) => {
  * @template T, G
  * @param {MongoDB} driver 
  * @param {Collection<G>} col 
+ * @param {(input: G) => G} [hook_post=x=>x] 
  * @returns {db_crud<T, G>["get"]}
  */
-export const get_regular = (driver, col) => {
+export const get_regular = (driver, col, hook_post=x=>x) => {
   return async (id_or_handle, options) => {
     const filter = handle_or_id(id_or_handle);
 
@@ -203,7 +205,9 @@ export const get_regular = (driver, col) => {
     );
 
     return /** @type {G} */(
-      sanitize_one(res)
+      hook_post(
+        /** @type {G} */(sanitize_one(res))
+      )
     );
   }
 }

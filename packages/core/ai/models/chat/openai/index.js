@@ -300,7 +300,7 @@ export class OpenAI {
     const builder = stream_message_builder();
     
     for await (const chunk of current_stream) {
-      // console.log({chunk: JSON.stringify(chunk, null, 2)});
+      // console.dir({chunk: chunk}, {depth:10});
       builder.add_chunk(chunk);
 
       if(chunk?.choices?.[0].delta.content) {

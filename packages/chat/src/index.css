@@ -58,7 +58,7 @@
   }
 
   .chat-bg-overlay {
-    @apply bg-black/10 dark:bg-white/10;
+    @apply bg-black/5 dark:bg-white/10;
   }
 
   .chat-border-overlay {

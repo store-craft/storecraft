@@ -54,11 +54,11 @@ export const app = new App({
   postman: new PostmanExtension()
 })
 .withAI(
-  // new XAI({model: 'grok-3'}),
+  new XAI({model: 'grok-3-mini'}),
   // new GroqCloud({ model: 'meta-llama/llama-4-scout-17b-16e-instruct'})
   // new GroqCloud({ model: 'llama-3.3-70b-versatile'})
   // new Gemini({ model: 'gemini-2.0-flash'})
-  new OpenAI({ model: 'gpt-4.1-mini'})
+  // new OpenAI({ model: 'gpt-4.1-mini'})
   // new Anthropic({ model: 'claude-3-5-haiku-20241022' }),
   // new Mistral({ model: 'mistral-large-latest' }),
 )

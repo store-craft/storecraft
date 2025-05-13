@@ -4,7 +4,7 @@ export type config = {
    */
   model?: "grok-2" | 
           "grok-2-vision" | 
-          'grok-3',
+          'grok-3' | 'grok-3-mini',
           
   api_version?: string;
   /** If missing, then will be read from environment variable `XAI_API_KEY` */

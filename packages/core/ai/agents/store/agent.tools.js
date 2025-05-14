@@ -115,7 +115,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const shipping_methods = await context.app.api.shipping_methods.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -135,7 +135,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.collections.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -177,7 +177,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.discounts.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -209,6 +209,44 @@ export const TOOLS = (context) => {
       }
     ), 
 
+    browse_customer_orders: tool(
+      {
+        title: '**browsing** `order`',
+        description: 'Send a command to the frontend to render an orders browser in the frontend, this will make the customer to login if he is not logged in',
+        schema: undefined,
+        use: async function (params) {
+          return (
+            {
+              command: /** @type {const} */ ('browse_customer_orders'),
+              params
+            }
+          )
+        }
+      }
+    ), 
+
+    fetch_a_single_customer_order: tool(
+      {
+        title: '**Fetching** `order`',
+        description: 'fetch a single order by id',
+        schema: z.object(
+          {
+            id: z.string().describe('The id of the order to fetch'),
+          }
+        ),
+        use: async function (params) {
+          const item = await context.app.api.orders.get(
+            params.id
+          );
+
+          if(!item) {
+            throw new Error('Order not found');
+          }
+          return sanitize_search(item);
+        }
+      }
+    ), 
+
 
     login_frontend: tool(
       {
@@ -229,6 +267,8 @@ export const TOOLS = (context) => {
         }
       }
     )
+
+    
   }
 }
 

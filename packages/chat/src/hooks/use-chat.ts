@@ -4,7 +4,7 @@ import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useIndexDB } from "./use-index-db";
 import { create_local_storage_hook } from "./use-local-storage";
-import { fixture_chat_1, fixture_chat_2 } from "@/components/chat.fixture";
+import { fixture_chat_1, fixture_chat_orders } from "@/components/chat.fixture";
 
 export type ChatHookConfig = {
   threadId?: string;
@@ -344,9 +344,11 @@ export const useChat = (config: ChatHookConfig) => {
   
 
   return {
-    messages, threadId, loading, error, pubsub,
+    messages: fixture_chat_orders, threadId, 
+    loading, error, pubsub,
     actions: {
-      speak, streamSpeak, createNewChat, loadThread
+      speak, streamSpeak, createNewChat, 
+      loadThread
     }
   }
 

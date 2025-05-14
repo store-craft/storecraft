@@ -2,9 +2,9 @@ import { type content_tool_result, type InferToolReturnSchema } from "@storecraf
 import { type ChatMessage } from "./common.types";
 import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 
-type ToolResult = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_collection"]>;
+type ToolResultOrderBrowser = InferToolReturnSchema<ReturnType<typeof TOOLS>["browse_customer_orders"]>;
 
-export const fixture_chat_2: ChatMessage[] = [
+export const fixture_chat_orders: ChatMessage[] = [
   {
     role: "user",
     contents: [{type: 'text', content: 'show me the nintendo switch collection'}]
@@ -15,20 +15,20 @@ export const fixture_chat_2: ChatMessage[] = [
       {
         type: 'tool_result',
         content: {
-          name: 'browse_collection',
+          name: 'browse_customer_orders',
           data: {
             result: {
-              command: 'browse_collection',
+              command: 'browse_customer_orders',
               params: {
-                handle: 'nintendo-switch-games'
               }
             }
           }
         }
       }
     ]
-  } satisfies ChatMessage<content_tool_result<ToolResult>>,
+  } satisfies ChatMessage<content_tool_result<ToolResultOrderBrowser>>,
 ]
+
 
 export const fixture_chat_1: ChatMessage[] = [
   {

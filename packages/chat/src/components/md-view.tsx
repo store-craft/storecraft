@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
 import { LoadingImage } from './loading-image'
 import { pubsub } from '@/hooks/use-chat'
+import { PriceTag } from './price-tag'
 
 const onClick = (value: string) => {
   pubsub.dispatch({
@@ -24,12 +25,7 @@ const options: MarkdownToJSX.Options = {
       },
     },
     price: {
-      component: (props) => <span {...props}  />,
-      props: {
-        className: 'rounded-full text-lime-600 dark:text-lime-400 font-mono \
-        font-bold w-fit py-0 px-1 border chat-border-overlay \
-        bg-slate-50 dark:bg-lime-900 ',
-      },
+      component: PriceTag
     },
     product: {
       component: ({children, ...rest}) => (

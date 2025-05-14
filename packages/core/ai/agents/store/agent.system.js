@@ -45,15 +45,16 @@ can use similarity search with a query "a game about nordic god"
 - Use 'browse_collection_products' tool whenever the customer wants to browse and see all products in a collection
 - The tool will send a command to the frontend to show the collection by querying the backend by itself.
 
-3. 'browse_all_products' tool
+4. 'browse_all_products' tool
 - Use 'browse_all_products' tool whenever the customer wants to browse and see all products in the store
 - The tool will send a command to the frontend to show the collection by querying the backend by itself.
 
-3. 'browse_discount_products' tool
+5. 'browse_discount_products' tool
 - INVOKE ONLY ONCE when asked about discounts
 - Use 'browse_discount_products' tool whenever the customer wants to browse and see all products of a discount
 - The tool will send a command to the frontend to show the collection by querying the backend by itself.
 </tools_logic>
+
 
 <messages_format>
 1. Whenever you specify a price, use the format <price>price</price>

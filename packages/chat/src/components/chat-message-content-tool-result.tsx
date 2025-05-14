@@ -9,6 +9,7 @@ import { ToolResultContent_SimilaritySearch } from "./chat-contents/chat-tool-re
 import { ToolResultContent_BrowseCollectionProducts } from "./chat-contents/chat-tool-result-browse-collection-products";
 import { ToolResultContent_BrowseDiscountProducts } from "./chat-contents/chat-tool-result-browse-discount-products";
 import { ToolResultContent_BrowseAllProducts } from "./chat-contents/chat-tool-result-browse-all-products";
+import { ToolResultContent_BrowseCustomerOrders } from "./chat-contents/chat-tool-result-browse-customer-order";
 
 export type tool_names = keyof ReturnType<typeof TOOLS>;
 export type Params = withDiv<
@@ -42,6 +43,8 @@ export const content_to_view = (
       return (<ToolResultContent_Discounts chat={{content}}  />)
     case 'search_with_similarity':
       return (<ToolResultContent_SimilaritySearch chat={{content}}  />)
+    case 'browse_customer_orders':
+      return (<ToolResultContent_BrowseCustomerOrders chat={{content}}  />)
       
     default:
       return null;

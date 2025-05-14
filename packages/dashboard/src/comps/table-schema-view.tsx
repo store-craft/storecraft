@@ -109,7 +109,8 @@ const Table = <T,>(
               return (
                 <td 
                   className={
-                    ' font-light font-mono text-ellipsis overflow-clip hover:overflow-x-scroll ' +
+                    ' font-light font-mono text-ellipsis \
+                    overflow-clip hover:overflow-x-scroll ' +
                     (
                       ix==0 ? 'px-3 text-left ' : 
                       ix<fields.length-1 ? 
@@ -215,11 +216,12 @@ export const TableSchemaView = <T,>(
 <div className={`w-full ${className}`}>
   <div className='w-full overflow-auto'>
     <Table 
-        context={context} 
-        fields={fields} 
-        data={data} 
-        recordClassName={recordClassName}
-        className='w-full bg-re-400 whitespace-nowrap'/>
+      context={context} 
+      fields={fields} 
+      data={data} 
+      recordClassName={recordClassName}
+      className='w-full bg-re-400 whitespace-nowrap'
+    />
   </div>
 </div>
   )

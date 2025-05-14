@@ -22,16 +22,17 @@ export const Card = (
     <div {...rest}>
 
       <div className={'relative z-10 w-full h-full rounded-lg p-[1.5px] \
-                chat-card overflow-clip ' + (card.border ? 'border' : '')}>
+        chat-card overflow-clip ' + (card.border ? 'border' : '')}>
         {
           card.loading && (
             <div className='absolute inset-0 h-full w-full rounded-full 
-                bg-conic/shorter from-purple-500/60 via-pink-500 
-                to-transparent from-0% via-25% to-40% animate-rotate-bg'/>
+              bg-conic/shorter from-purple-500/60 via-pink-500 
+              to-transparent from-0% via-25% to-40% animate-rotate-bg'/>
           )
         }
       
-        <div className='relative w-full h-full chat-card rounded-md'>
+        <div 
+          className='relative w-full h-full chat-card rounded-md'>
           {
             children
           }

@@ -349,7 +349,9 @@ export const useChat = (config: ChatHookConfig) => {
   
 
   return {
-    messages: fixture_chat_orders, threadId, 
+    // messages: fixture_chat_orders, 
+    messages, 
+    threadId, 
     loading, error, pubsub,
     actions: {
       speak, streamSpeak, createNewChat, 

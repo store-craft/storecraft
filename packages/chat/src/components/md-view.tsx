@@ -25,7 +25,7 @@ const options: MarkdownToJSX.Options = {
       },
     },
     price: {
-      component: PriceTag
+      component: (props) => <PriceTag {...props}/>
     },
     product: {
       component: ({children, ...rest}) => (
@@ -43,6 +43,22 @@ const options: MarkdownToJSX.Options = {
          ',
       },
     },    
+    order: {
+      component: ({children, ...rest}) => (
+        <span 
+          children={'🧾 ' + children} 
+          onClick={() => onClick(children as string)}
+          {...rest}  
+        />
+      ),
+      props: {
+        className: 'underline underline-offset-4 decoration-dotted \
+        rounded-full --font-mono \
+        chat-bg-overlay cursor-pointer \
+        font-bold w-fit py-0.5 px-1 border chat-border-overlay \
+         ',
+      },
+    },        
     collection: {
       component: ({children, ...rest}) => (
         <span 

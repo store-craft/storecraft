@@ -99,7 +99,7 @@ export const UserChatMessageView = (
           items-center gap-3'>
         <div 
           className='w-fit flex flex-col gap-3 px-5 py-2.5 
-            rounded-3xl chat-card'>
+            rounded-3xl chat-card text-right'>
           {
             message.contents?.filter(c => c.type==='text').map(
               (c, ix) => content_to_view(c, ix)

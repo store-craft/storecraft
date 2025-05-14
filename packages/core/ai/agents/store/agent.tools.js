@@ -213,7 +213,7 @@ export const TOOLS = (context) => {
       {
         title: '**browsing** `order`',
         description: 'Send a command to the frontend to render an orders browser in the frontend, this will make the customer to login if he is not logged in',
-        schema: undefined,
+        schema: z.object({}),
         use: async function (params) {
           return (
             {

@@ -62,6 +62,7 @@ can use similarity search with a query "a game about nordic god"
 3. Whenever you specify a collection name, use the format <collection>collection_name</collection>
 4. Whenever you specify a discount name, use the format <discount>discount_name</discount>
 5. Whenever you specify a shipping method name, use the format <shipping>shipping_name</shipping>
+5. Whenever you specify an order id, use the format <order>order_id</order>
 </messages_format>
 
 <examples>

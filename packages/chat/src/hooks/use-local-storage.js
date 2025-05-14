@@ -10,7 +10,7 @@ import { LS } from './utils.browser.js';
  * @template S
  * 
  * @param {string} key 
- * @param {S} [defaultValue] 
+ * @param {S} [defaultValue=undefined] 
  */
 export const create_local_storage_hook = (key, defaultValue) => {
   
@@ -48,7 +48,10 @@ export const create_local_storage_hook = (key, defaultValue) => {
   }
     
 
-  return () => {
+  /**
+   * @param {S} [defaultValue=undefined]
+   */
+  return (defaultValue=undefined) => {
     const trigger = useTrigger();
   
     useEffect(
@@ -79,7 +82,8 @@ export const create_local_storage_hook = (key, defaultValue) => {
     );
   
     return {
-      state, setState
+      state: state ?? defaultValue, 
+      setState
     }
 
   }

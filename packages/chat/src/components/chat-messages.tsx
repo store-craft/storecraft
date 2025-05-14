@@ -38,6 +38,12 @@ export const ChatMessagesView = forwardRef<
       () => (
         {
           scroll: () => {
+            // ref_resize_observer_div.current?.scrollIntoView({
+            //   behavior: "smooth", 
+            //   block: "end", 
+            //   inline: "end"
+            // })
+            console.log('scroll', ref_div.current.scrollHeight)
             ref_div.current?.scroll(
               {
                 top: (

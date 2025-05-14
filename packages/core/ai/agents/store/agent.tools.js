@@ -19,7 +19,6 @@ export const sleep = (ms=100) => {
 }
 
 /**
- * 
  * @param {{ app: App}} context Storecraft app instance
  */
 export const TOOLS = (context) => {
@@ -209,9 +208,10 @@ export const TOOLS = (context) => {
       }
     ), 
 
+
     browse_customer_orders: tool(
       {
-        title: '**browsing** `order`',
+        title: '**browsing** your `orders`',
         description: 'Send a command to the frontend to render an orders browser in the frontend, this will make the customer to login if he is not logged in',
         schema: z.object({}),
         use: async function (params) {
@@ -225,6 +225,7 @@ export const TOOLS = (context) => {
       }
     ), 
 
+    
     fetch_a_single_customer_order: tool(
       {
         title: '**Fetching** `order`',
@@ -247,28 +248,6 @@ export const TOOLS = (context) => {
       }
     ), 
 
-
-    login_frontend: tool(
-      {
-        title: 'Sending login form',
-        description: 'This will send a form to the customer with login inputs, so he can fill his credentials at the frontend side',
-        schema: z.object(
-          {
-            message: z.string().describe('sends message to customer with the form'),
-          }
-        ),
-        use: async function (input) {
-          return {
-            command: 'show_login_form',
-            params: {
-              message: input.message,
-            }
-          }
-        }
-      }
-    )
-
-    
   }
 }
 

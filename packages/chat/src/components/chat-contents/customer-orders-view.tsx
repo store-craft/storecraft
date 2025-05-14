@@ -2,12 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { type withDiv } from "../common.types";
-import { Card } from "../card.js";
 import { LoadingImage } from "../loading-image";
 import type { ProductType } from "@storecraft/core/api";
 import { useAuth, useCollection, useStorecraft } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
-import { FiltersView } from "./products-filter-view";
 import { PriceTag } from "../price-tag.js";
 import { Table, type TableParams } from "./table";
 import { Login } from "./login";
@@ -37,20 +35,24 @@ export const CardSomething = (
         transition-opacity ' + (ready ? 'opacity-100' : 'opacity-0')}>
       <div className='w-full h-32 relative'>
         <div 
-          className='absolute inset-0 rounded-md object-cover h-full w-full 
-            blur-3xl --opacity-40 dark:bg-pink-500/50 bg-cyan-500/50' />
+          className='absolute inset-0 rounded-md object-cover 
+            h-full w-full blur-3xl --opacity-40 
+            dark:bg-pink-500/50 bg-cyan-500/50' />
         <LoadingImage 
           src={item.media?.at(0) ?? 'placeholder'}
           className=' rounded-md object-contain h-full w-full' />
       </div>
 
-      <p children={item.title} 
-        className='whitespace-nowrap truncate font-medium capitalize 
-            text-base w-full --max-w-20' />
-      <p children={item.price + '$'} 
+      <p 
+        children={item.title} 
+        className='whitespace-nowrap truncate 
+          font-medium capitalize text-base w-full' />
+      <p 
+        children={item.price + '$'} 
         className='whitespace-nowrap font-bold text-2xl 
         text-green-600 font-mono' />
-      <button children='add to cart (coming soon)' 
+      <button 
+        children='add to cart (coming soon)' 
         className='uppercase tracking-widest font-bold w-full 
         dark:bg-pink-500 bg-black text-white
           p-2 chat-card border rounded-md text-xs' />
@@ -72,9 +74,9 @@ export const CustomerOrdersView = (
     actions: {
       next, prev, query
     }
-  } = useCollection('orders', {limit:5});
+  } = useCollection('orders', {limit: 5});
 
-  console.log(auth)
+  // console.log({auth, page, isAuthenticated})
 
   useEffect(
     () => {
@@ -141,22 +143,19 @@ export const CustomerOrdersView = (
     );
   }
 
-  if(!hasLoaded) {
+  if(page_loading && !page?.length) {
     return (
-      <div className='w-full h-fit flex flex-col gap-3 items-center justify-center'>
-        <p children='Loading your orders...' className='text-lg font-bold' />
+      <div 
+        className='w-full h-fit flex flex-col gap-3 
+          items-center justify-center'>
+        <p 
+          children='Loading your orders...' 
+          className='text-lg font-bold' />
         <LoadingImage 
           className='w-full h-40' />
       </div>
     )
   }
-
-
-  // const data = chat.content.content.data;
-  // // console.log(data)
-  // // return;
-  // if('error' in data) 
-  //   return null;
 
   return (
     <div className='w-full h-fit flex flex-col gap-0'>
@@ -168,7 +167,8 @@ export const CustomerOrdersView = (
             ...page.map(
               (item) => [
                 item.id, item.updated_at ,
-                item.status.fulfillment.name, item.pricing.total
+                item.status.fulfillment.name, 
+                item.pricing.total
               ]
             )
           ],

@@ -25,8 +25,6 @@ export const content_to_view = (
 ) => {
   
   switch (content.content.name as tool_names) {
-    case 'login_frontend':
-      return 'login frontend view';
     case 'search_products':
       return (<ToolResultContent_Products chat={{content}}  />)
     case 'fetch_shipping_methods':

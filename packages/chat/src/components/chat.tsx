@@ -16,17 +16,52 @@ import { type StorecraftSDKConfig } from "@storecraft/sdk";
 
 export type ChatProps = {
   chat?: {
+    /**
+     * @description Optional chat id to warm up the chat with.
+     * This will try to download the chat history from the server.
+     * @example 'chat_1234'
+     */
     threadId?: string,
+    /**
+     * @description Optional Storecraft config to use.
+     * You can warm it up with auth token, endpoint, etc.
+     */
     storecraft_config?: StorecraftSDKConfig,
+    /**
+     * @description Optional Apply default background style.
+     * If `false`, the chat will not apply the default background style.
+     * And you can use your own background style.
+     * @default true
+     */
+    apply_default_background_style?: boolean,
+    /**
+     * @description Optional Apply default dark mode.
+     * @default true
+     */
+    default_dark_mode?: boolean,
   }
 } & React.ComponentProps<'div'>;
 
+export const defaultChatProps: ChatProps["chat"] = {
+  threadId: undefined,
+  storecraft_config: undefined,
+  apply_default_background_style: true,
+  default_dark_mode: true,
+}
+
 export const Chat = (
   {
-    chat = {},
+    chat,
+    className='h-dvh w-screen chat-bg',
     ...rest
   }: ChatProps
 ) => {
+
+  // apply default nested chat props
+  chat = {
+    ...defaultChatProps,
+    ...chat
+  }
 
   useStorecraft(chat?.storecraft_config);
 
@@ -89,6 +124,7 @@ export const Chat = (
       ref_chat_messages.current?.scroll();
     }, []
   );
+
   useEffect(
     () => {
       requestAnimationFrame(
@@ -96,7 +132,9 @@ export const Chat = (
       )
     }, []
   );
-  const { darkMode } = useDarkMode();
+
+  const { darkMode } = useDarkMode(chat?.default_dark_mode);
+  
   const {
     loading, messages, error, threadId,
     pubsub, actions: {
@@ -143,10 +181,16 @@ export const Chat = (
   const dark_class = darkMode ? 'dark' : '';
   
   return (
-    <div {...rest}>
+    <div 
+      className={
+        dark_class + ' ' + (
+          chat?.apply_default_background_style ? className : ''
+        )
+      } 
+      {...rest}>
       <div 
-        className={dark_class + ` chat-bg chat-text w-screen 
-          h-screen flex flex-row justify-center items-center
+        className={` -- chat-text w-full 
+          h-full flex flex-row justify-center items-center
           font-inter`} >
         <div 
           className='max-w-[800px] w-full h-full relative --bg-red-100 
@@ -174,7 +218,7 @@ export const Chat = (
               chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
               className='w-full' />
             <div className='flex flex-row justify-between w-full h-fit mt-2'>
-              <ThreadIdView threadId={threadId}/>
+              <ThreadIdView threadId={ref_sticky.current + ' ' + threadId}/>
               <PoweredBy/>
             </div>
           </div>

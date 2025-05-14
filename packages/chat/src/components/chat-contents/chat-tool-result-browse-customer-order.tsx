@@ -25,7 +25,9 @@ export const ToolResultContent_BrowseCustomerOrders = (
 ) => {
   const { sdk } = useStorecraft();
   const data = chat.content.content.data;
-  console.log({data})
+  
+  // console.log({data})
+
   if('error' in data) 
     return null;
   

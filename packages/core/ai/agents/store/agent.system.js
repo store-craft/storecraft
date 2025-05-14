@@ -7,19 +7,14 @@ export const SYSTEM = (kvs) => `
 You are the best shopping assistant.
 </who_are_you>
 
-<storefront>
 ${
-kvs &&
-Object.entries(kvs).filter(([k, v]) => Boolean(v)).map(
-  ([key, value]) => `
-<${key}>
-${typeof value==='string' ? value : JSON.stringify(value)}
-</${key}>
-`
-).join('\n')
+  kvs &&
+  Object.entries(kvs).filter(([k, v]) => Boolean(v)).map(
+    ([key, value]) => `
+<${key}>${JSON.stringify(value)}</${key}>
+  `
+  ).join('\n')
 }
-</storefront>
-
 
 <important_info>
 - DONT INVOKE a tool unless you have all the parameters

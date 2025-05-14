@@ -121,7 +121,8 @@ const LoginForm = (
     <Field 
       dash={
         {
-          id:'email', label: 'Email', 
+          id:'email', 
+          label: 'Email', 
           input_params: {
             type: 'email',
             autoComplete: 'on',
@@ -136,7 +137,8 @@ const LoginForm = (
     <Field 
       dash={
         {
-          id:'password', label: 'Password', 
+          id:'password', 
+          label: 'Password', 
           input_params: {
             type: 'password',
             autoComplete: 'on',
@@ -156,22 +158,25 @@ const LoginForm = (
           type='submit' value='LOGIN' 
           title='Login' alt='Login'
           className='h-10 rounded-md --bg-white tracking-widest 
-            w-full shelf-input-color text-sm hover:ring-pink-400 hover:ring-2 
+            w-full shelf-input-color text-sm 
+            hover:ring-pink-400 hover:ring-2 
             cursor-pointer'
         />
       </Bling>
       {
         error &&
         (
-          <div className='flex flex-row flex-nowrap items-center text-sm w-full
-                         text-red-600 border-red-600 
-                         dark:text-red-500 
-                         dark:bg-red-400/10 
-                         bg-red-400/20 
-                         border
-                         rounded-md p-3 gap-3 '>
+          <div className='flex flex-row flex-nowrap 
+            items-center text-sm w-full
+            text-red-600 border-red-600 
+            dark:text-red-500 
+            dark:bg-red-400/10 
+            bg-red-400/20 
+            border
+            rounded-md p-3 gap-3 '>
             <BiErrorCircle 
-               className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
+               className='flex-inline text-2xl 
+                flex-shrink-0 opacity-70' /> 
             <div 
               children={format_error(error)} 
               className='flex-1 whitespace-pre-wrap overflow-x-auto' />
@@ -293,7 +298,10 @@ export const SocialLogin = (
   );
 
   return (
-    <div className={'flex flex-row items-center gap-3 ' + (providers.length > 0 ? 'animate-fadein' : 'animate-fadeout')}>
+    <div className={
+      'flex flex-row items-center gap-3 ' + 
+      (providers.length > 0 ? 'animate-fadein' : 'animate-fadeout')
+      }>
       {
         providers?.map(
           (provider, ix) => (
@@ -302,7 +310,8 @@ export const SocialLogin = (
               className='h-7 cursor-pointer'
               key={provider.provider} 
               src={img_with_src_data(provider.logo_url)} 
-              alt={provider.description ?? provider.name} />
+              alt={provider.description ?? provider.name} 
+            />
           )
         )
       }

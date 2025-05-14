@@ -1,6 +1,6 @@
 import { ChatMessage, content_multiple_text_deltas } from "@/components/common.types";
 import { content } from "@storecraft/core/ai";
-import { useStorecraft } from "@storecraft/sdk-react-hooks";
+import { useAuth, useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useIndexDB } from "./use-index-db";
 import { create_local_storage_hook } from "./use-local-storage";
@@ -80,6 +80,7 @@ export const useChat = (config: ChatHookConfig) => {
   const [threadId, setThreadId] = useState<string | undefined>(config?.threadId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const {state: preference, setState: setPreference} = usePreference();
+  const auth = useAuth();
 
   const {
     error: error_db,
@@ -202,7 +203,11 @@ export const useChat = (config: ChatHookConfig) => {
           'store',
           {
             prompt, 
-            thread_id: threadId
+            thread_id: threadId,
+            metadata: {
+              customer_email: auth?.auth?.access_token?.claims?.email,
+              customer_id: auth?.auth?.access_token?.claims?.id?.replace('au_', 'cus_'),
+            }
           }
         );
   
@@ -247,7 +252,7 @@ export const useChat = (config: ChatHookConfig) => {
       } finally {
         setLoading(false);
       }
-    }, [threadId]
+    }, [threadId, auth]
   );
 
   const loadThread = useCallback(

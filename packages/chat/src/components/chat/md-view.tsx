@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
-import { LoadingImage } from './loading-image'
-import { pubsub } from '@/hooks/use-chat'
-import { PriceTag } from './price-tag'
+import { LoadingImage } from '../common/loading-image'
+import { pubsub } from './use-chat'
+import { PriceTag } from '../common/price-tag'
 
 const onClick = (value: string) => {
   pubsub.dispatch({
@@ -109,7 +109,7 @@ const options: MarkdownToJSX.Options = {
     },        
   }
 }
-// 🏷️
+
 export type MDViewParams = {
   /**
    * @description The markdown content to be rendered

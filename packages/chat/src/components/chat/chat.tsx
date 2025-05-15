@@ -5,12 +5,12 @@ import { delta_to_scroll_end } from "./chat.utils"
 import { FaArrowDownLong } from "react-icons/fa6";
 import useDarkMode from "@/hooks/use-dark-mode"
 import { type ChatMessagesViewImperativeInterface } from "./chat-message"
-import { useChat } from "@/hooks/use-chat"
+import { useChat } from "./use-chat"
 import { content } from "@storecraft/core/ai"
 import { PoweredBy } from "../common/powered-by"
 import { type withDiv } from "./common.types"
 import { HiDuplicate } from "react-icons/hi"
-import { sleep } from "@/hooks/sleep"
+import { sleep } from "../../hooks/sleep"
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { type StorecraftSDKConfig } from "@storecraft/sdk";
 

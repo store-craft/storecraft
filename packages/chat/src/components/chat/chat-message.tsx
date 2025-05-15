@@ -7,7 +7,7 @@ import svg from '@/components/favicon.svg';
 import { ChatMessageTextContent } from "./chat-message-content-text";
 import { ChatMessageTextDeltasContent } from "./chat-message-content-text-deltas";
 import { ShowBinarySwitch } from "../common/show-if";
-import { ChatPubSubEvent_State, pubsub } from "@/hooks/use-chat";
+import { ChatPubSubEvent_State, pubsub } from "./use-chat";
 import { useCallback, useEffect, useState } from "react";
 import { ChatMessageToolUseContent } from "./chat-message-content-tool-use";
 import { ChatMessageToolResultContent } from "./chat-message-content-tool-result";

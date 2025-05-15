@@ -134,6 +134,36 @@ const {
 
 ```
 
+## `useCart()`
+
+A utility hook to manage a frontend cart with `LocalStorage` support.
+This can be used later to create a checkout session.
+
+```js
+
+import { useCart } from '@storecraft/sdk-react-hooks'
+
+const {
+  cart: {
+    line_items, 
+    coupons, 
+    shipping,
+    customer,
+    updated_at,
+    created_at,
+  },
+  actions: {
+    addItem, 
+    removeItem, 
+    clearCart,
+    setCoupons,
+    setShipping,
+    setCustomer,
+  }
+} = useCart();
+
+```
+
 ```text
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

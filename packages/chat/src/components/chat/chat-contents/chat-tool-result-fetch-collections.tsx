@@ -3,8 +3,8 @@ import {
 } from "@storecraft/core/ai";
 import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
 import { useCallback, useEffect, useState } from "react";
-import { pubsub } from "@/hooks/use-chat";
-import { sleep } from "@/hooks/sleep";
+import { pubsub } from "../use-chat";
+import { sleep } from "../../../hooks/sleep";
 import { type withDiv } from "../common.types";
 import { Card } from "@/components/common/card";
 import { LoadingImage } from "@/components/common/loading-image";

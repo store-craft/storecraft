@@ -1,6 +1,6 @@
 import { type content_error } from "@storecraft/core/ai";
 import { type withDiv } from "./common.types";
-import { MDView } from "../common/md-view";
+import { MDView } from "./md-view";
 import { useState } from "react";
 import ShowIf from "../common/show-if";
 import { CopyClipboard } from "./copy-clipboard";

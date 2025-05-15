@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type withDiv } from "@/components/chat/common.types"
-import { sleep } from "@/hooks/sleep";
+import { sleep } from "../../hooks/sleep";
 
 export type CardParams = withDiv<
   {

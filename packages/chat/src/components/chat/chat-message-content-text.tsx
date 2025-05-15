@@ -1,6 +1,6 @@
 import { content_text } from "@storecraft/core/ai";
 import { type withDiv } from "./common.types";
-import { MDView } from "../common/md-view";
+import { MDView } from "./md-view";
 
 export type Params = withDiv<
   {

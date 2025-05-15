@@ -1,5 +1,5 @@
 import { type content_multiple_text_deltas, type withDiv } from "./common.types";
-import { MDView } from "../common/md-view";
+import { MDView } from "./md-view";
 import { useMemo, useState } from "react";
 
 export type Params = withDiv<

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { type withDiv } from "./common.types";
-import { sleep } from "@/hooks/sleep";
+import { sleep } from "../../hooks/sleep";
 import { ShowBinarySwitch } from "../common/show-if";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import { MdDone } from "react-icons/md";

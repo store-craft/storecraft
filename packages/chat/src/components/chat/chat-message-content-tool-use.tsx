@@ -1,10 +1,10 @@
 import { type content_tool_use } from "@storecraft/core/ai";
 import { type withDiv } from "./common.types";
-import { MDView } from "../common/md-view";
+import { MDView } from "./md-view";
 import { Card } from "../common/card";
 import { useEffect, useState } from "react";
-import { pubsub } from "@/hooks/use-chat";
-import { sleep } from "@/hooks/sleep";
+import { pubsub } from "./use-chat";
+import { sleep } from "../../hooks/sleep";
 
 export type Params = withDiv<
   {

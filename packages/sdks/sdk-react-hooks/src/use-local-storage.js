@@ -48,7 +48,10 @@ export const create_local_storage_hook = (key, defaultValue) => {
   }
     
 
-  return () => {
+  /**
+   * @param {S} [defaultValue=undefined]
+   */
+  return (defaultValue) => {
     const trigger = useTrigger();
   
     useEffect(
@@ -75,7 +78,8 @@ export const create_local_storage_hook = (key, defaultValue) => {
     );
   
     return {
-      state, setState
+      state: state ?? defaultValue, 
+      setState
     }
 
   }

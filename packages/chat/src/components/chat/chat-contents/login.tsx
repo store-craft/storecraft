@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { sleep } from "@/hooks/sleep";
+import { sleep } from "../../../hooks/sleep";
 import { type withDiv } from "../common.types";
 import { Card } from "@/components/common/card";
 import { useAuth } from "@storecraft/sdk-react-hooks";

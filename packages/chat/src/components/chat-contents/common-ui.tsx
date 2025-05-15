@@ -9,7 +9,7 @@ export const Button = (
   return (
     <button 
       className={
-        'h-8  text-slate-50 dark:text-slate-50 ' +
+        'h-9 text-slate-50 dark:text-slate-50 ' +
         'rounded-md shadow-sm border chat-border-overlay ' +
         'capitalize ' +
         'active:scale-[0.98] transition-transform duration-75 ' + 

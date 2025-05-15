@@ -1,17 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { pubsub } from "@/hooks/use-chat";
+import React, { useCallback, useState } from "react";
 import { sleep } from "@/hooks/sleep";
 import { type withDiv } from "../common.types.js";
 import { Card } from "../card.js";
-import { LoadingImage } from "../loading-image.js";
-import type { ProductType } from "@storecraft/core/api";
-import { useAuth, useCollection, useStorecraft } from "@storecraft/sdk-react-hooks";
-import { MdNavigateNext } from "react-icons/md";
-import { FiltersView } from "./products-filter-view.js";
-import { PriceTag } from "../price-tag.js";
-import { Table, type TableParams } from "./table.js";
-import { Chat } from "../chat.js";
+import { useAuth } from "@storecraft/sdk-react-hooks";
 import { Button } from "./common-ui.js";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
 
 /**
  * @description Easily `format` errors coming from the `storecraft` backend
@@ -55,21 +48,17 @@ export const Login = (
   }: Params
 ) => {
   const [error, setError] = useState<string>(undefined);
+  const [isLoadingSignin, setIsLoadingSignin] = useState(false);
   const auth = useAuth();
   const ref_email = React.useRef<HTMLInputElement>(null);
   const ref_password = React.useRef<HTMLInputElement>(null);
 
-  // useEffect(
-  //   () => {
-  //     sleep((index + 1) * 300).then(() => {setReady(true)})
-  //   }, []
-  // );
-
   const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {
       e.preventDefault();
-
+      setIsLoadingSignin(true);;
       try {
+        await sleep(300);
         await auth.actions.signin(
           ref_email.current?.value,
           ref_password.current?.value
@@ -80,14 +69,16 @@ export const Login = (
           format_storecraft_errors(e).join('\n') ?? 
           'Unknown Error'
         );
+      } finally {
+        setIsLoadingSignin(false);
       }
     }, [auth]
   );
 
   return (
-    <Card className='w-fit '>
+    <Card className='w-1/2 '>
       <form className='flex flex-col gap-3 
-        p-3 w-fit h-fit duration-300 text-sm'
+        p-3 w-full h-fit duration-300 text-sm'
         onSubmit={onSubmit}>
         {
           chat?.header && (
@@ -104,7 +95,7 @@ export const Login = (
           id='email' 
           name='email' 
           placeholder='email' 
-          className='px-3 h-8 border chat-border-color 
+          className='px-3 h-9 border chat-border-color 
             rounded-md chat-bg-overlay
             placeholder:font-normal placeholder:text-sm tracking-widest
             dark:placeholder:text-gray-300 placeholder:text-gray-800'
@@ -115,9 +106,9 @@ export const Login = (
           id='password' 
           name='password' 
           placeholder='password' 
-          className='px-3 h-8 border chat-border-color  
-            rounded-md chat-bg-overlay
-            placeholder:font-normal placeholder:text-sm tracking-widest 
+          className='px-3 h-9 border chat-border-color  
+            rounded-md chat-bg-overlay placeholder:font-normal 
+            placeholder:text-sm tracking-widest 
             dark:placeholder:text-gray-300 placeholder:text-gray-800'
         />
         {
@@ -126,15 +117,27 @@ export const Login = (
               children={error} 
               className='text-sm tracking-wider whitespace-pre-wrap
                 text-red-500 bg-red-500/10 border border-red-500 
-                rounded-md p-2' />
+                rounded-md p-2 font-mono' />
           )
         }
         <Button 
           type='submit' 
           value='LOGIN' 
           title='Login' 
-          children='login' 
-          // onClick={onSubmit} 
+          children={
+            (
+              <div 
+                className='flex flex-row justify-center 
+                  items-center gap-2 tracking-wider'>
+                LOGIN
+                {
+                  isLoadingSignin && 
+                  <CgSpinnerTwoAlt 
+                    className='animate-spin w-5 h-5 text-white' />
+                }
+              </div>
+            ) 
+          }
         />
       </form>
     </Card>

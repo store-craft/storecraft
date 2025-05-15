@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { pubsub } from "@/hooks/use-chat";
 import { sleep } from "@/hooks/sleep";
 import { type withDiv } from "../common.types";
 import { LoadingImage } from "../loading-image";
 import type { ProductType } from "@storecraft/core/api";
-import { useAuth, useCollection, useStorecraft } from "@storecraft/sdk-react-hooks";
+import { useAuth, useCollection } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
 import { PriceTag } from "../price-tag.js";
 import { Table, type TableParams } from "./table";
@@ -132,7 +132,7 @@ export const CustomerOrdersView = (
     ] as TableParams['chat']['renderers'], []
   );
 
-  if(false || !isAuthenticated) {
+  if(!isAuthenticated) {
     return (
       <div>
         <Login chat={

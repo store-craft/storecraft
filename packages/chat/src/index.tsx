@@ -1,8 +1,8 @@
 import './index.css'
 import { createRoot } from 'react-dom/client'
 import { StrictMode } from 'react'
-import { Chat, type ChatProps } from './components/chat'
-export { Chat } from './components/chat';
+import { Chat, type ChatProps } from './components/chat/chat'
+export { Chat } from './components/chat/chat';
 
 /**
  * Mounts the chat component to the given container.

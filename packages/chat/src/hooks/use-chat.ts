@@ -1,10 +1,10 @@
-import { ChatMessage, content_multiple_text_deltas } from "@/components/common.types";
+import { ChatMessage, content_multiple_text_deltas } from "../components/chat/common.types";
 import { content } from "@storecraft/core/ai";
 import { useAuth, useStorecraft } from "@storecraft/sdk-react-hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useIndexDB } from "./use-index-db";
 import { create_local_storage_hook } from "./use-local-storage";
-import { fixture_chat_1, fixture_chat_orders } from "@/components/chat.fixture";
+import { fixture_chat_1, fixture_chat_orders } from "../components/chat/chat.fixture";
 
 export type ChatHookConfig = {
   threadId?: string;

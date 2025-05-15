@@ -3,8 +3,10 @@ import { Bling, HR } from "./common-ui"
 import ShowIf from "./show-if"
 import { useStorecraft } from "@storecraft/sdk-react-hooks"
 import { useCallback, useEffect, useState } from "react"
-import { withDash, withDashDiv } from "./types"
+import { withDashDiv } from "./types"
 import { OAuthProvider } from "@storecraft/core/api"
+import { format_storecraft_errors } from "./error-message"
+import { CgSpinnerTwoAlt } from "react-icons/cg"
 
 export type LoginFormFieldsType = {
   email?: string
@@ -13,18 +15,17 @@ export type LoginFormFieldsType = {
 }
 
 type FieldParams = withDashDiv<{
-  value: object,
+  value: string | number,
   desc?: string
-  id: string,
   label: string
-  onChange: (id: string, value: string) => void,
+  onChange: (value: string) => void,
   input_params?: React.ComponentProps<"input">
 }>
 
 const Field = (
   {
     dash: {
-      value, desc, id, label, onChange, 
+      value, desc, label, onChange, 
       input_params
     },
     ...rest 
@@ -51,8 +52,8 @@ const Field = (
         w-full block shelf-input-color
       hover:ring-pink-400 hover:ring-2
         font-normal transition-none' 
-      value={value[id] ?? ''} 
-      onChange={e => onChange(id, e.currentTarget.value)} 
+      value={value ?? ''} 
+      onChange={e => onChange(e.currentTarget.value)} 
       {...input_params}
     />    
   </Bling>      
@@ -74,10 +75,13 @@ const format_error = (e: any) => {
 
 export type LoginFormProps = withDashDiv<
   {
-    onChange: (id: string, value: string) => void
-    signinWithErrorHandling: () => Promise<void>
-    error: object
-    credentials: LoginFormFieldsType
+    // onChange: (id: string, value: string) => void,
+    defaultCredentials: LoginFormFieldsType,
+    signinWithErrorHandling: (
+      email: string, password: string, endpoint?: string
+    ) => Promise<void>,
+    // error: object,
+    // credentials: LoginFormFieldsType,
     is_backend_endpoint_editable?: boolean 
   }
 >
@@ -86,59 +90,69 @@ export type LoginFormProps = withDashDiv<
 const LoginForm = (
   {
     dash: {
-      onChange, 
       signinWithErrorHandling, 
-      error, 
-      credentials, 
       is_backend_endpoint_editable=true,
+      defaultCredentials,
     },
     ...rest
  }: LoginFormProps
 ) => {
 
+  const [credentials, setCredentials] = useState(defaultCredentials);
+  const [error, setError] = useState(undefined);
   const { sdk, actions: { updateConfig } } = useStorecraft();
   const [isLoadingSignin, setIsLoadingSignin] = useState(false);
-  // console.log({credentials})
 
   const onEndpointChange = useCallback(
-    (id: string, value: string) => {
-      updateConfig(
-        {
-          ...sdk.config,
-          endpoint: value,
-        }
+    (value: string) => {
+      setCredentials(
+        c => ({...c, endpoint: value})
       );
-      onChange(id, value);
-    }, [onChange, updateConfig]
+      updateConfig({
+        ...sdk.config,
+        endpoint: value,
+      });
+    }, [updateConfig]
   );
 
-  const onSubmit_internal = useCallback(
+  useEffect(
+    () => {
+      setCredentials(
+        c => ({...defaultCredentials, ...c})
+      );
+    }, [defaultCredentials]
+  );
+
+  const onSubmit_internal: React.FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {
       e.preventDefault();
 
-      // console.log({formData})
-      console.log({e})
-
       setIsLoadingSignin(true);
+      // setError(undefined);
+      setIsLoadingSignin(true);
+
       try {
-        await signinWithErrorHandling();
+        await signinWithErrorHandling(
+          credentials.email, 
+          credentials.password, 
+          credentials.endpoint
+        );
       } catch (e) {
-        console.log('error', e);
+        console.error('error ', e)
+        setError(
+          format_storecraft_errors(e)?.join('\n') ??
+          'Unknown Error'
+        )
       } finally {
         setIsLoadingSignin(false);
       }
-    }, [signinWithErrorHandling]
+    }, [signinWithErrorHandling, credentials]
   );
-
-  function search(formData) {
-    const query = formData.get("query");
-    alert(`You searched for '${query}'`);
-  }
 
  return (
 <div {...rest}>
   <Bling 
-    className='shadow-xl --shadow-gray-300/10 w-full font-mono'
+    className='shadow-xl w-full font-mono'
     stroke='border-4' 
     to='to-kf-400 dark:to-kf-500 '>
     <form 
@@ -149,7 +163,6 @@ const LoginForm = (
       <Field 
         dash={
           {
-            id:'email', 
             label: 'Email', 
             input_params: {
               type: 'email',
@@ -157,15 +170,14 @@ const LoginForm = (
               name: 'email' 
             },
             desc: 'Email of admin user',
-            value: credentials,
-            onChange: onChange  
+            value: credentials.email,
+            onChange: (value) => {setCredentials({ ...credentials, email: value })}  
           }
         }
       />
       <Field 
         dash={
           {
-            id:'password', 
             label: 'Password', 
             input_params: {
               type: 'password',
@@ -173,8 +185,8 @@ const LoginForm = (
               name: 'password' 
             },
             desc: `Password of admin user. Initial password is 'admin'`,
-            value: credentials,
-            onChange: onChange  
+            value: credentials.password,
+            onChange: (value) => {setCredentials({ ...credentials, password: value })}  
           }
         }
       />
@@ -182,16 +194,27 @@ const LoginForm = (
       <Bling 
         stroke='border-4 w-full' rounded='rounded-lg' 
         from='from-kf-500' to='to-pink-500'>
-        <input 
+        <button 
           type='submit' 
-          value='LOGIN' 
+          children={
+            (
+              <div className='flex flex-row items-center gap-2'>
+                LOGIN
+                {
+                  isLoadingSignin && 
+                  <CgSpinnerTwoAlt 
+                    className='animate-spin w-5 h-5 text-pink-400' />
+                }
+              </div>
+            ) 
+          }
           title='Login' 
-          alt='Login'
-          className='h-10 rounded-md --bg-white tracking-widest 
+          className='h-10 rounded-md tracking-widest 
             w-full shelf-input-color text-sm 
             hover:ring-pink-400 hover:ring-2 
-            cursor-pointer'
-      />
+            cursor-pointer text-center
+            flex flex-row items-center justify-center'
+        />
       </Bling>
       {
         error &&
@@ -202,8 +225,7 @@ const LoginForm = (
             dark:text-red-500 
             dark:bg-red-400/10 
             bg-red-400/20 
-            border
-            rounded-md p-3 gap-3 '>
+            border rounded-md p-3 gap-3 '>
             <BiErrorCircle 
               className='flex-inline text-2xl 
                 flex-shrink-0 opacity-70' /> 
@@ -218,7 +240,6 @@ const LoginForm = (
         <Field 
           dash={
             {
-              id:'endpoint', 
               label: 'Backend Endpoint', 
               input_params: {
                 type: 'text',
@@ -226,7 +247,7 @@ const LoginForm = (
                 name: 'endpoint' 
               },
               desc: `The Storecraft Backend Endpoint`,
-              value: credentials,
+              value: credentials.endpoint,
               onChange: onEndpointChange  
             }
           }
@@ -327,24 +348,34 @@ export const SocialLogin = (
     }, []
   );
 
+  if(providers.length === 0) 
+    return null;
+
   return (
-    <div className={
-      'flex flex-row items-center gap-3 ' + 
-      (providers.length > 0 ? 'animate-fadein' : 'animate-fadeout')
-      }>
-      {
-        providers?.map(
-          (provider, ix) => (
-            <img 
-              onClick={() => onClick(provider)}
-              className='h-7 cursor-pointer'
-              key={provider.provider} 
-              src={img_with_src_data(provider.logo_url)} 
-              alt={provider.description ?? provider.name} 
-            />
+    <div className='flex flex-col gap-5'>
+      <div className="flex items-center">
+        <div className="flex-grow border shelf-border-color  h-0.5"></div>
+        <div className="flex-grow-0 mx-3 font-mono capitalize">social login</div>
+        <div className="flex-grow border shelf-border-color h-0.5"></div>
+      </div>
+      <div className={
+        'flex flex-row items-center gap-3 ' + 
+        (providers.length > 0 ? 'animate-fadein' : 'animate-fadeout')
+        }>
+        {
+          providers?.map(
+            (provider, ix) => (
+              <img 
+                onClick={() => onClick(provider)}
+                className='h-7 cursor-pointer'
+                key={provider.provider} 
+                src={img_with_src_data(provider.logo_url)} 
+                alt={provider.description ?? provider.name} 
+              />
+            )
           )
-        )
-      }
+        }
+      </div>
     </div>
   )
 }

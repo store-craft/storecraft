@@ -75,7 +75,7 @@ const format_error = (e: any) => {
 export type LoginFormProps = withDashDiv<
   {
     onChange: (id: string, value: string) => void
-    onSubmit: React.FormEventHandler<HTMLFormElement>
+    signinWithErrorHandling: () => Promise<void>
     error: object
     credentials: LoginFormFieldsType
     is_backend_endpoint_editable?: boolean 
@@ -87,7 +87,7 @@ const LoginForm = (
   {
     dash: {
       onChange, 
-      onSubmit, 
+      signinWithErrorHandling, 
       error, 
       credentials, 
       is_backend_endpoint_editable=true,
@@ -97,7 +97,7 @@ const LoginForm = (
 ) => {
 
   const { sdk, actions: { updateConfig } } = useStorecraft();
-
+  const [isLoadingSignin, setIsLoadingSignin] = useState(false);
   // console.log({credentials})
 
   const onEndpointChange = useCallback(
@@ -112,49 +112,73 @@ const LoginForm = (
     }, [onChange, updateConfig]
   );
 
+  const onSubmit_internal = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      // console.log({formData})
+      console.log({e})
+
+      setIsLoadingSignin(true);
+      try {
+        await signinWithErrorHandling();
+      } catch (e) {
+        console.log('error', e);
+      } finally {
+        setIsLoadingSignin(false);
+      }
+    }, [signinWithErrorHandling]
+  );
+
+  function search(formData) {
+    const query = formData.get("query");
+    alert(`You searched for '${query}'`);
+  }
+
  return (
 <div {...rest}>
   <Bling 
     className='shadow-xl --shadow-gray-300/10 w-full font-mono'
     stroke='border-4' 
     to='to-kf-400 dark:to-kf-500 '>
-  <form 
-    className='w-full p-5 shelf-login-form-bg flex flex-col text-sm 
-      tracking-wider font-medium gap-5 rounded-md'
-    onSubmit={onSubmit}>
-    <Field 
-      dash={
-        {
-          id:'email', 
-          label: 'Email', 
-          input_params: {
-            type: 'email',
-            autoComplete: 'on',
-            name: 'email' 
-          },
-          desc: 'Email of admin user',
-          value: credentials,
-          onChange: onChange  
+    <form 
+      className='w-full p-5 shelf-login-form-bg flex flex-col text-sm 
+        tracking-wider font-medium gap-5 rounded-md'
+      onSubmit={onSubmit_internal}
+      >
+      <Field 
+        dash={
+          {
+            id:'email', 
+            label: 'Email', 
+            input_params: {
+              type: 'email',
+              autoComplete: 'on',
+              name: 'email' 
+            },
+            desc: 'Email of admin user',
+            value: credentials,
+            onChange: onChange  
+          }
         }
-      }
-    />
-    <Field 
-      dash={
-        {
-          id:'password', 
-          label: 'Password', 
-          input_params: {
-            type: 'password',
-            autoComplete: 'on',
-            name: 'password' 
-          },
-          desc: `Password of admin user. Initial password is 'admin'`,
-          value: credentials,
-          onChange: onChange  
+      />
+      <Field 
+        dash={
+          {
+            id:'password', 
+            label: 'Password', 
+            input_params: {
+              type: 'password',
+              autoComplete: 'on',
+              name: 'password' 
+            },
+            desc: `Password of admin user. Initial password is 'admin'`,
+            value: credentials,
+            onChange: onChange  
+          }
         }
-      }
-    />
-    <HR />
+      />
+      <HR />
       <Bling 
         stroke='border-4 w-full' rounded='rounded-lg' 
         from='from-kf-500' to='to-pink-500'>
@@ -167,7 +191,7 @@ const LoginForm = (
             w-full shelf-input-color text-sm 
             hover:ring-pink-400 hover:ring-2 
             cursor-pointer'
-        />
+      />
       </Bling>
       {
         error &&

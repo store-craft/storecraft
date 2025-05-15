@@ -46,31 +46,24 @@ const Login = (
   
   const onChange: ComponentProps<typeof LoginForm>["dash"]["onChange"] = useCallback(
     (id, val) => {
-      setCredentials(
-        { 
-          ...credentials, 
-          [id] : val 
-        } 
-      );
+      setCredentials({ 
+        ...credentials, 
+        [id] : val 
+      });
     },
     [credentials],
   );
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
-    async (e) => {
-      e.preventDefault();
-
+  const signinWithErrorHandling = useCallback(
+    async () => {
       try {
-        updateConfig(
-          {
-            endpoint: credentials.endpoint,
-          }
-        );
+        updateConfig({
+          endpoint: credentials.endpoint,
+        });
         const auth = await sdk.auth.signin(
           credentials.email,    
           credentials.password
         );
-
       } catch (e) {
         console.error('error ', e)
         setError(
@@ -91,28 +84,23 @@ const Login = (
     <LoginMarquee 
       className='w-full h-12 --bg-green-400' />
     <LoginConnect 
-      className='absolute w-full --bg-green-300 left-0 top-12 h-fit 
-        z-30  --bg-green-300/30 ' />
+      className='absolute w-full left-0 top-12 h-fit z-30' />
     <div 
       className='w-full h-fit md:h-[calc(100%-3rem)] 
-        flex flex-col p-10
-        items-center justify-start 
-        md:justify-start md:items-start 
-        md:flex-row gap-10'>
+        flex flex-col p-10 items-center justify-start 
+        md:justify-start md:items-start md:flex-row gap-10'>
 
       <div 
         className='flex-shrink-0 order-first md:order-first
-          --scale-[0.8] origin-top
-          --md:scale-[0.8] md:origin-top-left 
-          w-full max-w-[22rem] h-fit 
-          rounded-md'
+          origin-top md:origin-top-left w-full max-w-[22rem] 
+          h-fit rounded-md'
           // @ts-ignore
           sstyle={{transformOrigin: 'top center'}}>
         <LoginForm 
           dash={
             {
               is_backend_endpoint_editable,
-              onSubmit, 
+              signinWithErrorHandling, 
               credentials,
               onChange,
               error

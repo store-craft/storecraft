@@ -165,8 +165,8 @@ export const AssistantChatMessageView = (
       <img src={svg} 
         className={` h-8 chat-border-overlay transition-all duration-400
           rounded-md object-cover bg-purple-500/50 shadow-lg shadow-purple-500/50 
-          sm:ml-3 sm:w-8 sm:border-1 ` + 
-          (remove ? 'w-0 ml-0 border-0' : 'ml-3 w-8 border-1')} />
+          sm:ml-3 sm:w-8 sm:border-1 w-0 ` + 
+          (remove ? 'w-0 sm:w-0 ml-0 border-0' : 'ml-3 sm:w-8 border-0')} />
 
       <div className='flex flex-col gap-3 px-3 w-full overflow-x-hidden'>
         {

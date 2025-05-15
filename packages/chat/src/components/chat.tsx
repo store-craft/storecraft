@@ -105,16 +105,20 @@ export const Chat = (
         scrollTop: div.scrollTop
       }
 
-      if(is_scrolling_up) {
-        ref_sticky.current = false;
-      }
-
       setShowScroller(
         delta_to_scroll_end(div) > 100
       );
 
     }, []
   );
+
+  const onChatMessagesTouch = useCallback(
+    (div?: HTMLDivElement) => {
+      if(!div)
+        return;
+      ref_sticky.current = false;
+    }, []
+  );  
 
   const ref_chat_messages = useRef<ChatMessagesViewImperativeInterface>(null);
 
@@ -199,6 +203,7 @@ export const Chat = (
           <ChatMessagesView 
             messages={messages} 
             onChatWindowScroll={onChatMessagesScroll}
+            onChatWindowTouch={onChatMessagesTouch}
             onChatWindowResize={onChatMessagesWindowResize}
             className='w-full h-full '
             ref={ref_chat_messages}
@@ -218,7 +223,7 @@ export const Chat = (
               chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
               className='w-full' />
             <div className='flex flex-row justify-between w-full h-fit mt-2'>
-              <ThreadIdView threadId={ref_sticky.current + ' ' + threadId}/>
+              <ThreadIdView threadId={threadId}/>
               <PoweredBy/>
             </div>
           </div>

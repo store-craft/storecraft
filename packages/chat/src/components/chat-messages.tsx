@@ -7,11 +7,13 @@ import {
   type ChatMessagesViewImperativeInterface, 
   ChatMessageView 
 } from "./chat-message";
+import { scroll_snapshop } from "./chat.utils";
 
 export type MessagesParams = withDiv<
   {
     messages: ChatMessage[];
-    onChatWindowScroll?: (el?: HTMLDivElement) => void
+    onChatWindowTouch?: (info?: HTMLDivElement) => void
+    onChatWindowScroll?: (info?: HTMLDivElement) => void
     onChatWindowResize?: (el?: HTMLDivElement) => void
   }
 >;
@@ -21,7 +23,10 @@ export const ChatMessagesView = forwardRef<
 >(
   (
     {
-      messages, onChatWindowScroll, onChatWindowResize,
+      messages, 
+      onChatWindowScroll, 
+      onChatWindowResize,
+      onChatWindowTouch,
       ...rest
     }: MessagesParams,
     ref
@@ -38,12 +43,7 @@ export const ChatMessagesView = forwardRef<
       () => (
         {
           scroll: () => {
-            // ref_resize_observer_div.current?.scrollIntoView({
-            //   behavior: "smooth", 
-            //   block: "end", 
-            //   inline: "end"
-            // })
-            console.log('scroll', ref_div.current.scrollHeight)
+            // console.log('scroll', ref_div.current.scrollHeight)
             ref_div.current?.scroll(
               {
                 top: (
@@ -61,7 +61,14 @@ export const ChatMessagesView = forwardRef<
 
     const internal_onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
       (e) => {
-        onChatWindowScroll?.(e.currentTarget);
+        onChatWindowScroll?.(ref_div.current);
+      }, [onChatWindowScroll]
+    );
+
+    const internal_onTouch: React.UIEventHandler<HTMLDivElement> = useCallback(
+      (e) => {
+        // console.log('onTouch', e);
+        onChatWindowTouch?.(ref_div.current);
       }, [onChatWindowScroll]
     );
 
@@ -85,7 +92,7 @@ export const ChatMessagesView = forwardRef<
 
     useEffect(
       () => {
-        onChatWindowScroll?.(ref_div.current)
+        onChatWindowScroll?.(ref_div.current);
       }, [onChatWindowScroll]
     );
 
@@ -95,6 +102,8 @@ export const ChatMessagesView = forwardRef<
           className='w-full h-full flex flex-col pb-44 
             gap-0 pt-5 --pr-5 overflow-y-scroll'
           onScroll={internal_onScroll}
+          onTouchStart={internal_onTouch}
+          onMouseDown={internal_onTouch}
           ref={ref_div}
         >
           <div id='__resize_observer' className='w-full h-fit'

@@ -132,7 +132,7 @@ export const CustomerOrdersView = (
     ] as TableParams['chat']['renderers'], []
   );
 
-  if(!isAuthenticated) {
+  if(false || !isAuthenticated) {
     return (
       <div>
         <Login chat={

@@ -65,8 +65,10 @@ export const Login = (
   //   }, []
   // );
 
-  const onSubmit = useCallback(
-    async () => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
+    async (e) => {
+      e.preventDefault();
+
       try {
         await auth.actions.signin(
           ref_email.current?.value,
@@ -84,8 +86,9 @@ export const Login = (
 
   return (
     <Card className='w-fit '>
-      <div className='flex flex-col gap-3 
-        p-3 w-fit h-fit duration-300 text-sm'>
+      <form className='flex flex-col gap-3 
+        p-3 w-fit h-fit duration-300 text-sm'
+        onSubmit={onSubmit}>
         {
           chat?.header && (
             <p 
@@ -94,27 +97,29 @@ export const Login = (
                 text-base w-full --max-w-20' />
           )
         }
-        <div className='h-fit relative flex flex-col gap-2 font-mono'>
-          <input 
-            ref={ref_email}
-            type='email' 
-            placeholder='email' 
-            className='px-3 h-8 border chat-border-color 
-              rounded-md chat-bg-overlay
-              placeholder:font-normal placeholder:text-sm tracking-widest
-              dark:placeholder:text-gray-300 placeholder:text-gray-800'
-          />
-        </div>
-        <div className='h-fit relative flex flex-col gap-2'>
-          <input 
-            ref={ref_password}
-            placeholder='password' 
-            className='px-3 h-8 border chat-border-color  
-              rounded-md chat-bg-overlay
-              placeholder:font-normal placeholder:text-sm tracking-widest 
-              dark:placeholder:text-gray-300 placeholder:text-gray-800'
-          />
-        </div>
+        <input 
+          ref={ref_email}
+          type='email' 
+          autoComplete='on'
+          id='email' 
+          name='email' 
+          placeholder='email' 
+          className='px-3 h-8 border chat-border-color 
+            rounded-md chat-bg-overlay
+            placeholder:font-normal placeholder:text-sm tracking-widest
+            dark:placeholder:text-gray-300 placeholder:text-gray-800'
+        />
+        <input 
+          ref={ref_password}
+          autoComplete='on'
+          id='password' 
+          name='password' 
+          placeholder='password' 
+          className='px-3 h-8 border chat-border-color  
+            rounded-md chat-bg-overlay
+            placeholder:font-normal placeholder:text-sm tracking-widest 
+            dark:placeholder:text-gray-300 placeholder:text-gray-800'
+        />
         {
           error && (
             <div 
@@ -125,9 +130,13 @@ export const Login = (
           )
         }
         <Button 
+          type='submit' 
+          value='LOGIN' 
+          title='Login' 
           children='login' 
-          onClick={onSubmit} />
-      </div>
+          // onClick={onSubmit} 
+        />
+      </form>
     </Card>
   )
 }

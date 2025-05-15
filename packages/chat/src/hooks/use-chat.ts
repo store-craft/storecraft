@@ -347,10 +347,9 @@ export const useChat = (config: ChatHookConfig) => {
     }
   )
   
-
   return {
-    // messages: fixture_chat_orders, 
-    messages, 
+    messages: fixture_chat_orders, 
+    // messages, 
     threadId, 
     loading, error, pubsub,
     actions: {
@@ -358,7 +357,6 @@ export const useChat = (config: ChatHookConfig) => {
       loadThread
     }
   }
-
 }
 
 

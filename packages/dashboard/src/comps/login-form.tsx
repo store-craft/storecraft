@@ -32,21 +32,25 @@ const Field = (
 ) => {
 
  return (
-<div className='--text-pink-600 font-semibold' {...rest}>
-  <p children={label} className='tracking-widest text-pink-500' />
+<div 
+  className='--text-pink-600 font-semibold' 
+  {...rest}>
+  <p 
+    children={label} 
+    className='tracking-widest text-pink-500' 
+  />
   { 
     desc && 
     <p children={desc} 
       className='tracking-normal font-inter my-3 
-                  font-normal --text-gray-500' />
+        font-normal --text-gray-500' />
   }
   <Bling className='mt-2'>
     <input 
-      className={`rounded-md h-10 px-3
-                  w-full block 
-                  shelf-input-color
-                  hover:ring-pink-400 hover:ring-2
-                  font-normal transition-none `} 
+      className='rounded-md h-10 px-3
+        w-full block shelf-input-color
+      hover:ring-pink-400 hover:ring-2
+        font-normal transition-none' 
       value={value[id] ?? ''} 
       onChange={e => onChange(id, e.currentTarget.value)} 
       {...input_params}
@@ -155,8 +159,10 @@ const LoginForm = (
         stroke='border-4 w-full' rounded='rounded-lg' 
         from='from-kf-500' to='to-pink-500'>
         <input 
-          type='submit' value='LOGIN' 
-          title='Login' alt='Login'
+          type='submit' 
+          value='LOGIN' 
+          title='Login' 
+          alt='Login'
           className='h-10 rounded-md --bg-white tracking-widest 
             w-full shelf-input-color text-sm 
             hover:ring-pink-400 hover:ring-2 
@@ -175,7 +181,7 @@ const LoginForm = (
             border
             rounded-md p-3 gap-3 '>
             <BiErrorCircle 
-               className='flex-inline text-2xl 
+              className='flex-inline text-2xl 
                 flex-shrink-0 opacity-70' /> 
             <div 
               children={format_error(error)} 

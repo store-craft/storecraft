@@ -29,26 +29,29 @@ export type CounterRef = CounterImperativeInterface &
 export const Counter = forwardRef((
   { 
     counter: {
-      value=1, minVal=1, maxVal=1 , 
+      value=1, 
+      minVal=1, 
+      maxVal=1 , 
       onChange=undefined
     }, 
     ...rest 
   }: CounterProps, ref
 ) => {
 
-  const [count, setCount] = useState(
-    clamp(value, minVal, maxVal)
-  );
+  // const [count, setCount] = useState(
+  //   clamp(value, minVal, maxVal)
+  // );
+  value = clamp(value, minVal, maxVal);
 
   const set = useCallback(
     (delta: number) => {
       const v = Math.min(
-        Math.max(count + delta, minVal), 
-        maxVal ?? (count + delta + 1)
+        Math.max(value + delta, minVal), 
+        maxVal ?? (value + delta + 1)
       );
-      setCount(v);
+      // setCount(v);
       onChange?.(v);
-    }, [count, onChange, minVal, maxVal]
+    }, [value, onChange, minVal, maxVal]
   );
 
   const cb_up = useCallback(
@@ -66,8 +69,8 @@ export const Counter = forwardRef((
   useImperativeHandle(
     ref, 
     () => ({
-      getCount : () => count
-    }), [count]
+      getCount : () => value
+    }), [value]
   );
 
   return (
@@ -81,7 +84,7 @@ export const Counter = forwardRef((
           onClick={cb_down} />
         <span 
           className='select-none text-sm' 
-          children={count} />
+          children={value} />
         <FaPlus 
           className='w-3 h-3  mx-2
             cursor-pointer' 

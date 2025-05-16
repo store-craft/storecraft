@@ -55,7 +55,9 @@ export const useCart = () => {
         )
       );
       if(item) {
-        item.qty = item.qty + quantity;
+        item.qty = Math.min(
+          item.qty + quantity, item?.data?.qty ?? 0
+        );
       } else {
         cart.line_items.push({
           id: product.id,

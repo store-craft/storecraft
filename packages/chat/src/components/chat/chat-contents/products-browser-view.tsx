@@ -68,7 +68,8 @@ export const ProductCardView = (
         children='add to cart' 
         className='uppercase tracking-widest font-bold w-full 
         dark:bg-pink-500 bg-black text-white
-          p-2 chat-card border rounded-md text-xs' />
+          p-2 chat-card border rounded-md text-xs
+          cursor-pointer' />
     </div>
   )
 }

@@ -32,12 +32,15 @@ export const validate_checkout = app =>
  */
 async (checkout) => {
 
-  const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
-  const shipping_method = await app.__show_me_everything.db.resources.shipping_methods.get(
+  // get shipping snapshot
+  const shipping_id = checkout.shipping_method.id ?? 
+    checkout.shipping_method.handle;
+  const shipping_method = await app._.db.resources.shipping_methods.get(
     shipping_id
   );
 
-  const snaps_products = await app.__show_me_everything.db.resources.products.getBulk(
+  // get products snapshot
+  const snaps_products = await app._.db.resources.products.getBulk(
     checkout.line_items.map(li => li.id)
   );
 
@@ -47,7 +50,6 @@ async (checkout) => {
   const errors = [];
 
   /**
-   * 
    * @param {string} id 
    * @param {ValidationEntry["message"]} message 
    */
@@ -128,7 +130,12 @@ async (order) => {
   const manual_discounts = discounts.filter(
     it => it.application.id===DiscountApplicationEnum.Manual.id
   ).filter(
-    d => order.coupons.find(c => c.handle===d.handle)!==undefined
+    d => order.coupons.find(
+      c => (
+        (c.handle===d.handle) ||
+        (c.id===d.id)
+      )
+    )!==undefined
   );
 
   const pricing = await calculate_pricing(
@@ -138,7 +145,7 @@ async (order) => {
     order.shipping_method, 
     order.address,
     order?.contact?.customer_id,
-    app.__show_me_everything.taxes
+    app._.taxes
   );
 
   // console.log(pricing)
@@ -199,11 +206,8 @@ async (order_checkout, gateway_handle) => {
   const order = {
     ...order_priced,
     status : {
-      // @ts-ignore
       fulfillment: FulfillOptionsEnum.draft,
-      // @ts-ignore
       payment: PaymentOptionsEnum.unpaid,
-      // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
   }

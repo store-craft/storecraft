@@ -878,6 +878,11 @@ export interface HandleAndID  {
   handle: string;
 }
 
+/** 
+ * @description `id` or `handle` of entity required
+ */
+export interface HandleOrID extends withOptionalHandleOrID {}
+
 
 /**
  * @description Product upsert interface
@@ -1987,9 +1992,11 @@ export interface BaseCheckoutCreateType {
  */
 export interface CheckoutCreateType extends BaseCheckoutCreateType {
   /** 
-   * @description A list of manual coupons handles 
+   * @description A list of `discount` codes (handles) or ids
+   * to apply to the order. You can watch the full `discount`
+   * in the `order.pricing.evo` property of the order
    */
-  coupons?: DiscountType[]; 
+  coupons?: HandleOrID[]; 
 }
 
 /**
@@ -2023,12 +2030,10 @@ export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>
    */
   pricing: PricingData;
 
-
   /** 
    * @description Payment gateway info and status 
    */
   payment_gateway?: OrderPaymentGatewayData; 
-
 }
 
 /**

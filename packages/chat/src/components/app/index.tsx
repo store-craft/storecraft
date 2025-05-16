@@ -26,15 +26,15 @@ export const ChatApp = (
 
   return (
     <div 
-      className={className + ' ' + (darkMode ? 'dark' : '')}
+      className={className + ' ' + (darkMode ? 'dark bg-red-400' : '')}
       {...rest}
       >
-      <div className='flex flex-row w-full h-full'>
+      <div className='flex flex-row w-full overflow-x-scroll h-full justify-between '>
         <Chat 
           chat={config?.chat}
-          className='w-full h-full chat-bg'
+          className='max-w-full shrink flex-1 h-full chat-bg'
         />
-        <Cart className='w-[500px]' />
+        <Cart className='w-full max-w-[400px] h-full shrink-0 ' />
 
       </div>
     </div>

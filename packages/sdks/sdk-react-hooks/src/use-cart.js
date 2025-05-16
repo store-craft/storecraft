@@ -1,9 +1,11 @@
 /**
- * @import { LineItem, ProductType, ShippingMethodType } from "@storecraft/core/api"
+ * @import { 
+ *  LineItem, ProductType, ShippingMethodType 
+ * } from "@storecraft/core/api"
  * @import { CartType } from "./use-cart.types.js"
  */
 
-import { create_local_storage_hook } from "@storecraft/sdk-react-hooks"
+import { create_local_storage_hook, useStorecraft } from "@storecraft/sdk-react-hooks"
 import React, { useCallback } from "react"
 
 /**
@@ -38,6 +40,9 @@ export const useCart = () => {
     state: cart,
     setState: setCart,
   } = useCartState(create_new_cart());
+  const {
+    sdk
+  } = useStorecraft();
 
   /**
    * @description Add Line iten with quantity to the cart
@@ -191,6 +196,25 @@ export const useCart = () => {
         create_new_cart()
       );
     }, [cart]
+  );
+
+  const pricing = useCallback(
+    async () => {
+      sdk.checkout.pricing(
+        {
+          line_items: cart.line_items,
+          shipping: cart.shipping,
+          coupons: cart.coupons,
+          customer: cart.customer
+        }
+      )
+    }, [cart, sdk]
+  );
+
+  const subTotal = cart.line_items.reduce(
+    (acc, item) => {
+      return acc + (item.data.price * item.qty);
+    }, 0
   );
 
   return {

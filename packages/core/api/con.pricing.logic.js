@@ -934,7 +934,7 @@ export const calculate_line_items_for_discount =
  * @param {DiscountType[]} auto_discounts disabled discounted will be filtered out
  * @param {DiscountType[]} coupons disabled coupons will be filtered out
  * @param {ShippingMethodType} [shipping_method] 
- * @param {Partial<AddressType>} [shipping_address]
+ * @param {Partial<AddressType>} [shipping_address] used for taxes
  * @param {string} [uid=undefined] 
  * @param {tax_provider} [tax_provider=undefined] 
  * @param {OrderData} [tax_provider=undefined] 

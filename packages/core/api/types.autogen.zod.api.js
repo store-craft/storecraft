@@ -282,6 +282,8 @@ export const variantOptionSchema = z.object({
     ),
 });
 
+export const handleOrIDSchema = withOptionalHandleOrIDSchema;
+
 export const discountApplicationEnumSchema = z.object({
   Auto: z.object({
     id: z.literal(0),
@@ -1783,9 +1785,11 @@ export const baseCheckoutCreateTypeSchema = z.object({
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
   coupons: z
-    .array(discountTypeSchema)
+    .array(handleOrIDSchema)
     .optional()
-    .describe("A list of manual coupons handles"),
+    .describe(
+      "A list of `discount` codes (handles) or ids\nto apply to the order. You can watch the full `discount`\nin the `order.pricing.evo` property of the order",
+    ),
 });
 
 export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema

@@ -240,8 +240,6 @@ const get = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["getBulk"]}
  */
 const getBulk = (driver) => {

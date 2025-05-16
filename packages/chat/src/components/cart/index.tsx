@@ -19,8 +19,8 @@ export const Cart = (
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text chat-bg border-l'>
-
+          chat-text  chat-bg border-l'>
+        {/* <div children='tomer ' className="h-20 w-full bg-green-200"/> */}
         {/* Cart Header */}
         <CartHeader className='w-full' />
 
@@ -28,7 +28,7 @@ export const Cart = (
         <CartLineItems className='flex-1 overflow-scroll' />
 
         {/* Footer */}
-        <CartFooter className='w-full' />
+        <CartFooter className='w-full h-fit' />
 
       </div>
     </div>

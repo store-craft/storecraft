@@ -179,7 +179,7 @@ export const Chat = (
       {...rest}>
       <div 
         className='chat-text w-full h-full flex flex-row 
-          justify-center items-center font-inter' >
+          justify-center --items-center font-inter' >
         <div 
           className='max-w-[800px] w-full h-full relative --bg-red-100 
             flex flex-col gap-0 items-center'>

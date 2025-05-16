@@ -5,7 +5,7 @@ import { type withDiv } from "../common.types";
 import { Card } from "@/components/common/card";
 import { LoadingImage } from "@/components/common/loading-image";
 import type { ProductType } from "@storecraft/core/api";
-import { useCollection } from "@storecraft/sdk-react-hooks";
+import { useCart, useCollection } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
 import { FiltersView } from "./products-filter-view";
 
@@ -33,7 +33,11 @@ export const ProductCardView = (
   }: withDiv<{item: ProductType, index: number}>
 ) => {
   const [ready, setReady] = useState(false);
-
+  const {
+    actions: {
+      addLineItem
+    }
+  } = useCart();
   useEffect(
     () => {
       sleep((index + 1) * 300).then(() => {setReady(true)})
@@ -59,7 +63,9 @@ export const ProductCardView = (
       <p children={item.price + '$'} 
         className='whitespace-nowrap font-bold text-2xl 
         text-green-600 font-mono' />
-      <button children='add to cart (coming soon)' 
+      <button 
+        onClick={_ => { addLineItem(item) }}
+        children='add to cart' 
         className='uppercase tracking-widest font-bold w-full 
         dark:bg-pink-500 bg-black text-white
           p-2 chat-card border rounded-md text-xs' />

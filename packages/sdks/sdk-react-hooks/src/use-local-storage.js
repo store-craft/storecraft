@@ -63,7 +63,7 @@ export const create_local_storage_hook = (key, defaultValue) => {
 
     const setState = useCallback(
       /**
-       * @param {S} $state 
+       * @param {S | ((prev: S) => S)} $state 
        */
       ($state) => {
         let new_state = $state;
@@ -72,7 +72,7 @@ export const create_local_storage_hook = (key, defaultValue) => {
           new_state = $state(state);
         }
 
-        notify($state);
+        notify(/** @type {S} */(new_state));
 
       }, []
     );

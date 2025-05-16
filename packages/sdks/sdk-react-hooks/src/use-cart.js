@@ -39,15 +39,20 @@ export const useCart = () => {
     setState: setCart,
   } = useCartState(create_new_cart());
 
-  const addItem = useCallback(
+  /**
+   * @description Add Line iten with quantity to the cart
+   */
+  const addLineItem = useCallback(
     /**
-     * @description Add an item to the cart
-     * @param {ProductType} product 
-     * @param {number} [quantity=1] 
+     * @param {ProductType} product
+     * @param {number} quantity
      */
     (product, quantity = 1) => {
       const item = cart.line_items.find(
-        (item) => item.data.id === product.id
+        (item) => (
+          (item.data.id === product.id) || 
+          (item.data.handle === product.handle)
+        )
       );
       if(item) {
         item.qty = item.qty + quantity;
@@ -62,30 +67,75 @@ export const useCart = () => {
       setCart(
         {
           ...cart,
+          line_items: [...cart.line_items],
           updated_at: new Date().toISOString()
         }
-      )
+      );
     }, [cart]
   );
 
+  // console.log({cart})
+
   /**
-   * @description Remove an item from the cart
+   * @description Remove a line item from the cart
    */
-  const removeItem = useCallback(
+  const removeLineItem = useCallback(
+    /**
+     * @param {string} product_id_or_handle
+     */
     (product_id_or_handle='') => {
+      console.log({product_id_or_handle})
       setCart(
-        {
+        (cart) => ({
           ...cart,
           line_items: cart.line_items.filter(
             (item) => (
-              (item.data.id !== product_id_or_handle) ||
+              (item.data.id !== product_id_or_handle) &&
               (item.data.handle !== product_id_or_handle)
             )
           ),
           updated_at: new Date().toISOString()
+        })
+      );
+
+    }, []
+  );
+
+  /**
+   * @description Update Quantity of an item in the cart
+   */
+  const updateLineItem = useCallback(
+    /**
+     * @param {string} product_id_or_handle
+     * @param {number} [quantity=1]
+     */
+    (product_id_or_handle='', quantity = 1) => {
+      const item = cart.line_items.find(
+        (item) => (
+          (item.data.id === product_id_or_handle) || 
+          (item.data.handle === product_id_or_handle)
+        )
+      );
+
+      if(!item) {
+        return;
+      }
+
+      if(quantity <= 0) {
+        removeLineItem(product_id_or_handle);
+        return;
+      }
+
+      item.qty = quantity;
+      
+      setCart(
+        {
+          ...cart,
+          updated_at: new Date().toISOString()
         }
-      )
-    }, [cart]
+      );
+
+    }, [cart, removeLineItem]
   );
 
   const setCoupons = useCallback(
@@ -137,15 +187,16 @@ export const useCart = () => {
     () => {
       setCart(
         create_new_cart()
-      )
+      );
     }, [cart]
   );
 
   return {
     cart,
     actions: {
-      addItem,
-      removeItem,
+      addLineItem,
+      removeLineItem,
+      updateLineItem,
       setCoupons,
       setShipping,
       setCustomer,

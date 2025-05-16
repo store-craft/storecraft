@@ -52,7 +52,7 @@ export const defaultChatProps: ChatProps["chat"] = {
 export const Chat = (
   {
     chat,
-    className='h-dvh w-screen chat-bg',
+    className='h-dvh w-full chat-bg',
     ...rest
   }: ChatProps
 ) => {
@@ -155,21 +155,6 @@ export const Chat = (
     }, [speak]
   );
 
-  // useEffect(
-  //   () => {
-  //     if(!ref_sticky.current)
-  //       return;
-  //     setTimeout(
-  //       () => ref_chat_messages.current?.scroll(),
-  //       2000
-  //     )
-  //     // ref_chat_messages.current?.scroll()
-  //     // requestAnimationFrame(
-  //     //   () => {ref_chat_messages.current?.scroll()}
-  //     // );
-  //   }, [messages]
-  // );
-
  useEffect(
     () => {
       return pubsub.add(
@@ -193,9 +178,8 @@ export const Chat = (
       } 
       {...rest}>
       <div 
-        className={` -- chat-text w-full 
-          h-full flex flex-row justify-center items-center
-          font-inter`} >
+        className='chat-text w-full h-full flex flex-row 
+          justify-center items-center font-inter' >
         <div 
           className='max-w-[800px] w-full h-full relative --bg-red-100 
             flex flex-col gap-0 items-center'>

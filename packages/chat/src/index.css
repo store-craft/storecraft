@@ -59,6 +59,15 @@
 }
 
 @layer components {
+  .border,
+  .border-r,
+  .border-l,
+  .border-t,
+  .border-b,
+  .border-x,
+  .border-y {
+    @apply border-gray-300 dark:border-slate-600;
+  }
 
   .chat-bg {
     @apply bg-gray-100 dark:bg-gray-800;

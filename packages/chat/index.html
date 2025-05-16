@@ -9,7 +9,7 @@
   <body class="bg-gray-800">
     <div id="root"></div>
     <script type="module" dsrc="/src/auto-mount.ts">
-      import { mountStorecraftChat } from '/src/index.tsx';
+      import { mountChatApp, mountStorecraftChat } from '/src/index.tsx';
 
       const { threadId } = Object.fromEntries(
         new URLSearchParams(window.location.search)
@@ -17,17 +17,19 @@
 
       console.log({ threadId });
       
-      mountStorecraftChat(
+      mountChatApp(
         document.getElementById('root'), 
         {
-          chat: {
-            threadId,
-            storecraft_config: {
-              endpoint: 'http://10.100.102.104:8000',
+          config: {
+            chat: {
+              threadId,
+              storecraft_config: {
+                endpoint: 'http://10.100.102.104:8000',
+              },
+              apply_default_background_style: true,
+              default_dark_mode: true
             },
-            apply_default_background_style: true,
-            default_dark_mode: true
-          },
+          }
           // className: 'h-dvh w-[400px] bg-gray-100 dark:bg-gray-800'
         }
       );

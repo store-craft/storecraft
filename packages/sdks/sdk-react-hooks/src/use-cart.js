@@ -26,13 +26,14 @@ const create_new_cart = () => {
     id: undefined,
     customer: {
       email: undefined,
-      id: undefined
+      customer_id: undefined,
     }
   }
 }
 
 /**
- * @description useCart is a custom hook that manages the cart state.
+ * @description useCart is a custom hook that manages 
+ * the cart state.
  */
 export const useCart = () => {
 
@@ -203,9 +204,13 @@ export const useCart = () => {
       sdk.checkout.pricing(
         {
           line_items: cart.line_items,
-          shipping: cart.shipping,
-          coupons: cart.coupons,
-          customer: cart.customer
+          shipping_method: cart.shipping,
+          coupons: cart.coupons.map(
+            (v) => ({
+              handle: v
+            })
+          ),
+          contact: cart.customer,
         }
       )
     }, [cart, sdk]

@@ -35,7 +35,7 @@ export const ToolResultContent_BrowseCollectionProducts = (
     return null;
 
   return (
-    <>
+    <div className='w-full flex flex-col gap-2 h-fit'>
       <FlashCard card={{ms:3000, border: false}}>
         <div 
           children={params.title} 
@@ -49,6 +49,6 @@ export const ToolResultContent_BrowseCollectionProducts = (
           }
         }
       />
-    </>
+    </div>
   )
 }

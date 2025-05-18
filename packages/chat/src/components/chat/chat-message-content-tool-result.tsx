@@ -1,6 +1,5 @@
 import { type content_tool_result } from "@storecraft/core/ai";
 import { type TOOLS } from "@storecraft/core/ai/agents/store/agent.tools.js";
-import { type withDiv } from "./common.types";
 import { ToolResultContent_Products } from "./chat-contents/chat-tool-result-search-products";
 import { ToolResultContent_ShippingMethods } from "./chat-contents/chat-tool-result-fetch-shipping";
 import { ToolResultContent_Collections } from "./chat-contents/chat-tool-result-fetch-collections";
@@ -10,6 +9,7 @@ import { ToolResultContent_BrowseCollectionProducts } from "./chat-contents/chat
 import { ToolResultContent_BrowseDiscountProducts } from "./chat-contents/chat-tool-result-browse-discount-products";
 import { ToolResultContent_BrowseAllProducts } from "./chat-contents/chat-tool-result-browse-all-products";
 import { ToolResultContent_BrowseCustomerOrders } from "./chat-contents/chat-tool-result-browse-customer-order";
+import { type withDiv } from "./common.types";
 
 export type tool_names = keyof ReturnType<typeof TOOLS>;
 export type Params = withDiv<

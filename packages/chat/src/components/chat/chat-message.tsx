@@ -168,7 +168,7 @@ export const AssistantChatMessageView = (
           sm:ml-3 sm:w-8 sm:border-1 w-0 ` + 
           (remove ? 'w-0 sm:w-0 ml-0 border-0' : 'ml-3 sm:w-8 border-0')} />
 
-      <div className='flex flex-col gap-3 px-3 w-full overflow-x-hidden'>
+      <div className='flex flex-1 flex-col gap-3 px-3 w-full overflow-x-scroll'>
         {
           message.contents?.map(
             (c, ix) => content_to_view(c, ix)

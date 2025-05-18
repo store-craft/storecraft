@@ -118,7 +118,7 @@ export const ProductsBrowserView = (
   //   return null;
 
   return (
-    <div className='w-full h-fit flex flex-col gap-3'>
+    <div className='w-full h-fit flex flex-col gap-3 '>
 
       {/* Navigator */}
       <div 
@@ -140,25 +140,31 @@ export const ProductsBrowserView = (
 
 
       {/* Carousel */}
-      <div 
-        className='flex flex-row w-full gap-2
-          overflow-x-auto h-fit pr-40'
-        style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}>
-        {
-          page.map(
-            (item, ix) => (
-              <Card 
-                key={item.handle} 
-                card={{loading: loading, border: true}} 
-                className='w-fit' >
-                <ProductCardView 
-                  key={ix} 
-                  item={item} 
-                  index={ix} />
-              </Card>
+      <div  
+        className='w-full h-fit --bg-amber-200  --w-40 --flex-1 --w-full overflow-auto --h-fit'
+        style={{'maskImage': 'linear-gradient(to right, rgba(0, 0, 0, 1.0) 80%, transparent 100%)'}}
+        >
+        <div 
+          className='w-fit flex flex-1 flex-row gap-2 h-fit pr-40 overflow-scroll'
+          >
+          {
+            page.map(
+              (item, ix) => (
+                // <div className="h-40 w-40 bg-white" key={ix} />
+                <Card 
+                  key={item.handle} 
+                  card={{loading: loading, border: true}} 
+                  className='w-fit' >
+                  <ProductCardView 
+                    key={ix} 
+                    item={item} 
+                    index={ix} />
+                </Card>
+              )
             )
-          )
-        }
+          }
+        </div>
+
       </div>
 
       {/* Filter view */}

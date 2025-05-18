@@ -1,4 +1,4 @@
-import { LineItem, ProductType, ShippingMethodType } from "@storecraft/core/api"
+import { AddressType, LineItem, OrderContact, ProductType, ShippingMethodType } from "@storecraft/core/api"
 import { create_local_storage_hook } from "./use-local-storage.js"
 import React, { useCallback } from "react"
 
@@ -13,8 +13,7 @@ export type CartType = {
   created_at?: string
   updated_at?: string
   id?: string
-  customer?: {
-    email?: string
-    id?: string
-  }
+  customer?: OrderContact,
+  address?: AddressType,
+  notes?: string,
 }

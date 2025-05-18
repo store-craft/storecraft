@@ -55,9 +55,12 @@ const CartHeader = (
           className='text-xl cursor-pointer' 
           onClick={cart?.onClose}
         />    
-        <span 
-          className='font-semibold text-xl uppercase italic tracking-tight'
-          children='Cart'/>
+        <div className="flex flex-row gap-2 items-center">
+          <CiShoppingCart className='text-2xl' />
+          <span 
+            className='font-semibold text-xl uppercase italic tracking-tight'
+            children='Cart'/>
+        </div>
         <span 
           className='font-medium text-base 
             font-mono' 

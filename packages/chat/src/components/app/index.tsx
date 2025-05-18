@@ -1,6 +1,9 @@
 import { Chat, ChatProps } from "@/components/chat/chat"
 import { Cart, CartProps } from "../cart";
 import useDarkMode from "@/hooks/use-dark-mode";
+import useToggle from "@/hooks/use-toggle";
+import { useEffect, useState } from "react";
+import { useCart } from "@storecraft/sdk-react-hooks";
 
 export type ChatAppProps = {
   config?: {
@@ -23,47 +26,56 @@ export const ChatApp = (
   }: ChatAppProps
 ) => {
   const { darkMode } = useDarkMode();
+  const [isCartOpen, setCartOpen] = useState(true);
+  const {
+    events: {
+      subscribe
+    }
+  } = useCart();
+
+  useEffect(
+    () => {
+      return subscribe(
+        (event) => {
+          console.log('event', event);
+          if(event==='add_line_item')
+            setCartOpen(true);
+        }
+      )
+    }, [subscribe]
+  );
 
   return (
     <div 
       className={
-        className + ' ' + (darkMode ? 'dark bg-red-400' : '')
+        className + ' ' + (darkMode ? 'dark --bg-red-400' : '')
       }
       {...rest}
       >
       <div 
-        className='flex flex-row w-full --overflow-x-scroll 
-          h-full justify-between'>
-
-        {/* <div className="bg-red-400 flex flex-1 h-full" >
-        </div> */}
-
-        {/* <div className="bg-green-400 flex flex-row flex-1  h-full overflow-scroll" >
-            <div className="w-fit flex flex-row  gap-2 ">
-              {
-                Array.from({length: 12}).map(
-                  (_, ix) => (
-                    <div 
-                      key={ix} 
-                      className="w-20 h-20 bg-white border-2 border-blue-400" 
-                      children={`Thread ${ix}`} />
-                  )
-                )
-              }
-            </div>
-          
-        </div> */}
+        className='flex flex-row w-full overflow-x-hidden 
+          h-full justify-between relative'>
 
         <Chat 
           chat={config?.chat}
-          className='max-w-full flex-1 --w-full h-full chat-bg '
-          cclassName='max-w-full --shrink flex-1 h-full chat-bg'
+          className='max-w-full md:flex-1 mx-auto 
+            h-full chat-bg '
         />
 
-        <Cart 
-          className='max-w-[400px] h-full --grow-0 --shrink ' 
-          cclassName='w-full flex-1 max-w-[400px] h-full --shrink ' 
-        />
+        {
+          // isCartOpen && 
+          <Cart 
+            className={
+              'w-[400px] h-full shrink-0 \
+              absolute right-0 top-0 lg:relative z-10 --hidden \
+              transition-all  duration-400 ' +
+              (isCartOpen ? 'max-w-[400px]' : 'max-w-0')
+            }
+            cart={{
+              onClose: () => setCartOpen(false),
+            }}
+          />
+        }
 
       </div>
     </div>

@@ -17,3 +17,9 @@ export type CartType = {
   address?: AddressType,
   notes?: string,
 }
+
+
+export type CartEvents = 'add_line_item' | 
+  'remove_line_item' | 'update_line_item' | 'clear_cart';
+
+export type CartSubscriber = (event: CartEvents, payload?: any) => void;

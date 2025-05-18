@@ -2,16 +2,41 @@
  * @import { 
  *  LineItem, ProductType, ShippingMethodType 
  * } from "@storecraft/core/api"
- * @import { CartType } from "./use-cart.types.js"
+ * @import { CartEvents, CartSubscriber, CartType } from "./use-cart.types.js"
  */
 
 import { create_local_storage_hook, useStorecraft } from "@storecraft/sdk-react-hooks"
-import React, { useCallback } from "react"
+import React, { useCallback, useMemo } from "react"
 
 /**
  * @type {ReturnType<typeof create_local_storage_hook<CartType>>}
  */
 const useCartState = create_local_storage_hook('storecraft_latest_cart');
+
+/** @type {Set<CartSubscriber>} */
+const subs = new Set();
+
+/**
+ * @param {CartSubscriber} cb 
+ */
+const subscribe = cb => {
+  subs.add(cb);
+  return () => {
+    subs.delete(cb)
+  }
+}
+
+/**
+ * @param {CartEvents} event 
+ * @param {any} payload 
+ */
+const notify = (event, payload) => {
+  // console.log(subs)
+  subs.forEach(
+    cb => cb(event, payload)
+  );
+}
+  
 
 /**
  * @returns {CartType}
@@ -79,6 +104,7 @@ export const useCart = () => {
           updated_at: new Date().toISOString()
         }
       );
+      notify('add_line_item');
     }, [cart]
   );
 
@@ -105,6 +131,8 @@ export const useCart = () => {
           updated_at: new Date().toISOString()
         })
       );
+
+      notify('remove_line_item');
 
     }, []
   );
@@ -143,6 +171,7 @@ export const useCart = () => {
         }
       );
 
+      notify('update_line_item');
     }, [cart, removeLineItem]
   );
 
@@ -196,12 +225,18 @@ export const useCart = () => {
       setCart(
         create_new_cart()
       );
+      notify('clear_cart');
     }, [cart]
   );
 
+  /**
+   * @description get the exact pricing of the cart
+   * from the backend. This will calculate the 
+   * shipping, taxes and discounts (both automatic and coupons).
+   */
   const pricing = useCallback(
-    async () => {
-      sdk.checkout.pricing(
+    () => {
+      return sdk.checkout.pricing(
         {
           line_items: cart.line_items,
           shipping_method: cart.shipping,
@@ -216,14 +251,36 @@ export const useCart = () => {
     }, [cart, sdk]
   );
 
-  const subTotal = cart.line_items.reduce(
-    (acc, item) => {
-      return acc + (item.data.price * item.qty);
-    }, 0
+  /**
+   * @description Quick Subtotal of the cart
+   * without calculating shipping, taxes and discounts.
+   * For better pricing, use the {@link pricing()} method.
+   */
+  const quickSubTotal = useMemo(
+    () => cart.line_items.reduce(
+      (acc, item) => {
+        return acc + (item.data.price * item.qty);
+      }, 0
+    ), [cart]
   );
 
+  /**
+   * @description get the number of items in the cart,
+   * taking into account the quantity of each item.
+   */
+  const itemsCount = useMemo(
+    () => cart.line_items.reduce(
+      (acc, item) => {
+        return acc + item.qty;
+      }, 0
+    ), [cart]
+  );
+  
+  
   return {
     cart,
+    itemsCount,
+    quickSubTotal,
     actions: {
       addLineItem,
       removeLineItem,
@@ -231,7 +288,12 @@ export const useCart = () => {
       setCoupons,
       setShipping,
       setCustomer,
-      clearCart
+      clearCart,
+      pricing,
+    },
+    events: {
+      subscribe,
+      notify,
     }
   }
 }

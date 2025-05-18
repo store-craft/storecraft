@@ -1,9 +1,13 @@
 import { useCart } from "@storecraft/sdk-react-hooks";
 import React from "react"
 import { CartLineItems } from "./cart-line-items";
+import { CiShoppingCart } from "react-icons/ci";
+import { MdClose } from "react-icons/md";
 
 export type CartProps = {
-  cart?: {}
+  cart?: {
+    onClose?: () => void,
+  }
 } & React.ComponentProps<'div'>;
 
 export const Cart = (
@@ -22,7 +26,7 @@ export const Cart = (
           chat-text  chat-bg border-l'>
         {/* <div children='tomer ' className="h-20 w-full bg-green-200"/> */}
         {/* Cart Header */}
-        <CartHeader className='w-full' />
+        <CartHeader className='w-full' cart={cart_prop} />
 
         {/* Line Items   */}
         <CartLineItems className='flex-1 overflow-scroll' />
@@ -37,23 +41,27 @@ export const Cart = (
 
 const CartHeader = (
   {
-    ...rest
+    cart, ...rest
   } : CartProps
 ) => {
-  const { cart } = useCart();
+  const { itemsCount } = useCart();
 
   return (
     <div {...rest}>
       <div 
         className='flex flex-row w-full justify-between 
           items-center border-b p-2 font-semibold'>
+        <MdClose 
+          className='text-xl cursor-pointer' 
+          onClick={cart?.onClose}
+        />    
         <span 
-          className='font-semibold text-xl'
+          className='font-semibold text-xl uppercase italic tracking-tight'
           children='Cart'/>
         <span 
           className='font-medium text-base 
             font-mono' 
-          children={`(${cart.line_items.length})`} 
+          children={`(${itemsCount ?? 0})`} 
         />
       </div>    
     </div>
@@ -65,6 +73,8 @@ const CartFooter = (
     cart, ...rest
   } : CartProps
 ) => {
+  const { quickSubTotal } = useCart();
+
   return (
     <div {...rest}>
       <div 
@@ -73,10 +83,10 @@ const CartFooter = (
           className='flex flex-row w-full justify-between 
             items-center --border-b py-2 font-semibold'>
           <span 
-            className='font-medium text-xl tracking-wider'
-            children='SubTotal'/>
+            className='font-bold text-xl --tracking-wide uppercase italic'
+            children='Sub-Total'/>
           <span 
-            children={500} 
+            children={quickSubTotal ?? 0} 
             className='font-normal font-mono
               text-base' 
           />

@@ -7,9 +7,7 @@ import useTrigger from "./use-trigger.js";
 
 
 /**
- * 
  * `useAuth` hook 
- * 
  */
 export const useAuth = () => {
 

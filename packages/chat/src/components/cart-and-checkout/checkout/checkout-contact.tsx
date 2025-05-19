@@ -18,15 +18,6 @@ export const CheckoutContact = (
     }
   } = useCheckout();
 
-  const onNext = useCallback(
-    () => {
-      // perform validation
-      if(true) {
-        checkout?.next();
-      }
-    }, [checkout]
-  );
-
   const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     (e) => {
       e.preventDefault();
@@ -41,6 +32,9 @@ export const CheckoutContact = (
       setAddress(
         address_result?.address
       );
+
+      checkout?.next();
+
     }, [checkout]
   );
 

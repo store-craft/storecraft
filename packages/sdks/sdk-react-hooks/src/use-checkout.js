@@ -293,6 +293,7 @@ export const useCheckout = () => {
   
   
   return {
+    errors,
     checkout,
     itemsCount,
     quickSubTotal,

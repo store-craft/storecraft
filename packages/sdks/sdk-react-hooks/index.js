@@ -6,4 +6,5 @@ export * from './src/use-storecraft.js'
 export * from './src/use-storecraft-cache.js'
 export * from './src/use-quick-search.js'
 export * from './src/use-cart.js'
+export * from './src/use-checkout.js'
 

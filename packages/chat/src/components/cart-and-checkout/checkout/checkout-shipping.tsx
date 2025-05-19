@@ -1,50 +1,44 @@
-import { useCart } from "@storecraft/sdk-react-hooks";
-import React from "react"
-import { CartLineItems } from "./cart-line-items";
-import { CiShoppingCart } from "react-icons/ci";
-import { MdClose } from "react-icons/md";
+import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
+import { useCallback } from "react"
+import { MdOutlineArrowBack, MdOutlineLocalShipping } from "react-icons/md";
+import { CheckoutProps } from ".";
 import { Button } from "../common/button";
 
-export type CartProps = {
-  cart?: {
-    onClose?: () => void,
-    onCheckoutClicked?: () => void,
-  }
-} & React.ComponentProps<'div'>;
-
-export const Cart = (
+export const CheckoutShipping = (
   {
-    cart: cart_prop, ...rest
-  } : CartProps
+    checkout, ...rest
+  } : CheckoutProps
 ) => {
   const {
-    cart
-  } = useCart();
+  } = useCheckout();
+
+  const onNext = useCallback(
+    () => {
+      // perform validation
+      if(true) {
+        checkout?.next();
+      }
+    }, [checkout]
+  );
 
   return(
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text chat-bg border-l'>
+          chat-text  chat-bg border-l'>
 
         {/* Cart Header */}
-        <Header className='w-full' cart={cart_prop} />
-
-        {/* Line Items   */}
-        <CartLineItems className='flex-1 overflow-scroll' />
+        <Header 
+          className='w-full' 
+          checkout={checkout} 
+        />
 
         {/* Footer */}
-        <div className='w-full h-fit'>
-          {
-            (cart.line_items.length > 0) && (
-              <Button 
-                onClick={cart_prop?.onCheckoutClicked}
-                children='Checkout'
-              />
-            )
-          }
-          <Footer className='w-full h-fit' />
-        </div>
+        <Button 
+          children='Next'
+          className='w-full h-fit ' 
+          onClick={onNext}
+        />
 
       </div>
     </div>
@@ -53,31 +47,30 @@ export const Cart = (
 
 const Header = (
   {
-    cart, ...rest
-  } : CartProps
+    checkout, ...rest
+  } : CheckoutProps
 ) => {
-  const { itemsCount } = useCart();
 
   return (
     <div {...rest}>
       <div 
         className='flex flex-row w-full justify-between 
           items-center border-b p-2 font-semibold'>
-        <MdClose 
+        <MdOutlineArrowBack 
           className='text-xl cursor-pointer' 
-          onClick={cart?.onClose}
+          onClick={checkout?.back}
         />    
         <div className="flex flex-row gap-2 items-center">
-          <CiShoppingCart className='text-2xl' />
+          <MdOutlineLocalShipping className='text-2xl' />
           <span 
             className='font-semibold text-xl uppercase 
               italic tracking-tight'
-            children='Cart'/>
+            children='Shipping'/>
         </div>
         <span 
           className='font-medium text-base 
             font-mono' 
-          children={`(${itemsCount ?? 0})`} 
+          children={``} 
         />
       </div>    
     </div>
@@ -86,8 +79,8 @@ const Header = (
 
 const Footer = (
   {
-    cart, ...rest
-  } : CartProps
+    checkout, ...rest
+  } : CheckoutProps
 ) => {
   const { quickSubTotal } = useCart();
 

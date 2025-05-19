@@ -8,18 +8,16 @@ import React, { useCallback } from "react"
  */
 export type CartType = {
   line_items: LineItem[]
-  shipping?: ShippingMethodType
-  coupons?: string[]
   created_at?: string
   updated_at?: string
   id?: string
-  customer?: OrderContact,
-  address?: AddressType,
-  notes?: string,
 }
 
 
-export type CartEvents = 'add_line_item' | 
-  'remove_line_item' | 'update_line_item' | 'clear_cart';
+export type CartEvents = 
+  'add_line_item' | 
+  'remove_line_item' | 
+  'update_line_item' | 
+  'clear_cart';
 
 export type CartSubscriber = (event: CartEvents, payload?: any) => void;

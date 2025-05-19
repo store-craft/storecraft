@@ -1,7 +1,6 @@
 import { Chat, ChatProps } from "@/components/chat/chat"
-import { Cart, CartProps } from "../cart";
+import { CartAndCheckout, CartProps } from "../cart-and-checkout";
 import useDarkMode from "@/hooks/use-dark-mode";
-import useToggle from "@/hooks/use-toggle";
 import { useEffect, useState } from "react";
 import { useCart } from "@storecraft/sdk-react-hooks";
 
@@ -64,7 +63,7 @@ export const ChatApp = (
 
         {
           // isCartOpen && 
-          <Cart 
+          <CartAndCheckout 
             className={
               'w-[400px] h-full shrink-0 \
               absolute right-0 top-0 lg:relative z-10 --hidden \

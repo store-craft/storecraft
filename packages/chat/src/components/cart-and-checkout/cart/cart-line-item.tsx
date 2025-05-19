@@ -1,7 +1,7 @@
 import { type LineItem, type ProductType } from "@storecraft/core/api";
 import { useCart } from "@storecraft/sdk-react-hooks";
 import React from "react"
-import { LoadingImage, LoadingSingleImage } from "../common/loading-image";
+import { LoadingImage, LoadingSingleImage } from "../../common/loading-image";
 import { Counter } from "./counter";
 import { IoClose } from "react-icons/io5";
 

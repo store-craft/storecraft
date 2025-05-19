@@ -4,16 +4,15 @@ import { CartLineItems } from "./cart-line-items";
 import { CiShoppingCart } from "react-icons/ci";
 import { MdClose } from "react-icons/md";
 
-export type CartProps = {
-  cart?: {
-    onClose?: () => void,
+export type CheckoutProps = {
+  checkout?: {
   }
 } & React.ComponentProps<'div'>;
 
-export const Cart = (
+export const Checkout = (
   {
-    cart: cart_prop, ...rest
-  } : CartProps
+    checkout: undefined, ...rest
+  } : CheckoutProps
 ) => {
   const {
     cart
@@ -58,7 +57,8 @@ const CartHeader = (
         <div className="flex flex-row gap-2 items-center">
           <CiShoppingCart className='text-2xl' />
           <span 
-            className='font-semibold text-xl uppercase italic tracking-tight'
+            className='font-semibold text-xl uppercase 
+              italic tracking-tight'
             children='Cart'/>
         </div>
         <span 

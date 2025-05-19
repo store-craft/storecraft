@@ -44,15 +44,9 @@ const notify = (event, payload) => {
 const create_new_cart = () => {
   return {
     line_items: [],
-    shipping: undefined,
-    coupons: [],
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     id: undefined,
-    customer: {
-      email: undefined,
-      customer_id: undefined,
-    }
   }
 }
 
@@ -175,51 +169,6 @@ export const useCart = () => {
     }, [cart, removeLineItem]
   );
 
-  const setCoupons = useCallback(
-    /**
-     * @param {string[]} [coupons=[]] 
-     */
-    (coupons = []) => {
-      setCart(
-        {
-          ...cart,
-          coupons: coupons,
-          updated_at: new Date().toISOString()
-        }
-      )
-    }, [cart]
-  );
-
-  const setShipping = useCallback(
-    /**
-     * @param {ShippingMethodType} shipping 
-     */
-    (shipping) => {
-      setCart(
-        {
-          ...cart,
-          shipping: shipping,
-          updated_at: new Date().toISOString()
-        }
-      )
-    }, [cart]
-  );
-
-  const setCustomer = useCallback(
-    /**
-     * @param {CartType["customer"]} customer 
-     */
-    (customer) => {
-      setCart(
-        {
-          ...cart,
-          customer: customer,
-          updated_at: new Date().toISOString()
-        }
-      )
-    }, [cart]
-  );
-
   const clearCart = useCallback(
     () => {
       setCart(
@@ -229,27 +178,6 @@ export const useCart = () => {
     }, [cart]
   );
 
-  /**
-   * @description get the exact pricing of the cart
-   * from the backend. This will calculate the 
-   * shipping, taxes and discounts (both automatic and coupons).
-   */
-  const pricing = useCallback(
-    () => {
-      return sdk.checkout.pricing(
-        {
-          line_items: cart.line_items,
-          shipping_method: cart.shipping,
-          coupons: cart.coupons.map(
-            (v) => ({
-              handle: v
-            })
-          ),
-          contact: cart.customer,
-        }
-      )
-    }, [cart, sdk]
-  );
 
   /**
    * @description Quick Subtotal of the cart
@@ -285,11 +213,7 @@ export const useCart = () => {
       addLineItem,
       removeLineItem,
       updateLineItem,
-      setCoupons,
-      setShipping,
-      setCustomer,
       clearCart,
-      pricing,
     },
     events: {
       subscribe,

@@ -1660,7 +1660,6 @@ export interface AddressType  {
 
   /**
    * @description The phone number of the recipient
-   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$ Invalid phone number
    */  
   phone_number?: string;
 
@@ -1982,7 +1981,7 @@ export interface BaseCheckoutCreateType {
   /** 
    * @description Shipping method `handle` or `id`
    */
-  shipping_method: Partial<HandleAndID>; 
+  shipping_method: HandleOrID; 
   // shipping_method: Partial<ShippingMethodType>; 
 }
 

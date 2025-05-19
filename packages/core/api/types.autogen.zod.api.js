@@ -720,7 +720,6 @@ export const addressTypeSchema = z.object({
   lastname: z.string().optional().describe("Last name of recipient"),
   phone_number: z
     .string()
-    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$ Invalid phone number/)
     .optional()
     .describe("The phone number of the recipient"),
   company: z.string().optional().describe("Optional company name of recipient"),
@@ -1778,9 +1777,9 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: handleAndIDSchema
-    .partial()
-    .describe("Shipping method `handle` or `id`"),
+  shipping_method: handleOrIDSchema.describe(
+    "Shipping method `handle` or `id`",
+  ),
 });
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({

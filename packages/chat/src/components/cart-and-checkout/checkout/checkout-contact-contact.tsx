@@ -1,11 +1,6 @@
-import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
-import { useCallback } from "react"
-import { MdClose } from "react-icons/md";
+import { useCheckout } from "@storecraft/sdk-react-hooks";
 import { CheckoutProps } from ".";
-import { IoMdContact } from "react-icons/io";
-import { Button } from "../common/button";
 import { Input } from "../common/input";
-import { CountrySelect } from "../common/country-select";
 
 export const CheckoutContactContact = (
   {
@@ -30,9 +25,12 @@ export const CheckoutContactContact = (
 
         <Input 
           className='w-full'
+          type='email'
+          required 
           input={{
             title: 'Email',
-            inputClassName: 'border h-12'
+            inputClassName: 'border h-12',
+            warning: 'Please enter a valid email address',
           }}
         />
       </div>

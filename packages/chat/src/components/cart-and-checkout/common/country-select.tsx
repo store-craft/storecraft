@@ -12,7 +12,7 @@ export type InputProps = {
     title?: string,
     inputClassName?: string,
   }
-} & React.ComponentProps<'div'>;
+} & React.ComponentProps<'input'>;
 
 export type InputImperativeinterface = {
   getText: () => string
@@ -88,6 +88,7 @@ export const CountrySelect = forwardRef(
                 key={index} 
                 value={country.code} 
                 children={country.name} 
+                selected={country.code === text}
               />
             ))
           }

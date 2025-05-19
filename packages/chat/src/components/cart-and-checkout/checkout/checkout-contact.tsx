@@ -1,11 +1,11 @@
 import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
-import { useCallback } from "react"
+import { useCallback, useRef } from "react"
 import { MdClose } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { IoMdContact } from "react-icons/io";
 import { Button } from "../common/button";
 import { CheckoutContactContact } from "./checkout-contact-contact";
-import { CheckoutContactAddress } from "./checkout-contact-address";
+import { CheckoutAddressimperativeInterface, CheckoutContactAddress } from "./checkout-contact-address";
 
 export const CheckoutContact = (
   {
@@ -13,6 +13,9 @@ export const CheckoutContact = (
   } : CheckoutProps
 ) => {
   const {
+    suggested: {
+      setAddress
+    }
   } = useCheckout();
 
   const onNext = useCallback(
@@ -24,11 +27,31 @@ export const CheckoutContact = (
     }, [checkout]
   );
 
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
+    (e) => {
+      e.preventDefault();
+      
+      const address_result = ref_address.current?.getAddress();
+
+      if(!address_result?.isValid) {
+        // show error
+        return;
+      }
+
+      setAddress(
+        address_result?.address
+      );
+    }, [checkout]
+  );
+
+  const ref_address = useRef<CheckoutAddressimperativeInterface>(null);
+
   return(
     <div {...rest}>
-      <div 
+      <form 
         className='w-full h-full flex flex-col 
-          chat-text  chat-bg border-l '>
+          chat-text  chat-bg border-l '
+        onSubmit={onSubmit}>
         {/* Cart Header */}
         <Header 
           className='w-full' 
@@ -40,27 +63,28 @@ export const CheckoutContact = (
             
           {/* content */}
           <div 
-            className='w-full flex flex-col gap-5 p-2 '>
+            className='w-full flex flex-col gap-5 p-2 '
+          >
             <CheckoutContactContact
               className='w-full' 
-          />
-
-          <CheckoutContactAddress 
-            className='w-full'
-          />
-
-        </div>
+            />
+            <CheckoutContactAddress 
+              ref={ref_address}
+              className='w-full'
+            />
+          </div>
 
         </div>
 
         {/* Footer */}
         <Button 
+          type="submit"
           children='Next'
           className='w-full h-fit cursor-pointer ' 
-          onClick={onNext}
+          onClick={onSubmit}
         />
 
-      </div>
+      </form>
     </div>
   )
 }

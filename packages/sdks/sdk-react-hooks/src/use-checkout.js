@@ -272,7 +272,7 @@ export const useCheckout = () => {
    * For better pricing, use the {@link pricing()} method.
    */
   const quickSubTotal = useMemo(
-    () => suggestedCheckout.line_items.reduce(
+    () => (suggestedCheckout?.line_items ?? []).reduce(
       (acc, item) => {
         return acc + (item.data.price * item.qty);
       }, 0
@@ -284,7 +284,7 @@ export const useCheckout = () => {
    * taking into account the quantity of each item.
    */
   const itemsCount = useMemo(
-    () => suggestedCheckout.line_items.reduce(
+    () => (suggestedCheckout?.line_items ?? []).reduce(
       (acc, item) => {
         return acc + item.qty;
       }, 0

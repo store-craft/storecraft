@@ -1,6 +1,6 @@
 import { 
-  useCallback, useState, 
-  useImperativeHandle, forwardRef 
+  useState, 
+  forwardRef 
 } from 'react'
 import countries from './countries.json' with {type: 'json'}
 
@@ -22,34 +22,15 @@ export const CountrySelect = forwardRef(
   (
     { 
       input: {
-        title='', text='', warning=undefined, 
-        onUpdate=undefined, inputClassName=''
+        title='', warning=undefined, 
+        inputClassName=''
       }, className, ...rest 
     }: InputProps, ref: React.ForwardedRef<InputImperativeinterface>
   ) => {
 
-    const [inner_text, setText] = useState(text)
-    const [isFocused, setFocused] = useState(false)
     const [warn, setWarning] = useState(warning)
     const cls_span = 'opacity-50 top-1';
     const cls_input = 'px-2 pt-5';
-
-    const onChange = useCallback(
-      e => {
-        const v = e.currentTarget.value
-        if(warn) setWarning(undefined)
-        onUpdate && onUpdate(v)
-        setText(v)
-      }, [onUpdate, warn]
-    );
-
-    useImperativeHandle(
-      ref, 
-      () => ({
-        getText : () => inner_text
-      }),
-      [inner_text]
-    );
 
     return (
       <div 
@@ -78,7 +59,7 @@ export const CountrySelect = forwardRef(
           // onFocus={()=>setFocused(true)} 
 
           // ref={ref} 
-          onSelect={onChange} 
+          // onSelect={onChange} 
           {...rest}
         >
           {
@@ -88,7 +69,7 @@ export const CountrySelect = forwardRef(
                 key={index} 
                 value={country.code} 
                 children={country.name} 
-                selected={country.code === text}
+                // selected={country.code === text}
               />
             ))
           }

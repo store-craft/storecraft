@@ -59,12 +59,8 @@ export const Input = forwardRef(
             rounded-md w-full 
             focus:outline-none 
             block text-sm 
-            --text-black 
             dark:placeholder-gray-400 placeholder-gray-600 
-            --bg-slate-100 
-            --rounded-xs 
-            --focus:ring-blue-500 
-            --focus:border-blue-500 
+            hover:ring-blue-500 
             focus:border
             font-light 
             tracking-wide transition-none

@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { IoMdContact } from "react-icons/io";
 import { Button } from "../common/button";
-import { CheckoutContactContact } from "./checkout-contact-contact";
+import { CheckoutContactContact, CheckoutContactImperativeInterface } from "./checkout-contact-contact";
 import { CheckoutAddressimperativeInterface, CheckoutContactAddress } from "./checkout-contact-address";
 
 export const CheckoutContact = (
@@ -14,7 +14,8 @@ export const CheckoutContact = (
 ) => {
   const {
     suggested: {
-      setAddress
+      setAddress,
+      setContact
     }
   } = useCheckout();
 
@@ -23,14 +24,20 @@ export const CheckoutContact = (
       e.preventDefault();
       
       const address_result = ref_address.current?.getAddress();
+      const contact_result = ref_contact.current?.getContact();
+      const isValid = contact_result?.isValid 
+        && address_result?.isValid;
 
-      if(!address_result?.isValid) {
+      if(!isValid) {
         // show error
         return;
       }
 
       setAddress(
         address_result?.address
+      );
+      setContact(
+        contact_result?.contact
       );
 
       checkout?.next();
@@ -39,6 +46,7 @@ export const CheckoutContact = (
   );
 
   const ref_address = useRef<CheckoutAddressimperativeInterface>(null);
+  const ref_contact = useRef<CheckoutContactImperativeInterface>(null);
 
   return(
     <div {...rest}>
@@ -60,6 +68,7 @@ export const CheckoutContact = (
             className='w-full flex flex-col gap-5 p-2 '
           >
             <CheckoutContactContact
+              ref={ref_contact}
               className='w-full' 
             />
             <CheckoutContactAddress 

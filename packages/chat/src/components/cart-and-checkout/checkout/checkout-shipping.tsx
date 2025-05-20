@@ -1,8 +1,9 @@
-import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
-import { useCallback } from "react"
-import { MdOutlineArrowBack, MdOutlineLocalShipping } from "react-icons/md";
+import { useCart, useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
+import React, { useCallback } from "react"
+import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { Button } from "../../common/button";
+import { CheckoutCreateType, ShippingMethodType } from "@storecraft/core/api";
 
 export const CheckoutShipping = (
   {
@@ -10,7 +11,30 @@ export const CheckoutShipping = (
   } : CheckoutProps
 ) => {
   const {
+    suggested: {
+      // setShipping,
+      suggestedCheckout
+    }
   } = useCheckout();
+
+  const {
+    page
+  } = useCollection(
+    'shipping', { limit: 10, vql: 'active=true' }
+  );
+
+  const [shipping, setShipping] = React.useState<CheckoutCreateType["shipping_method"]>(
+    suggestedCheckout.shipping_method
+  );
+
+  const onSelect: ShippingItemProps["shipping"]["onSelect"] = useCallback(
+    (item) => {
+      // perform validation
+      if(true) {
+        checkout?.next();
+      }
+    }, [checkout]
+  );
 
   const onNext = useCallback(
     () => {
@@ -25,7 +49,7 @@ export const CheckoutShipping = (
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text  chat-bg border-l'>
+          --gap-5 chat-text chat-bg border-l'>
 
         {/* Cart Header */}
         <Header 
@@ -33,13 +57,87 @@ export const CheckoutShipping = (
           checkout={checkout} 
         />
 
+        <div className='w-full flex-1 overflow-y-auto'>
+          <div 
+            className='w-full h-fit flex 
+              flex-col gap-3 p-3'>
+            {
+              page?.map(
+                (item) => (
+                  <ShippingItem
+                    key={item.id}
+                    shipping={{
+                      item,
+                      selected: false
+                    }}
+                    className='w-full h-fit '
+                  />
+                )
+              )  
+            }
+          </div>
+        </div>
+
+
         {/* Footer */}
         <Button 
           children='Next'
-          className='w-full h-fit ' 
+          className='w-full h-fit cursor-pointer ' 
           onClick={onNext}
         />
 
+      </div>
+    </div>
+  )
+}
+
+type ShippingItemProps = {
+  shipping: {
+    item: ShippingMethodType,
+    selected: boolean,
+    onSelect?: (item: ShippingMethodType) => void,
+  },
+} & React.ComponentProps<'div'>;
+
+const ShippingItem = (
+  {
+    shipping, 
+    ...rest
+  }: ShippingItemProps
+) => {
+  return (
+    <div {...rest}>
+      <div 
+        className='w-full h-fit flex flex-col 
+          gap-0 rounded-lg border p-2 
+          dark:hover:bg-white/10
+          hover:bg-black/10
+          cursor-pointer'
+        onClick={() => shipping?.onSelect?.(shipping?.item)}>
+        {/* header */}
+        <div 
+          className='w-full flex flex-row 
+            justify-between gap-2 items-center'>
+          <div className='w-fit flex flex-row gap-2 items-center'>
+            <MdOutlineRadioButtonUnchecked className='opacity-50'/>
+            <span 
+              children={shipping?.item?.title} 
+              className='font-semibold text-lg text-ellipsis'
+            />
+          </div>
+          <span 
+            children={shipping?.item?.price} 
+            className='font-normal font-mono text-base'
+          />
+        </div>
+
+        {/* description */}
+        <div className='w-full flex flex-row gap-2 items-center'>
+          <span
+            className='font-light text-sm text-gray-500'
+            children={shipping?.item?.description}
+          />
+        </div>
       </div>
     </div>
   )

@@ -40,7 +40,7 @@ export const Checkout = (
   const {
     checkout
   } = useCheckout();
-  const [flowIndex, setFlowIndex] = useState(0);
+  const [flowIndex, setFlowIndex] = useState(1);
 
   return(
     <div {...rest}>

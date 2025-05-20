@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { sleep } from "../../../hooks/sleep";
-import { type withDiv } from "../common.types";
-import { Card } from "@/components/common/card";
+import { sleep } from "@/hooks/sleep";
 import { useAuth } from "@storecraft/sdk-react-hooks";
-import { Button } from "./common-ui";
+import { Button } from "./button";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { Input } from "./input";
 
 /**
  * @description Easily `format` errors coming from the `storecraft` backend
@@ -24,27 +23,15 @@ export const format_storecraft_errors = (
   ) ?? ['ouch, unexpected error'];
 }
 
-export type Params = withDiv<
-  {
-    chat?: {
-      header?: string
-    }
+export type Params = React.ComponentProps<'div'> & {
+  chat?: {
+    header?: string
   }
->;
-
-const format_error = (e: any) => {
-  if(typeof e === 'string')
-    return e;
-
-  let payload = e?.messages?.[0]?.message 
-    ?? 'unknown error';
-
-  return payload;
 }
 
 export const Login = (
   {
-    chat
+    chat, ...rest
   }: Params
 ) => {
   const [error, setError] = useState<string>(undefined);
@@ -76,9 +63,9 @@ export const Login = (
   );
 
   return (
-    <Card className='w-1/2 '>
+    <div {...rest}>
       <form className='flex flex-col gap-3 
-        p-3 w-full h-fit duration-300 text-sm'
+        w-full h-fit duration-300 text-sm'
         onSubmit={onSubmit}>
         {
           chat?.header && (
@@ -88,28 +75,31 @@ export const Login = (
                 text-base w-full --max-w-20' />
           )
         }
-        <input 
+
+        <Input 
+          className='w-full autofill:bg-green-400'
+          autoComplete="on"
           ref={ref_email}
-          type='email' 
-          autoComplete='on'
-          id='email' 
-          name='email' 
-          placeholder='email' 
-          className='px-3 h-9 border chat-border-color 
-            rounded-md chat-bg-overlay
-            placeholder:font-normal placeholder:text-sm tracking-widest
-            dark:placeholder:text-gray-300 placeholder:text-gray-800'
+          type='email'
+          name={'email' satisfies 'email'}
+          required 
+          input={{
+            title: 'Email',
+            inputClassName: 'border h-12',
+          }}
         />
-        <input 
+
+        <Input 
+          className='w-full'
+          autoComplete="on"
           ref={ref_password}
-          autoComplete='on'
-          id='password' 
-          name='password' 
-          placeholder='password' 
-          className='px-3 h-9 border chat-border-color  
-            rounded-md chat-bg-overlay placeholder:font-normal 
-            placeholder:text-sm tracking-widest 
-            dark:placeholder:text-gray-300 placeholder:text-gray-800'
+          type='password'
+          name={'password' satisfies 'password'}
+          required 
+          input={{
+            title: 'Password',
+            inputClassName: 'border h-12',
+          }}
         />
         {
           error && (
@@ -121,25 +111,24 @@ export const Login = (
           )
         }
         <Button 
+          onClick={onSubmit}
           type='submit' 
-          value='LOGIN' 
-          title='Login' 
-          children={
-            (
-              <div 
-                className='flex flex-row justify-center 
-                  items-center gap-2 tracking-wider'>
-                LOGIN
-                {
-                  isLoadingSignin && 
-                  <CgSpinnerTwoAlt 
-                    className='animate-spin w-5 h-5 text-white' />
-                }
-              </div>
-            ) 
-          }
-        />
+          // value='LOGIN' 
+          title='Login'>
+          <div 
+            className='w-full h-full flex flex-row justify-center 
+              items-center gap-2 tracking-wider'>
+            LOGIN
+            {
+              isLoadingSignin && 
+              <CgSpinnerTwoAlt 
+                className='animate-spin w-5 h-5 
+                  text-white' />
+            }
+          </div>
+
+        </Button>
       </form>
-    </Card>
+    </div>
   )
 }

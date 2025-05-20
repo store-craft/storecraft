@@ -8,7 +8,8 @@ import { useAuth, useCollection } from "@storecraft/sdk-react-hooks";
 import { MdNavigateNext } from "react-icons/md";
 import { PriceTag } from "@/components/common/price-tag";
 import { Table, type TableParams } from "./table";
-import { Login } from "./login";
+import { Login } from "@/components/common/login-form";
+import { Card } from "@/components/common/card";
 
 export type Params = withDiv<
   {
@@ -134,12 +135,14 @@ export const CustomerOrdersView = (
 
   if(!isAuthenticated) {
     return (
-      <div>
-        <Login chat={
-          {header:'Please login to perform this action '}
+      <Card className='max-w-3/4 sm:max-w-1/2 p-3'>
+        <Login 
+          chat={
+            {header:'Please login to perform this action '}
           }
+          className='w-full h-fit'
         />
-      </div>
+      </Card>
     );
   }
 

@@ -2,7 +2,7 @@ import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
 import { useCallback } from "react"
 import { MdOutlineArrowBack, MdOutlineLocalShipping } from "react-icons/md";
 import { CheckoutProps } from ".";
-import { Button } from "../common/button";
+import { Button } from "../../common/button";
 
 export const CheckoutShipping = (
   {

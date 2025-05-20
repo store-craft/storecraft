@@ -1,6 +1,6 @@
 import { 
-  useCallback, useState, 
-  useImperativeHandle, forwardRef 
+  useState, 
+  forwardRef 
 } from 'react'
 
 export type InputProps = {
@@ -11,10 +11,6 @@ export type InputProps = {
     inputClassName?: string,
   }
 } & React.ComponentProps<'input'>;
-
-export type InputImperativeinterface = {
-  getText: () => string
-}
 
 export const Input = forwardRef(
   (
@@ -28,24 +24,25 @@ export const Input = forwardRef(
       value,
       onChange,
       ...rest 
-    }: InputProps, ref: React.ForwardedRef<InputImperativeinterface>
+    }: InputProps, ref: React.ForwardedRef<HTMLInputElement>
   ) => {
 
     // const [inner_text, setText] = useState(text)
     const [isFocused, setFocused] = useState(false)
-
-    const cls_span = (isFocused || value!=='') ? 
-      'opacity-70 top-1' : 'opacity-0 top-3'
-    const cls_input = (isFocused || value!=='') ? 
-      'px-2 pt-5' : 'px-2'
-
-    useImperativeHandle(
-      ref, 
-      () => ({
-        getText : () => String(value)
-      }),
-      [value]
+    const [isEmpty, setIsEmpty] = useState(
+      !Boolean(value ?? rest?.defaultValue ?? '')
     );
+
+    const cls_span = (isFocused || !isEmpty) ? 
+      'opacity-70 top-1' : 'opacity-0 top-3';
+    const cls_input = (isFocused || !isEmpty) ? 
+      'px-2 pt-5' : 'px-2';
+
+    const obChange_internal = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.currentTarget.value;
+      setIsEmpty(!Boolean(value));
+      onChange?.(e);
+    }
 
     return (
       <div 
@@ -53,6 +50,7 @@ export const Input = forwardRef(
         sstyle={{direction:'rtl'}}>
 
         <input 
+          ref={ref}
           onWheel={(e) => e.target.blur()}
           className={
             `${cls_input} 
@@ -72,7 +70,7 @@ export const Input = forwardRef(
           // ref={ref} 
           onBlur={()=>setFocused(false)} 
           onFocus={()=>setFocused(true)} 
-          onChange={onChange} 
+          onChange={obChange_internal} 
           {...rest}
         />
 

@@ -5,7 +5,7 @@
 /* width */
 ::-webkit-scrollbar {
   height: 5px;
-  width: 5px;
+  width: 0px;
 }
 ::-webkit-scrollbar-track {
   background: #00000000;
@@ -21,6 +21,7 @@
   background: rgba(0.0, 0.0, 0.0, 0.5);
 }
 
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -31,7 +32,7 @@ select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   /* border: 1px solid #253341; */
-  -webkit-text-fill-color: gray;
+  -webkit-text-fill-color: forestgreen;
   -webkit-box-shadow: 0 0 0px 1000px rgba(0.0, 0.0, 0.0, 0.0) inset;
   box-shadow: 0 0 0px 1000px rgba(0.0, 0.0, 0.0, 0.0) inset;
   transition: background-color 5000s ease-in-out 0s;

@@ -3,7 +3,7 @@ import React from "react"
 import { CartLineItems } from "./cart-line-items";
 import { CiShoppingCart } from "react-icons/ci";
 import { MdClose } from "react-icons/md";
-import { Button } from "../common/button";
+import { Button } from "../../common/button";
 
 export type CartProps = {
   cart?: {

@@ -1,8 +1,9 @@
 import { useAuth, useCheckout } from "@storecraft/sdk-react-hooks";
 import { CheckoutProps } from ".";
-import { Input } from "../common/input";
+import { Input } from "@/components/common/input";
 import { OrderContact } from "@storecraft/core/api";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { Login } from "@/components/common/login-form";
 
 const validateEmail = (email='') => {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -15,7 +16,6 @@ export type CheckoutContactImperativeInterface = {
     isValid: boolean
   }
 }
-
 
 export const CheckoutContactContact = forwardRef((
   {
@@ -31,18 +31,35 @@ export const CheckoutContactContact = forwardRef((
       suggestedCheckout,
     }
   } = useCheckout();
-  const {
+  const { 
     isAuthenticated,
-    contact: auth_contact
+    contact: auth_contact,
+    actions: {
+      signout
+    }
   } = useAuth();
 
   const [contact, setContact] = useState({
     ...(suggestedCheckout?.contact ?? {}),
-    ...(auth_contact ?? {}),
+    ...(isAuthenticated ? auth_contact : {}),
   });
   const [warning, setWarning] = useState<string>();
+  const [showSignIn, setShowSignin] = useState(false);
+
+  useEffect(
+    () => {
+      // override everything with auth contact
+      setContact(
+        (prev) => ({
+          ...(prev ?? {}),
+          ...(auth_contact ?? {}),
+        })
+      );
+    }, [isAuthenticated]
+  );
 
   console.log({contact, auth_contact, suggestedCheckout})
+
   const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       const name = e.currentTarget.name;
@@ -86,21 +103,87 @@ export const CheckoutContactContact = forwardRef((
           className='w-full text-lg 
             font-medium tracking-wider'
         />
-
-        <Input 
-          className='w-full autofill:bg-green-400'
-          type='email'
-          name={'email' satisfies 'email'}
-          value={contact?.email}
-          onChange={onChange}
-          required 
-          input={{
-            title: 'Email',
-            inputClassName: 'border h-12 --bg-green-400 autofill:bg-green-400',
-            warning,
-          }}
-        />
+        {
+          isAuthenticated && (
+            <div className='w-full flex flex-row 
+              justify-between items-center'>
+              <span 
+                children={contact?.email} 
+                className='font-mono text-sm'
+              />
+              <span 
+                children='(signout)' 
+                className='--underline text-sm 
+                  cursor-pointer opacity-70 tracking-wider
+                  underline decoration-dashed
+                  underline-offset-4'
+                onClick={signout}
+              />
+            </div>
+          )
+        }
+        {
+          !isAuthenticated && (
+            <NonAuthContactLogin
+              className='w-full'
+              contact={contact}
+              onChange={onChange}
+              warning={warning}
+            />
+          )
+        }
       </div>
     </div>
   )
 })
+
+type NonAuthContactLoginProps = {
+  contact?: Partial<OrderContact>,
+  warning?: string,
+  onChange: React.ChangeEventHandler<HTMLInputElement>,
+} & React.ComponentProps<'div'>;
+
+const NonAuthContactLogin = (
+  {
+    contact,
+    onChange,
+    warning,
+    ...rest
+  }: NonAuthContactLoginProps
+) => {
+  const [showSignIn, setShowSignin] = useState(false);
+
+  return (
+    <div {...rest}>
+      <Input 
+        className='w-full'
+        type='email'
+        name={'email' satisfies 'email'}
+        value={contact?.email}
+        onChange={onChange}
+        required 
+        input={{
+          title: 'Email',
+          inputClassName: 'border h-12',
+          warning,
+        }}
+      />
+      <div className='w-full flex flex-col gap-2 mt-2'>
+        <span 
+          children='signin' 
+          className='self-end text-sm 
+            cursor-pointer tracking-wider opacity-70
+            underline decoration-dashed
+            underline-offset-4'
+          onClick={() => setShowSignin((prev) => !prev)} 
+        />
+      </div>
+      {
+        showSignIn && (
+          <Login className='w-full mt-3' />
+        )
+      }
+    </div>
+  )
+}
+

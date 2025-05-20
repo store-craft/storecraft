@@ -1,7 +1,7 @@
 import { useCheckout } from "@storecraft/sdk-react-hooks";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react"
 import { CheckoutProps } from ".";
-import { Input } from "../common/input";
+import { Input } from "@/components/common/input";
 import { CountrySelect } from "../common/country-select";
 import { AddressType } from "@storecraft/core/api";
 
@@ -44,7 +44,7 @@ export const CheckoutContactAddress = forwardRef((
       getAddress: () => {
         
         const entries = ([
-          'country', 'firstname', 'lastname', 
+          'firstname', 'lastname', 
           'street1', 'postal_code', 'city',
           'phone_number'
         ] as (keyof AddressType)[])
@@ -53,6 +53,10 @@ export const CheckoutContactAddress = forwardRef((
         ).filter(
           ([_, v]) => Boolean(v)
         );
+
+        if(address?.country==='--' || !address?.country) {
+          entries.push(['country', 'Required Field']);
+        }
 
         // console.log({entries})
         const isValid = entries.length === 0;
@@ -76,7 +80,7 @@ export const CheckoutContactAddress = forwardRef((
   return(
     <div {...rest}>
       <div 
-        className='w-full h-full flex flex-col 
+        className='w-full h-fit flex flex-col 
           chat-text chat-bg gap-3'>
         
         <p 
@@ -106,7 +110,7 @@ export const CheckoutContactAddress = forwardRef((
               onChange={onChange}
               className='flex-1'
               input={{
-                // warning: warnings?.firstname,
+                warning: warnings?.firstname,
                 title: 'Firstname',
                 inputClassName: 'border h-12',
               }}

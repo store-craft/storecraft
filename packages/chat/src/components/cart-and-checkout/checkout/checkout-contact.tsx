@@ -3,7 +3,7 @@ import { useCallback, useRef } from "react"
 import { MdClose } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { IoMdContact } from "react-icons/io";
-import { Button } from "../common/button";
+import { Button } from "../../common/button";
 import { CheckoutContactContact, CheckoutContactImperativeInterface } from "./checkout-contact-contact";
 import { CheckoutAddressimperativeInterface, CheckoutContactAddress } from "./checkout-contact-address";
 
@@ -19,7 +19,7 @@ export const CheckoutContact = (
     }
   } = useCheckout();
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
+  const onSubmit: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
       e.preventDefault();
       
@@ -50,10 +50,9 @@ export const CheckoutContact = (
 
   return(
     <div {...rest}>
-      <form 
+      <div 
         className='w-full h-full flex flex-col 
-          chat-text  chat-bg border-l '
-        onSubmit={onSubmit}>
+          chat-text  chat-bg border-l '>
         {/* Cart Header */}
         <Header 
           className='w-full' 
@@ -87,7 +86,7 @@ export const CheckoutContact = (
           onClick={onSubmit}
         />
 
-      </form>
+      </div>
     </div>
   )
 }

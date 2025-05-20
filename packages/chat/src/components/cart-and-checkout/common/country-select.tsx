@@ -28,10 +28,6 @@ export const CountrySelect = forwardRef(
     }: InputProps, ref: React.ForwardedRef<InputImperativeinterface>
   ) => {
 
-    const [warn, setWarning] = useState(warning)
-    const cls_span = 'opacity-50 top-1';
-    const cls_input = 'px-2 pt-5';
-
     return (
       <div 
         className={`${className} relative group h-fit`} 
@@ -39,16 +35,10 @@ export const CountrySelect = forwardRef(
 
         <select 
           className={
-            `${cls_input} 
+            `px-2 pt-5
             rounded-md w-full 
             focus:outline-none 
             block text-sm 
-            --text-black 
-            --placeholder-gray-500 
-            --bg-slate-100 
-            --rounded-xs 
-            --focus:ring-blue-500 
-            --focus:border-blue-500 
             focus:border
             font-light 
             tracking-wide transition-none
@@ -69,19 +59,18 @@ export const CountrySelect = forwardRef(
                 key={index} 
                 value={country.code} 
                 children={country.name} 
-                // selected={country.code === text}
               />
             ))
           }
         </select>
 
         <div sstyle={{direction:'rtl'}} 
-          className={`${cls_span} duration-300 
+          className={`top-1 duration-300 
             text-xs font-normal pointer-events-none absolute 
             transition-all left-3`}>
-          <span children={'Country/Region'} />
+          <span children={'Country/Region'} className='opacity-50' />
           { 
-            warn && 
+            warning && 
             <span 
               className='text-red-500' children={` ${warning}`} 
             />

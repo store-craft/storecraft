@@ -34,7 +34,6 @@ export class DummyPayments {
   #db;
 
   /**
-   * 
    * @param {Config} config 
    */
   constructor(config={}) {
@@ -48,7 +47,6 @@ export class DummyPayments {
   }
 
   /**
-   * 
    * @param {Config} config 
    */
   #validate_and_resolve_config(config) {
@@ -61,11 +59,13 @@ export class DummyPayments {
     return config;
   }
 
+  /** @type {Impl["info"]} */
   get info() {
     return {
       name: 'Dummy payments',
-      description: 'This is a `dummy` payment processor for playgorund purposes',
+      description: 'This is a dummy payment processor for test purposes',
       url: 'https://storecraft.app',
+      logo_url: 'http://storecraft.app/favicon.svg'
     }
   }
   

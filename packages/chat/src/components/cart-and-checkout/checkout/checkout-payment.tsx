@@ -1,9 +1,10 @@
-import { useCart, useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
+import { useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
 import React, { useCallback } from "react"
-import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlinePayment, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import { MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
 import { CheckoutProps } from ".";
-import { Button } from "../../common/button";
-import { CheckoutCreateType, ShippingMethodType } from "@storecraft/core/api";
+import { PaymentGatewayItemGet } from "@storecraft/core/api";
+import { OrderSummary } from "./order-summary";
+import { LoadingSingleImage } from "@/components/common/loading-image";
 
 export const CheckoutPayment = (
   {
@@ -20,32 +21,14 @@ export const CheckoutPayment = (
   const {
     page
   } = useCollection(
-    'shipping', { limit: 10, vql: 'active=true' }
+    'payments/gateways'
   );
 
-  const [shipping, setShipping] = React.useState<
-    CheckoutCreateType["shipping_method"]>(
-    suggestedCheckout?.shipping_method
-  );
-
-  const onSelect: ShippingItemProps["shipping"]["onSelect"] = useCallback(
+  const onSelect: PaymentItemViewProps["payment"]["onSelect"] = useCallback(
     (item) => {
       // perform validation
       if(item) {
-        setShipping(item);
         // checkout?.setShippingMethod(item);
-      }
-    }, [checkout]
-  );
-
-  const onNext = useCallback(
-    () => {
-      // perform validation
-      if(true) {
-        setSuggestedShipping(
-          shipping
-        );
-        checkout?.next();
       }
     }, [checkout]
   );
@@ -62,16 +45,31 @@ export const CheckoutPayment = (
           checkout={checkout} 
         />
 
-        <div className='w-full flex-1 overflow-y-auto'>
-          
+        <div 
+          className='w-full flex-1 overflow-y-auto flex flex-col gap-3 p-3'>
+          {
+            page?.map(
+              (item, ix) => (
+                <PaymentItemView
+                  key={ix}
+                  payment={{
+                    item,
+                    onSelect
+                  }}
+                  className='w-full h-fit'
+                />
+              )
+            )
+          }
         </div>
 
 
         {/* Footer */}
-        <Button 
-          children='Payment'
-          className='w-full h-fit cursor-pointer ' 
-          onClick={onNext}
+        <OrderSummary
+          className='w-full h-fit'
+          summary={{
+            open: true
+          }}
         />
 
       </div>
@@ -79,19 +77,19 @@ export const CheckoutPayment = (
   )
 }
 
-type ShippingItemProps = {
-  shipping: {
-    item: ShippingMethodType,
-    selected: boolean,
-    onSelect?: (item: ShippingMethodType) => void,
+type PaymentItemViewProps = {
+  payment: {
+    item: PaymentGatewayItemGet,
+    selected?: boolean,
+    onSelect?: (item: PaymentGatewayItemGet) => void,
   },
 } & React.ComponentProps<'div'>;
 
-const ShippingItem = (
+const PaymentItemView = (
   {
-    shipping, 
+    payment, 
     ...rest
-  }: ShippingItemProps
+  }: PaymentItemViewProps
 ) => {
   return (
     <div {...rest}>
@@ -101,37 +99,29 @@ const ShippingItem = (
           dark:hover:bg-white/10
           hover:bg-black/10
           cursor-pointer'
-        onClick={() => shipping?.onSelect?.(shipping?.item)}>
+        onClick={() => payment?.onSelect?.(payment?.item)}>
         {/* header */}
         <div 
           className='w-full flex flex-row 
             justify-between gap-2 items-center'>
           <div className='w-fit flex flex-row gap-2 items-center'>
-            {
-              shipping?.selected && 
-              <MdOutlineRadioButtonChecked className='text-pink-500'/>
-            }
-            {
-              !shipping?.selected && 
-              <MdOutlineRadioButtonUnchecked className='text-gray-500'/>
-            }
-            {/* <MdOutlineRadioButtonUnchecked className='opacity-50'/> */}
+            <LoadingSingleImage 
+              src={payment?.item?.info?.logo_url}
+              className='w-6 h-6 rounded-full'
+              alt={payment?.item?.info?.name}
+            />
             <span 
-              children={shipping?.item?.title} 
+              children={payment?.item?.info?.name} 
               className='font-semibold text-lg text-ellipsis'
             />
           </div>
-          <span 
-            children={shipping?.item?.price} 
-            className='font-normal font-mono text-base'
-          />
         </div>
 
         {/* description */}
         <div className='w-full flex flex-row gap-2 items-center'>
           <span
             className='font-light text-sm text-gray-500'
-            children={shipping?.item?.description}
+            children={payment?.item?.info?.description}
           />
         </div>
       </div>
@@ -167,34 +157,6 @@ const Header = (
           children={``} 
         />
       </div>    
-    </div>
-  )
-}
-
-const Footer = (
-  {
-    checkout, ...rest
-  } : CheckoutProps
-) => {
-  const { quickSubTotal } = useCart();
-
-  return (
-    <div {...rest}>
-      <div 
-        className='w-full p-2 border-t'>
-        <div 
-          className='flex flex-row w-full justify-between 
-            items-center --border-b py-2 font-semibold'>
-          <span 
-            className='font-bold text-xl --tracking-wide uppercase italic'
-            children='Sub-Total'/>
-          <span 
-            children={quickSubTotal ?? 0} 
-            className='font-normal font-mono
-              text-base' 
-          />
-        </div>
-      </div>
     </div>
   )
 }

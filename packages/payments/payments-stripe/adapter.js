@@ -100,7 +100,7 @@ export class Stripe {
   get info() {
     return {
       name: 'Stripe',
-      description: `Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes.`,
+      description: `Pay with Credit Card and other payment methods`,
       url: 'https://docs.stripe.com/payments/place-a-hold-on-a-payment-method',
       logo_url: 'https://images.ctfassets.net/fzn2n1nzq965/HTTOloNPhisV9P4hlMPNA/cacf1bb88b9fc492dfad34378d844280/Stripe_icon_-_square.svg?q=80&w=256'
     }

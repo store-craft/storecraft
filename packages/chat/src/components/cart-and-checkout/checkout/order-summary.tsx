@@ -37,12 +37,18 @@ const Label = (
   )
 }
 
+export type OrderSummaryProps = {
+  summary?: {
+    open?: boolean,
+  }
+} & React.ComponentProps<'div'>;
+
 export const OrderSummary = (
   {
-    checkout, ...rest
-  } : CheckoutProps
+    summary, ...rest
+  } : OrderSummaryProps
 ) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(summary?.open ?? false);
   const [pricing, setPricing] = useState<Partial<PricingData>>(null);
 
   const {

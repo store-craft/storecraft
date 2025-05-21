@@ -50,13 +50,13 @@ export const Checkout = (
   const {
     checkout
   } = useCheckout();
-  const [flowIndex, setFlowIndex] = useState(0);
+  const [flowIndex, setFlowIndex] = useState(2);
 
   return(
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text  chat-bg border-l'>
+          chat-text  chat-bg --border-l'>
         {/* Flow */}
         {
           flow[flowIndex].component({

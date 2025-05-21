@@ -51,6 +51,9 @@ export const OrderSummary = (
     },
     actions: {
       pricing: backend_pricing
+    },
+    events: {
+      subscribe
     }
   } = useCheckout();
 
@@ -60,13 +63,27 @@ export const OrderSummary = (
     }, [suggestedCheckout, backend_pricing]
   );
 
+  useEffect(
+    () => {
+      return subscribe(
+        (event) => {
+          if(event) {
+            setOpen(true);
+          }
+        }
+      )
+    }
+  );
+
   return(
     <div {...rest}>
       <div 
-        className='w-full h-12 flex flex-row 
+        className={`w-full h-12 flex flex-row 
           justify-between items-center gap-3
           --border-b cursor-pointer p-3
-          hover:bg-black/10 dark:hover:bg-white/10'
+          hover:bg-black/10 dark:hover:bg-white/10 ` +
+          (open ? 'bg-black/10 dark:bg-white/10' : '') 
+        }
         onClick={(_) => setOpen(!open)}>
         <div 
           className='w-fit flex flex-row 
@@ -77,7 +94,12 @@ export const OrderSummary = (
               decoration-dashed tracking-wide'
             children='Order Summary'
           />
-          <FaAngleDown />
+          <FaAngleDown 
+            className={
+              'text-sm transition-all duration-300 ' + 
+              (open ? 'rotate-180' : 'rotate-0')
+            }   
+          />
         </div>  
         <span 
           className={'text-sm font-mono ' + 
@@ -146,6 +168,7 @@ export const OrderSummary = (
         </div>
       </Drawer>
       <AddCoupons
+        onFocus={(_) => setOpen(true)}
         className='w-full h-fit p-1' 
       />
     </div>

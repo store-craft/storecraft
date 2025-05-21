@@ -18,9 +18,10 @@ export const AddCoupons = (
       suggestedCheckout,
       setCoupons
     },
-    actions: {
-    }
   } = useCheckout();
+
+  
+
   const ref_input = useRef<HTMLInputElement>(null);
   // console.log({suggestedCheckout});
   return (
@@ -31,7 +32,7 @@ export const AddCoupons = (
         {/* input */}
         <div 
           className='flex flex-row w-full h-10
-            items-center gap-5 '>
+            items-center gap-2 '>
           <input
             ref={ref_input}
             type='text' 

@@ -1,9 +1,10 @@
 import { useCart, useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
 import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { Button } from "../../common/button";
 import { CheckoutCreateType, ShippingMethodType } from "@storecraft/core/api";
+import { OrderSummary } from "./order-summary";
 
 export const CheckoutShipping = (
   {
@@ -23,19 +24,25 @@ export const CheckoutShipping = (
     'shipping', { limit: 10, vql: 'active=true' }
   );
 
-  const [shipping, setShipping] = React.useState<
+  const [shipping, setShipping] = useState<
     CheckoutCreateType["shipping_method"]>(
     suggestedCheckout?.shipping_method
   );
+
+  // console.log({suggestedCheckout: suggestedCheckout.shipping_method, shipping});
 
   const onSelect: ShippingItemProps["shipping"]["onSelect"] = useCallback(
     (item) => {
       // perform validation
       if(item) {
         setShipping(item);
+        setSuggestedShipping(
+          item
+        );
+
         // checkout?.setShippingMethod(item);
       }
-    }, [checkout]
+    }, [checkout, setSuggestedShipping]
   );
 
   const onNext = useCallback(
@@ -84,12 +91,15 @@ export const CheckoutShipping = (
           </div>
         </div>
 
-
         {/* Footer */}
         <Button 
           children='Payment'
           className='w-full h-fit cursor-pointer ' 
           onClick={onNext}
+        />
+
+        <OrderSummary
+          className='w-full h-fit --p-1'
         />
 
       </div>

@@ -58,7 +58,7 @@ export const CheckoutContactContact = forwardRef((
     }, [isAuthenticated]
   );
 
-  console.log({contact, auth_contact, suggestedCheckout})
+  // console.log({contact, auth_contact, suggestedCheckout})
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {

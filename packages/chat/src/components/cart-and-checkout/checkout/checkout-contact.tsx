@@ -4,8 +4,13 @@ import { MdClose } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { IoMdContact } from "react-icons/io";
 import { Button } from "../../common/button";
-import { CheckoutContactContact, CheckoutContactImperativeInterface } from "./checkout-contact-contact";
-import { CheckoutAddressimperativeInterface, CheckoutContactAddress } from "./checkout-contact-address";
+import { 
+  CheckoutContactContact, CheckoutContactImperativeInterface 
+} from "./checkout-contact-contact";
+import { 
+  CheckoutAddressimperativeInterface, CheckoutContactAddress 
+} from "./checkout-contact-address";
+import { OrderSummary } from "./order-summary";
 
 export const CheckoutContact = (
   {
@@ -85,7 +90,10 @@ export const CheckoutContact = (
           className='w-full h-fit cursor-pointer ' 
           onClick={onSubmit}
         />
-
+        
+        <OrderSummary
+          className='w-full h-fit --p-2'
+        />
       </div>
     </div>
   )

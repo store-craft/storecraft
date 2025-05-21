@@ -21,8 +21,9 @@ export const Card = (
   return (
     <div {...rest}>
 
-      <div className={'relative z-10 w-full h-full rounded-lg p-[1.5px] \
-        chat-card overflow-clip ' + (card.border ? 'border' : '')}>
+      <div 
+        className={'relative z-10 w-full h-full rounded-lg p-[1.5px] \
+          chat-card overflow-clip ' + (card.border ? 'border' : '')} >
         {
           card.loading && (
             <div className='absolute inset-0 h-full w-full rounded-full 

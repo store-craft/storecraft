@@ -2227,7 +2227,8 @@ export interface PricingData  {
   taxes?: TaxRecord[];
 
   /** 
-   * @description Subtotal of items price before discounts 
+   * @description Subtotal of items price before 
+   * discounts, shipping and everything
    */
   subtotal_undiscounted: number; 
 

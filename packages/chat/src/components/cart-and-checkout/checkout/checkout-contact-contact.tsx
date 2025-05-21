@@ -109,7 +109,8 @@ export const CheckoutContactContact = forwardRef((
               justify-between items-center'>
               <span 
                 children={contact?.email} 
-                className='font-mono text-sm'
+                className='font-mono text-sm
+                  opacity-70'
               />
               <span 
                 children='(signout)' 

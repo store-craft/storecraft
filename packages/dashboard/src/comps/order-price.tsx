@@ -27,30 +27,34 @@ const Entry = (
 
   return (
     <div 
-      className='flex flex-row justify-between items-center w-full' 
+      className='flex flex-row justify-between 
+        items-center w-full' 
       title={description ?? title}>
       {
         link &&
         <LinkWithState 
-            to={link} 
-            current_state={
-              () => context?.getState && context?.getState()
-            }
-            draggable='false'>
+          to={link} 
+          current_state={
+            () => context?.getState && context?.getState()
+          }
+          draggable='false'>
           <span 
-              children={title}
-              className='text-sm font-medium underline'/>
+            children={title}
+            className='text-sm font-medium underline'
+          />
         </LinkWithState>
       }
       {
         !link &&
         <span 
-            children={title}
-            className='text-sm font-medium '/>
+          children={title}
+          className='text-sm font-medium '
+        />
       }
       <span 
-          children={value} 
-          className='text-xs'/>            
+        children={value} 
+        className='text-xs'
+      />
     </div>
   )
 }
@@ -58,7 +62,8 @@ const Entry = (
 
 const OrderPrice = (
   { 
-    field, context, setError, value, onChange, ...rest 
+    field, context, setError, value, 
+    onChange, ...rest 
   }: OrderPriceParams
 ) => {
   
@@ -114,17 +119,24 @@ const OrderPrice = (
 <div {...comp_params}>
   
   <div className='flex flex-col gap-3 w-full --shelf-text-minor'>
-    <Entry title='SubTotal' value={pricing?.subtotal_undiscounted ?? 0} />
-    <Entry title='Shipping' value={pricing?.shipping_method?.price ?? 0} />
+    <Entry 
+      title='SubTotal' 
+      value={pricing?.subtotal_undiscounted ?? 0} 
+    />
+    <Entry 
+      title='Shipping' 
+      value={pricing?.shipping_method?.price ?? 0} 
+    />
     { // discounts
       pricing?.evo?.slice(1).filter(e => e.total_discount>0).map(
         e => (
           <Entry 
-              key={e.discount_code}
-              title={`${e.discount_code} (discount)`} 
-              value={-e.total_discount} 
-              link={`/pages/discounts/${e.discount_code}`}
-              context={context}/>
+            key={e.discount_code}
+            title={`${e.discount_code} (discount)`} 
+            value={-e.total_discount} 
+            link={`/pages/discounts/${e.discount_code}`}
+            context={context}
+          />
         )
       )
     }
@@ -132,34 +144,40 @@ const OrderPrice = (
       pricing?.taxes.map(
         (tax) => (
           <Entry 
-              key={tax.name}
-              title={`${tax.name} (tax)`} 
-              value={tax.value} 
-              description={tax.description}
-              context={context}/>
+            key={tax.name}
+            title={`${tax.name} (tax)`} 
+            value={-Math.abs(tax.value)} 
+            description={tax.description}
+            context={context}
+          />
         )
       )
     }
   </div>
   <HR className='my-5'/>
-  <div className='flex flex-row justify-between items-center'>
+  <div 
+    className='flex flex-row justify-between 
+      items-center'>
     <span 
-        children='Total'
-        className='text-sm font-medium '/>
+      children='Total'
+      className='text-sm font-medium '
+    />
     <span 
-        children='Calculate Price' 
-        className='text-sm font-medium underline 
-                  shelf-text-label-color cursor-pointer' 
-        onClick={onCalculatePrice}/>
+      children='Calculate Price' 
+      className='text-sm font-medium underline 
+        shelf-text-label-color cursor-pointer' 
+      onClick={onCalculatePrice}
+    />
   </div>
   <BlingInput 
-      className='mt-2 w-full' 
-      onChange={onUpdatePrice} 
-      onWheel={(e) => (e.target as HTMLInputElement).blur()}
-      value={pricing?.total ?? 0} 
-      placeholder='Price' 
-      type='number' 
-      min='0' />
+    className='mt-2 w-full' 
+    onChange={onUpdatePrice} 
+    onWheel={(e) => (e.target as HTMLInputElement).blur()}
+    value={pricing?.total ?? 0} 
+    placeholder='Price' 
+    type='number' 
+    min='0' 
+  />
 
 </div>
   )

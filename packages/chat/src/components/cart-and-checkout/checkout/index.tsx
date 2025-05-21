@@ -2,6 +2,7 @@ import { useCheckout } from "@storecraft/sdk-react-hooks";
 import React, { useState } from "react"
 import { CheckoutContact } from "./checkout-contact";
 import { CheckoutShipping } from "./checkout-shipping";
+import { CheckoutPayment } from "./checkout-payment";
 
 export type CheckoutProps = {
   checkout?: {
@@ -29,7 +30,16 @@ const flow = [
         checkout={checkout_props}
       />
     )
-  }  
+  },
+  {
+    stage: 'payment',
+    component: (checkout_props: CheckoutProps["checkout"]) => (
+      <CheckoutPayment 
+        className='w-full h-full' 
+        checkout={checkout_props}
+      />
+    )
+  }    
 ]
 
 export const Checkout = (
@@ -40,7 +50,7 @@ export const Checkout = (
   const {
     checkout
   } = useCheckout();
-  const [flowIndex, setFlowIndex] = useState(1);
+  const [flowIndex, setFlowIndex] = useState(0);
 
   return(
     <div {...rest}>

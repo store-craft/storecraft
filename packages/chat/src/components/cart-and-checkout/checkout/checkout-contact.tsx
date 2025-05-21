@@ -109,8 +109,8 @@ const Header = (
         <div className="flex flex-row gap-2 items-center">
           <IoMdContact className='text-2xl' />
           <span 
-            className='font-semibold text-xl uppercase 
-              italic tracking-tight'
+            className='font-thin text-xl uppercase 
+              italic tracking-wide'
             children='Contact'/>
         </div>
         <span 

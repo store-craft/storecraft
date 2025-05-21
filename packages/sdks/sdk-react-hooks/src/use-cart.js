@@ -161,6 +161,7 @@ export const useCart = () => {
       setCart(
         {
           ...cart,
+          line_items: [...cart.line_items],
           updated_at: new Date().toISOString()
         }
       );

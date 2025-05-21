@@ -1,6 +1,6 @@
 import { useCart, useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
 import React, { useCallback } from "react"
-import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { Button } from "../../common/button";
 import { CheckoutCreateType, ShippingMethodType } from "@storecraft/core/api";
@@ -12,7 +12,7 @@ export const CheckoutShipping = (
 ) => {
   const {
     suggested: {
-      // setShipping,
+      setShipping: setSuggestedShipping,
       suggestedCheckout
     }
   } = useCheckout();
@@ -23,15 +23,17 @@ export const CheckoutShipping = (
     'shipping', { limit: 10, vql: 'active=true' }
   );
 
-  const [shipping, setShipping] = React.useState<CheckoutCreateType["shipping_method"]>(
-    suggestedCheckout.shipping_method
+  const [shipping, setShipping] = React.useState<
+    CheckoutCreateType["shipping_method"]>(
+    suggestedCheckout?.shipping_method
   );
 
   const onSelect: ShippingItemProps["shipping"]["onSelect"] = useCallback(
     (item) => {
       // perform validation
-      if(true) {
-        checkout?.next();
+      if(item) {
+        setShipping(item);
+        // checkout?.setShippingMethod(item);
       }
     }, [checkout]
   );
@@ -39,10 +41,13 @@ export const CheckoutShipping = (
   const onNext = useCallback(
     () => {
       // perform validation
-      if(true) {
+      if(shipping) {
+        setSuggestedShipping(
+          shipping
+        );
         checkout?.next();
       }
-    }, [checkout]
+    }, [checkout, shipping]
   );
 
   return(
@@ -67,8 +72,9 @@ export const CheckoutShipping = (
                   <ShippingItem
                     key={item.id}
                     shipping={{
+                      onSelect: onSelect,
                       item,
-                      selected: false
+                      selected: item.id === shipping?.id
                     }}
                     className='w-full h-fit '
                   />
@@ -81,7 +87,7 @@ export const CheckoutShipping = (
 
         {/* Footer */}
         <Button 
-          children='Next'
+          children='Payment'
           className='w-full h-fit cursor-pointer ' 
           onClick={onNext}
         />
@@ -119,7 +125,15 @@ const ShippingItem = (
           className='w-full flex flex-row 
             justify-between gap-2 items-center'>
           <div className='w-fit flex flex-row gap-2 items-center'>
-            <MdOutlineRadioButtonUnchecked className='opacity-50'/>
+            {
+              shipping?.selected && 
+              <MdOutlineRadioButtonChecked className='text-pink-500'/>
+            }
+            {
+              !shipping?.selected && 
+              <MdOutlineRadioButtonUnchecked className='text-gray-500'/>
+            }
+            {/* <MdOutlineRadioButtonUnchecked className='opacity-50'/> */}
             <span 
               children={shipping?.item?.title} 
               className='font-semibold text-lg text-ellipsis'
@@ -161,8 +175,8 @@ const Header = (
         <div className="flex flex-row gap-2 items-center">
           <MdOutlineLocalShipping className='text-2xl' />
           <span 
-            className='font-semibold text-xl uppercase 
-              italic tracking-tight'
+            className='font-thin text-xl uppercase 
+              italic tracking-wide'
             children='Shipping'/>
         </div>
         <span 

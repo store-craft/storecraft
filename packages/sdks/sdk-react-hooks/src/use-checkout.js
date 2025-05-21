@@ -1,6 +1,7 @@
 /**
  * @import { 
 CheckoutCreateType,
+ HandleOrID,
  *  LineItem, OrderData, ProductType, ShippingMethodType 
  * } from "@storecraft/core/api"
  * @import { 
@@ -120,13 +121,13 @@ export const useCheckout = () => {
 
   const setShipping = useCallback(
     /**
-     * @param {ShippingMethodType} shipping 
+     * @param {HandleOrID} shipping 
      */
     (shipping) => {
       setSuggestedCheckout(
         (prev) => ({
           ...prev,
-          shipping: {...shipping},
+          shipping_method: {...shipping},
           updated_at: new Date().toISOString()
         })
       );

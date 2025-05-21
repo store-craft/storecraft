@@ -63,17 +63,21 @@ export const ChatApp = (
 
         {
           // isCartOpen && 
-          <CartAndCheckout 
+          <div
             className={
-              'w-[400px] h-full shrink-0 \
+              'w-[400px] h-full shrink-0 overflow-hidden \
               absolute right-0 top-0 lg:relative z-10 --hidden \
               transition-all  duration-400 ' +
               (isCartOpen ? 'max-w-[400px]' : 'max-w-0')
             }
-            cart={{
-              onClose: () => setCartOpen(false),
-            }}
-          />
+          >
+            <CartAndCheckout 
+              className='w-[400px] h-full'
+              cart={{
+                onClose: () => setCartOpen(false),
+              }}
+            />
+          </div>
         }
 
       </div>

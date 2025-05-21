@@ -70,8 +70,8 @@ const Header = (
         <div className="flex flex-row gap-2 items-center">
           <CiShoppingCart className='text-2xl' />
           <span 
-            className='font-semibold text-xl uppercase 
-              italic tracking-tight'
+            className='font-light text-xl uppercase 
+              italic tracking-wide'
             children='Cart'/>
         </div>
         <span 

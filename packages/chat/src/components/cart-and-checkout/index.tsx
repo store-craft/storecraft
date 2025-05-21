@@ -1,5 +1,5 @@
-import { useCart } from "@storecraft/sdk-react-hooks";
-import React, { useState } from "react"
+import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
+import React, { useCallback, useState } from "react"
 import { Cart } from "./cart";
 import { Checkout } from "./checkout";
 
@@ -17,15 +17,28 @@ export const CartAndCheckout = (
   const {
     cart
   } = useCart();
+  const {
+    suggested: {
+      setLineItems: setSuggestedLineItems,
+    }
+  } = useCheckout();
 
   const [showCheckout, setShowCheckout] = useState(false);
+  const onCheckoutClicked = useCallback(
+    () => {
+      setShowCheckout(true);
+      setSuggestedLineItems(
+        [...(cart?.line_items ?? [])]
+      );
+    }, [cart, cart?.line_items]
+  );
 
   return(
     <div {...rest}>
       <Cart 
         cart={{
           ...cart_prop,
-          onCheckoutClicked: () => setShowCheckout(true),
+          onCheckoutClicked,
         }} 
         className={'w-full h-full ' + (showCheckout ? 'hidden' : '')}
       />

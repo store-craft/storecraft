@@ -816,13 +816,9 @@ export const orderContactSchema = z.object({
 });
 
 export const validationEntrySchema = z.object({
-  id: z.string().describe("`id`"),
-  title: z
-    .string()
-    .min(3, "Title should be longer than 3")
-    .optional()
-    .describe("title"),
-  message: z
+  id: z.string().optional().describe("id of problamatic item"),
+  message: z.string().optional().describe("readable message for user"),
+  code: z
     .union([
       z.literal("shipping-method-not-found"),
       z.literal("product-not-exists"),
@@ -832,6 +828,7 @@ export const validationEntrySchema = z.object({
     ])
     .optional()
     .describe("message"),
+  extra: z.any().optional().describe("extra params for the validation"),
 });
 
 export const checkoutStatusEnumSchema = z.object({
@@ -1930,7 +1927,9 @@ export const pricingDataSchema = z.object({
     .describe("The taxes collected from the sale"),
   subtotal_undiscounted: z
     .number()
-    .describe("Subtotal of items price before discounts"),
+    .describe(
+      "Subtotal of items price before\ndiscounts, shipping and everything",
+    ),
   subtotal_discount: z.number().describe("Sum of all discounts at all stages"),
   subtotal: z
     .number()

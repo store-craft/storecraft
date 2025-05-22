@@ -9,7 +9,7 @@ import { ErrorsView } from "@/components/common/error-view";
 import { CgSpinner } from "react-icons/cg";
 import { sleep } from "@/hooks/sleep";
 
-export const CheckoutPayment = (
+export const CheckoutPaymentSelect = (
   {
     checkout: checkout_props, ...rest
   } : CheckoutProps
@@ -22,7 +22,6 @@ export const CheckoutPayment = (
     actions: {
       createCheckout
     },
-    checkout,
     errors
   } = useCheckout();
 
@@ -34,13 +33,19 @@ export const CheckoutPayment = (
 
   const onSelect: PaymentItemViewProps["payment"]["onSelect"] = useCallback(
     async (item) => {
-      // perform validation
-      if(item) {
-        await sleep(3000);
-        // await createCheckout(
-        //   suggestedCheckout,
-        //   item.handle
-        // );
+      await sleep(1000);
+
+      try {
+        const checkout_result = await createCheckout(
+          suggestedCheckout,
+          item.handle
+        );
+
+        // if we didn't error, we can go to the next step
+        if(checkout_result) {
+          checkout_props?.next();
+        }
+      } catch (error_messages) {
       }
     }, [createCheckout, suggestedCheckout]
   );
@@ -49,7 +54,7 @@ export const CheckoutPayment = (
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          --gap-5 chat-text chat-bg border-l'>
+          chat-text chat-bg border-l'>
 
         {/* Cart Header */}
         <Header 

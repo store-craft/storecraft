@@ -52,14 +52,22 @@ async (checkout) => {
   /**
    * @param {string} id 
    * @param {ValidationEntry["message"]} message 
+   * @param {ValidationEntry["code"]} code 
    */
-  const errorWith = (id, message) => {
-    errors.push({ id, message });
+  const errorWith = (id, message, code) => {
+    errors.push(
+      { id, message, code, extra: { id } }
+    );
   }
 
   // assert shipping is valid
-  if(!shipping_method)
-    errorWith(shipping_id, 'shipping-method-not-found')
+  if(!shipping_method) {
+    errorWith(
+      shipping_id, 
+      `Shipping Method ${shipping_id} not found`,
+      'shipping-method-not-found'
+    );
+  }
 
   // assert stock
   snaps_products.forEach(
@@ -67,18 +75,38 @@ async (checkout) => {
       const li = checkout.line_items[ix];
 
       if(!it) {
-        errorWith(li?.id, 'product-not-exists');
+        errorWith(
+          li?.id, 
+          `Product ${li?.data?.title ?? li?.id} not found`,
+          'product-not-exists'
+        );
       } else {
         const pd = it;
         const li = checkout.line_items[ix];
 
-        if(pd.qty==0)
-          errorWith(it?.id, 'product-out-of-stock');
-        else if(li.qty>pd.qty)
-          errorWith(it?.id, 'product-not-enough-stock');
+        if(pd.qty==0) {
+          errorWith(
+            pd?.id, 
+            `Product ${pd?.title ?? pd?.id} is out of stock`, 
+            'product-out-of-stock'
+          );
+        }
+        else if(li.qty>pd.qty) {
+          errorWith(
+            pd?.id, 
+            `Product ${pd?.title ?? pd?.id} has ${pd?.qty} in stock, ` + 
+            'try to lower the quantity',
+            'product-not-enough-stock'
+          );
+        }
         
-        if(!pd.active)
-          errorWith(it?.id, 'product-inactive');
+        if(!pd.active) {
+          errorWith(
+            pd.id, 
+            `Product ${pd.title} is inactive`,
+            'product-inactive'
+          );
+        }
 
         // patch line items inline
         li.data = pd;

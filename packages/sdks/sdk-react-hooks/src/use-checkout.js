@@ -1,7 +1,5 @@
 /**
- * @import { 
-CheckoutCreateType,
- HandleOrID,
+ * @import { CheckoutCreateType, error, HandleOrID,
  *  LineItem, OrderData, ProductType, ShippingMethodType 
  * } from "@storecraft/core/api"
  * @import { 
@@ -219,6 +217,7 @@ export const useCheckout = () => {
 
   /**
    * @description Create a checkout object and buy ui html.
+   * @throws {string[]} error messages.
    */
   const createCheckout = useCallback(
     /**
@@ -226,16 +225,25 @@ export const useCheckout = () => {
      * @param {string} gateway_handle 
      */
     async (input, gateway_handle) => {
-
-      if(creatingCheckout) {
-        console.warn(
-          'Already creating checkout, please wait'
-        );
-        return;
-      }
-
+      
       try {
+
+        // throw {
+        //   messages: [
+        //     {message: 'Not implemented'},
+        //     {message: 'Not implemented'},
+        //   ]
+        // }
+        
+        if(creatingCheckout) {
+          throw new Error(
+            'Already creating checkout, please wait'
+          );
+        }
+
         setCreatingCheckout(true);
+        setErrors(undefined);
+
         const checkout_attempt = await sdk.checkout.create(
           {
             // use last checkout id to override for retry
@@ -246,21 +254,21 @@ export const useCheckout = () => {
         );
 
         if(checkout_attempt.validation?.length) {
-          setErrors(
-            checkout_attempt.validation.map(
-              it => it.title ?? it.message
+          // format as storecraft error
+          throw /** @type {error} */({
+            messages: checkout_attempt.validation.map(
+              it => ({message: it.message})
             )
-          );
-          notify('error');
+          });
         } else {
           const buyUiHtml = await sdk.payments.getBuyUI(
             checkout_attempt.id
           );
 
           setBuyUiHtml(buyUiHtml);
-          notify('create_checkout');
         }
-
+        
+        notify('create_checkout');
         setCheckout({
           ...checkout,
           latest_checkout_attempt: checkout_attempt,
@@ -268,10 +276,26 @@ export const useCheckout = () => {
         });
 
         return checkout_attempt;
+
       } catch(e) {
-        setErrors(format_storecraft_errors(e));
+
+        const error_messages = e instanceof Error ? 
+          [e.message] : format_storecraft_errors(e);
+
+        setErrors(error_messages);
+        setBuyUiHtml(undefined);
+        setCheckout({
+          ...checkout,
+          latest_checkout_attempt: undefined,
+          updated_at: new Date().toISOString()
+        });
+
         notify('error');
+
         console.error(e);
+
+        throw error_messages;
+
       } finally {
         setCreatingCheckout(false);
       }

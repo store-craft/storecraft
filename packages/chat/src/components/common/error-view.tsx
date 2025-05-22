@@ -35,7 +35,7 @@ export const ErrorsView = (
 
   return (
     <div {...rest}>
-      <div 
+      <ul 
         className='text-xs tracking-wider 
           text-red-500 bg-red-500/10 border 
           border-red-500 flex flex-col gap-2
@@ -44,7 +44,7 @@ export const ErrorsView = (
         {
           errors?.map(
             (it, index) => (
-              <div 
+              <li 
                 key={index} 
                 children={it} 
                 className='w-full whitespace-pre-wrap'
@@ -52,7 +52,7 @@ export const ErrorsView = (
             )
           )
         }
-      </div>    
+      </ul>    
     </div>
   )
 }

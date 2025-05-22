@@ -2381,22 +2381,27 @@ export interface EvoEntry  {
  */
 export interface ValidationEntry  {
   /**
-   * @description `id`
+   * @description id of problamatic item
    */
-  id: string;
+  id?: string;
 
   /**
-   * @description title
-   * @minLength 3 Title should be longer than 3
+   * @description readable message for user
    */
-  title?: string;
+  message?: string;
 
   /**
    * @description message
    */
-  message?: 'shipping-method-not-found' | 'product-not-exists' | 
-            'product-out-of-stock' | 'product-not-enough-stock' |
-            'product-inactive';
+  code?: 'shipping-method-not-found' | 'product-not-exists' | 
+    'product-out-of-stock' | 'product-not-enough-stock' |
+    'product-inactive';
+  
+  /**
+   * @description extra params for the validation
+   * @example { id: '123', name: 'product-name' }
+   */
+  extra?: any;
 }
 
 /** 

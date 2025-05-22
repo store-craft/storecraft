@@ -1,27 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { SyntheticEvent, useCallback, useState } from "react";
 import { sleep } from "@/hooks/sleep";
 import { useAuth } from "@storecraft/sdk-react-hooks";
 import { Button } from "./button";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { Input } from "./input";
-
-/**
- * @description Easily `format` errors coming from the `storecraft` backend
- */
-export const format_storecraft_errors = (
-  error: import('@storecraft/core/api').error
-) => {
-  return error?.messages?.map(
-    it => {
-      let msg = '';
-      if(it.path) {
-        msg += it.path.join('.') + ' - '
-      }
-      msg += it.message ?? 'Unknown Error';
-      return msg;
-    }
-  ) ?? ['ouch, unexpected error'];
-}
+import { format_storecraft_errors } from "./error-view";
 
 export type Params = React.ComponentProps<'div'> & {
   chat?: {
@@ -40,7 +23,7 @@ export const Login = (
   const ref_email = React.useRef<HTMLInputElement>(null);
   const ref_password = React.useRef<HTMLInputElement>(null);
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
+  const onSubmit: React.EventHandler<SyntheticEvent> = useCallback(
     async (e) => {
       e.preventDefault();
       setIsLoadingSignin(true);;
@@ -107,7 +90,8 @@ export const Login = (
               children={error} 
               className='text-sm tracking-wider whitespace-pre-wrap
                 text-red-500 bg-red-500/10 border border-red-500 
-                rounded-md p-2 font-mono' />
+                rounded-md p-2 font-mono' 
+            />
           )
         }
         <Button 

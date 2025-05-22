@@ -5,17 +5,22 @@ import { CheckoutProps } from ".";
 import { PaymentGatewayItemGet } from "@storecraft/core/api";
 import { OrderSummary } from "./order-summary";
 import { LoadingSingleImage } from "@/components/common/loading-image";
+import { ErrorsView } from "@/components/common/error-view";
 
 export const CheckoutPayment = (
   {
-    checkout, ...rest
+    checkout: checkout_props, ...rest
   } : CheckoutProps
 ) => {
   const {
     suggested: {
-      setShipping: setSuggestedShipping,
       suggestedCheckout
-    }
+    },
+    actions: {
+      createCheckout
+    },
+    checkout,
+    errors
   } = useCheckout();
 
   const {
@@ -25,12 +30,15 @@ export const CheckoutPayment = (
   );
 
   const onSelect: PaymentItemViewProps["payment"]["onSelect"] = useCallback(
-    (item) => {
+    async (item) => {
       // perform validation
       if(item) {
-        // checkout?.setShippingMethod(item);
+        await createCheckout(
+          suggestedCheckout,
+          item.handle
+        );
       }
-    }, [checkout]
+    }, [createCheckout, suggestedCheckout]
   );
 
   return(
@@ -42,11 +50,18 @@ export const CheckoutPayment = (
         {/* Cart Header */}
         <Header 
           className='w-full' 
-          checkout={checkout} 
+          checkout={checkout_props} 
         />
 
         <div 
-          className='w-full flex-1 overflow-y-auto flex flex-col gap-3 p-3'>
+          className='w-full flex-1 overflow-y-auto 
+            flex flex-col gap-3 p-3'>
+
+          <ErrorsView
+            className='w-full h-fit'
+            errors={errors}
+          />
+
           {
             page?.map(
               (item, ix) => (
@@ -62,7 +77,6 @@ export const CheckoutPayment = (
             )
           }
         </div>
-
 
         {/* Footer */}
         <OrderSummary

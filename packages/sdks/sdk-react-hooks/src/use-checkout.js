@@ -16,7 +16,7 @@ import React, { useCallback, useMemo, useState } from "react"
 import { format_storecraft_errors } from "./utils.errors.js";
 
 /** @type {ReturnType<typeof create_local_storage_hook<CheckoutType>>} */
-const useSuggestedCheckoutState = create_local_storage_hook(
+const useCheckoutState = create_local_storage_hook(
   'storecraft_latest_checkout');
 
 /** @type {Set<CheckoutSubscriber>} */
@@ -45,14 +45,17 @@ const notify = (event, payload) => {
 /** @returns {CheckoutType} */
 const create_new_checkout = () => {
   return {
-    line_items: [],
-    shipping_method: undefined,
-    coupons: [],
-    id: undefined,
-    contact: {
-      email: undefined,
-      customer_id: undefined,
-    }
+    suggested: {
+      line_items: [],
+      shipping_method: undefined,
+      coupons: [],
+      id: undefined,
+      contact: {
+        email: undefined,
+        customer_id: undefined,
+      }
+    },
+    latest_checkout_attempt: undefined
   }
 }
 
@@ -63,13 +66,13 @@ const create_new_checkout = () => {
 export const useCheckout = () => {
 
   const {
-    state: suggestedCheckout,
-    setState: setSuggestedCheckout,
-  } = useSuggestedCheckoutState(create_new_checkout());
-  const [checkout, setCheckout] = useState(
-    /** @type {Partial<OrderData>} */(undefined));
+    state: checkout,
+    setState: setCheckout,
+  } = useCheckoutState(create_new_checkout());
   const [errors, setErrors] = useState(
     /** @type {string[]} */(undefined));
+  const [buyUiHtml, setBuyUiHtml] = useState(
+    /** @type {string} */(undefined));
 
   const {
     sdk
@@ -84,10 +87,13 @@ export const useCheckout = () => {
      */
     (line_items) => {
 
-      setSuggestedCheckout(
+      setCheckout(
         (prev) => ({
           ...prev,
-          line_items: [...line_items],
+          suggested: {
+            ...prev?.suggested,
+            line_items: [...line_items],
+          },
           updated_at: new Date().toISOString()
         })
       );
@@ -104,14 +110,18 @@ export const useCheckout = () => {
      * @param {string[]} [coupons=[]] 
      */
     (coupons = []) => {
-      setSuggestedCheckout(
+      setCheckout(
         (prev) => ({
           ...prev,
-          coupons: coupons.map(
-            (v) => ({
-              handle: v
-            })
-          ),
+          suggested: {
+            ...prev.suggested,
+            coupons: coupons.map(
+              (v) => ({
+                handle: v
+              })
+            ),
+          },
+          updated_at: new Date().toISOString()
         })
       );
       notify('updated');
@@ -124,10 +134,13 @@ export const useCheckout = () => {
      * @param {HandleOrID} shipping 
      */
     (shipping) => {
-      setSuggestedCheckout(
+      setCheckout(
         (prev) => ({
           ...prev,
-          shipping_method: {...shipping},
+          suggested: {
+            ...prev.suggested,
+            shipping_method: shipping
+          },
           updated_at: new Date().toISOString()
         })
       );
@@ -138,13 +151,16 @@ export const useCheckout = () => {
 
   const setContact = useCallback(
     /**
-     * @param {CheckoutType["contact"]} contact 
+     * @param {CheckoutType["suggested"]["contact"]} contact 
      */
     (contact) => {
-      setSuggestedCheckout(
+      setCheckout(
         (prev) => ({
           ...prev,
-          contact: {...contact},
+          suggested: {
+            ...prev.suggested,
+            contact: {...contact}
+          },
           updated_at: new Date().toISOString()
         })
       );
@@ -155,13 +171,16 @@ export const useCheckout = () => {
 
   const setAddress = useCallback(
     /**
-     * @param {CheckoutType["address"]} address 
+     * @param {CheckoutType["suggested"]["address"]} address 
      */
     (address) => {
-      setSuggestedCheckout(
+      setCheckout(
         (prev) => ({
           ...prev,
-          address: {...address},
+          suggested: {
+            ...prev.suggested,
+            address: {...address}
+          },
           updated_at: new Date().toISOString()
         })
       );
@@ -173,8 +192,7 @@ export const useCheckout = () => {
 
   const reset = useCallback(
     () => {
-      setSuggestedCheckout(create_new_checkout());
-      setCheckout(undefined);
+      setCheckout(create_new_checkout());
       notify('updated');
       notify('reset');
     }, []
@@ -192,15 +210,13 @@ export const useCheckout = () => {
         // method, so we can use the suggested checkout
         // althoug it is types to only have the handle or id
         // @ts-ignore
-        suggestedCheckout
+        checkout
       )
-    }, [suggestedCheckout, sdk]
+    }, [checkout, sdk]
   );
 
   /**
-   * @description get the exact pricing of the cart
-   * from the backend. This will calculate the 
-   * shipping, taxes and discounts (both automatic and coupons).
+   * @description Create a checkout object and buy ui html.
    */
   const createCheckout = useCallback(
     /**
@@ -209,22 +225,38 @@ export const useCheckout = () => {
      */
     async (input, gateway_handle) => {
       try {
-        const checkout = await sdk.checkout.create(
-          input ?? suggestedCheckout,
+        const checkout_attempt = await sdk.checkout.create(
+          {
+            // use last checkout id to override for retry
+            id: checkout?.latest_checkout_attempt?.id,
+            ...(input ?? checkout?.suggested)
+          },
           gateway_handle
         );
-        if(checkout.validation?.length) {
+
+        if(checkout_attempt.validation?.length) {
           setErrors(
-            checkout.validation.map(
+            checkout_attempt.validation.map(
               it => it.title ?? it.message
             )
           );
           notify('error');
         } else {
-          setCheckout(checkout);
+          const buyUiHtml = await sdk.payments.getBuyUI(
+            checkout_attempt.id
+          );
+
+          setBuyUiHtml(buyUiHtml);
           notify('create_checkout');
         }
 
+        setCheckout({
+          ...checkout,
+          latest_checkout_attempt: checkout_attempt,
+          updated_at: new Date().toISOString()
+        });
+
+        return checkout_attempt;
       } catch(e) {
         setErrors(format_storecraft_errors(e));
         notify('error');
@@ -232,14 +264,13 @@ export const useCheckout = () => {
       }
 
       return undefined;
-    }, [suggestedCheckout, sdk]
+    }, [checkout, sdk]
   );
   
 
   /**
-   * @description get the exact pricing of the cart
-   * from the backend. This will calculate the 
-   * shipping, taxes and discounts (both automatic and coupons).
+   * @description (Optional) Complete the checkout process.
+   * This is usually invoked at the backend using webhooks.
    */
   const completeCheckout = useCallback(
     /**
@@ -249,7 +280,7 @@ export const useCheckout = () => {
     async (order_id=undefined) => {
       try {
         const result = await sdk.checkout.complete(
-          order_id ?? checkout?.id
+          order_id ?? checkout?.latest_checkout_attempt?.id
         );
 
         notify('complete_checkout');
@@ -263,7 +294,7 @@ export const useCheckout = () => {
       }
 
       return undefined;
-    }, [suggestedCheckout, sdk]
+    }, [checkout, sdk]
   );
     
 
@@ -273,11 +304,11 @@ export const useCheckout = () => {
    * For better pricing, use the {@link pricing()} method.
    */
   const quickSubTotal = useMemo(
-    () => (suggestedCheckout?.line_items ?? []).reduce(
+    () => (checkout?.suggested?.line_items ?? []).reduce(
       (acc, item) => {
         return acc + (item.data.price * item.qty);
       }, 0
-    ), [suggestedCheckout]
+    ), [checkout]
   );
 
   /**
@@ -285,11 +316,11 @@ export const useCheckout = () => {
    * taking into account the quantity of each item.
    */
   const itemsCount = useMemo(
-    () => (suggestedCheckout?.line_items ?? []).reduce(
+    () => (checkout?.suggested?.line_items ?? []).reduce(
       (acc, item) => {
         return acc + item.qty;
       }, 0
-    ), [suggestedCheckout]
+    ), [checkout]
   );
   
   
@@ -309,7 +340,7 @@ export const useCheckout = () => {
      * it will use the suggested checkout.
      */
     suggested: {
-      suggestedCheckout,
+      suggestedCheckout: checkout?.suggested,
       setLineItems,
       setCoupons,
       setShipping,

@@ -1,6 +1,7 @@
 import { 
   AddressType, LineItem, OrderContact, 
-  ProductType, ShippingMethodType, CheckoutCreateType
+  ProductType, ShippingMethodType, CheckoutCreateType,
+  OrderData
 } from "@storecraft/core/api"
 import { create_local_storage_hook } from "./use-local-storage.js"
 import React, { useCallback } from "react"
@@ -9,7 +10,11 @@ import React, { useCallback } from "react"
  * @description useCart is a custom hook that manages the cart state.
  * This types is the main type of the cart.
  */
-export type CheckoutType = CheckoutCreateType;
+export type CheckoutType = {
+  suggested?: CheckoutCreateType,
+  latest_checkout_attempt?: Partial<OrderData>,
+  updated_at?: string,
+};
 // export type CheckoutType = {
 //   line_items: LineItem[]
 //   shipping?: ShippingMethodType

@@ -27,7 +27,7 @@ export const AddCoupons = (
   return (
     <div {...rest}>
       <div 
-        className='flex flex-col w-full h-fit gap-3 px-1'>
+        className='flex flex-col w-full h-fit gap-3 --px-1'>
 
         {/* input */}
         <div 

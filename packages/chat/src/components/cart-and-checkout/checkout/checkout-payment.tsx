@@ -1,11 +1,13 @@
 import { useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
 import { MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { PaymentGatewayItemGet } from "@storecraft/core/api";
 import { OrderSummary } from "./order-summary";
 import { LoadingSingleImage } from "@/components/common/loading-image";
 import { ErrorsView } from "@/components/common/error-view";
+import { CgSpinner } from "react-icons/cg";
+import { sleep } from "@/hooks/sleep";
 
 export const CheckoutPayment = (
   {
@@ -13,6 +15,7 @@ export const CheckoutPayment = (
   } : CheckoutProps
 ) => {
   const {
+    creatingCheckout, 
     suggested: {
       suggestedCheckout
     },
@@ -33,10 +36,11 @@ export const CheckoutPayment = (
     async (item) => {
       // perform validation
       if(item) {
-        await createCheckout(
-          suggestedCheckout,
-          item.handle
-        );
+        await sleep(3000);
+        // await createCheckout(
+        //   suggestedCheckout,
+        //   item.handle
+        // );
       }
     }, [createCheckout, suggestedCheckout]
   );
@@ -71,7 +75,13 @@ export const CheckoutPayment = (
                     item,
                     onSelect
                   }}
-                  className='w-full h-fit'
+                  className={
+                    'w-full h-fit ' + (
+                      creatingCheckout ? 
+                        'pointer-events-none' : 
+                        ''
+                    )
+                  }
                 />
               )
             )
@@ -95,7 +105,7 @@ type PaymentItemViewProps = {
   payment: {
     item: PaymentGatewayItemGet,
     selected?: boolean,
-    onSelect?: (item: PaymentGatewayItemGet) => void,
+    onSelect?: (item: PaymentGatewayItemGet) => Promise<void>,
   },
 } & React.ComponentProps<'div'>;
 
@@ -105,6 +115,18 @@ const PaymentItemView = (
     ...rest
   }: PaymentItemViewProps
 ) => {
+  const [loading, setLoading] = useState(false);
+
+  const onSelect = useCallback(
+    () => {
+      setLoading(true);
+      payment
+      .onSelect(payment.item)
+      .finally(() => setLoading(false));
+    }, 
+    [payment]
+  );
+
   return (
     <div {...rest}>
       <div 
@@ -113,11 +135,13 @@ const PaymentItemView = (
           dark:hover:bg-white/10
           hover:bg-black/10
           cursor-pointer'
-        onClick={() => payment?.onSelect?.(payment?.item)}>
+        onClick={onSelect}>
+
         {/* header */}
         <div 
           className='w-full flex flex-row 
             justify-between gap-2 items-center'>
+
           <div className='w-fit flex flex-row gap-2 items-center'>
             <LoadingSingleImage 
               src={payment?.item?.info?.logo_url}
@@ -129,6 +153,14 @@ const PaymentItemView = (
               className='font-semibold text-lg text-ellipsis'
             />
           </div>
+
+          { // Spinner
+            loading && (
+              <CgSpinner
+                className='animate-spin text-xl'
+              />
+            )
+          }
         </div>
 
         {/* description */}
@@ -138,6 +170,7 @@ const PaymentItemView = (
             children={payment?.item?.info?.description}
           />
         </div>
+
       </div>
     </div>
   )

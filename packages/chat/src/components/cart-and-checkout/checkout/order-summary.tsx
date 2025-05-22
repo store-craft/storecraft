@@ -55,7 +55,9 @@ export const OrderSummary = (
 ) => {
   const [open, setOpen] = useState(summary?.open ?? false);
   const [pricing, setPricing] = useState<Partial<PricingData>>(null);
-  console.log({pricing})
+
+  // console.log({pricing})
+
   const {
     suggested: {
       suggestedCheckout

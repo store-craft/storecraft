@@ -1,8 +1,5 @@
 import { useCheckout } from "@storecraft/sdk-react-hooks";
-import { useEffect, useRef, useState } from "react"
-import { type CheckoutProps } from ".";
-import { type PricingData } from "@storecraft/core/api";
-import { FaAngleDown } from "react-icons/fa6";
+import { useRef } from "react"
 import { IoMdClose } from "react-icons/io";
 
 type AddCouponsProps = {
@@ -20,10 +17,10 @@ export const AddCoupons = (
     },
   } = useCheckout();
 
-  
-
   const ref_input = useRef<HTMLInputElement>(null);
+
   // console.log({suggestedCheckout});
+
   return (
     <div {...rest}>
       <div 
@@ -50,9 +47,11 @@ export const AddCoupons = (
             onClick={() => {
               ref_input.current?.value &&
                 setCoupons([
-                  ...(suggestedCheckout?.coupons
+                  ...(
+                    (suggestedCheckout?.coupons ?? [])
                     .filter((c, ix) => c.handle !== ref_input.current?.value)
-                    .map((item) => item.handle) ?? []),
+                    .map((item) => item.handle) ?? []
+                  ),
                   ref_input.current?.value
                 ]);
               ref_input.current.value = '';

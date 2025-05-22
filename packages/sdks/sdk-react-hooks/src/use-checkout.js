@@ -73,6 +73,8 @@ export const useCheckout = () => {
     /** @type {string[]} */(undefined));
   const [buyUiHtml, setBuyUiHtml] = useState(
     /** @type {string} */(undefined));
+  const [creatingCheckout, setCreatingCheckout] = useState(
+    /** @type {boolean} */(false));
 
   const {
     sdk
@@ -114,7 +116,7 @@ export const useCheckout = () => {
         (prev) => ({
           ...prev,
           suggested: {
-            ...prev.suggested,
+            ...prev?.suggested,
             coupons: coupons.map(
               (v) => ({
                 handle: v
@@ -210,7 +212,7 @@ export const useCheckout = () => {
         // method, so we can use the suggested checkout
         // althoug it is types to only have the handle or id
         // @ts-ignore
-        checkout
+        checkout?.suggested
       )
     }, [checkout, sdk]
   );
@@ -224,7 +226,16 @@ export const useCheckout = () => {
      * @param {string} gateway_handle 
      */
     async (input, gateway_handle) => {
+
+      if(creatingCheckout) {
+        console.warn(
+          'Already creating checkout, please wait'
+        );
+        return;
+      }
+
       try {
+        setCreatingCheckout(true);
         const checkout_attempt = await sdk.checkout.create(
           {
             // use last checkout id to override for retry
@@ -261,10 +272,12 @@ export const useCheckout = () => {
         setErrors(format_storecraft_errors(e));
         notify('error');
         console.error(e);
+      } finally {
+        setCreatingCheckout(false);
       }
 
       return undefined;
-    }, [checkout, sdk]
+    }, [checkout, sdk, creatingCheckout]
   );
   
 
@@ -325,6 +338,7 @@ export const useCheckout = () => {
   
   
   return {
+    creatingCheckout,
     errors,
     checkout,
     itemsCount,

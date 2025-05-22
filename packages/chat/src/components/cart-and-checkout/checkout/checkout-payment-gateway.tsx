@@ -1,12 +1,8 @@
-import { useCheckout, useCollection } from "@storecraft/sdk-react-hooks";
+import { useCheckout } from "@storecraft/sdk-react-hooks";
 import React, { useCallback, useState } from "react"
 import { MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { OrderSummary } from "./order-summary";
-import { LoadingSingleImage } from "@/components/common/loading-image";
-import { ErrorsView } from "@/components/common/error-view";
-import { CgSpinner } from "react-icons/cg";
-import { sleep } from "@/hooks/sleep";
 
 export const CheckoutPaymentGateway = (
   {
@@ -40,7 +36,12 @@ export const CheckoutPaymentGateway = (
         <div 
           className='w-full flex-1 overflow-y-auto 
             flex flex-col gap-3 p-3'>
-
+          <Iframe 
+            className='w-full h-full'
+            iframe={{
+              src: 'https://storecraft.app'
+            }}
+          />
         </div>
 
         {/* Footer */}
@@ -84,6 +85,64 @@ const Header = (
           children={``} 
         />
       </div>    
+    </div>
+  )
+}
+
+type IframeProps = {
+  iframe: {
+    src: string,
+  }
+} & React.ComponentProps<'div'>;
+
+const Iframe = (
+  {
+    iframe, ...rest
+  } : IframeProps
+) => {
+  const [wasLoaded, setWasLoaded] = useState(false);
+  const onLoad: React.ReactEventHandler<HTMLIFrameElement> = useCallback(
+    (e) => {
+      console.log({e})
+      setWasLoaded(true);
+      alert('Iframe loaded');
+    }, []
+  );
+
+  return (
+    <div {...rest}>
+      <div 
+        className={
+          'w-full h-full bg-black/10 dark:bg-white/10 \
+            animate-pulse ' + (
+            wasLoaded ? 'hidden' : 'hidden'
+          )
+        }
+      />
+      <iframe
+        src={iframe.src}
+        className={
+          'w-full h-full border-0 ' + (
+            wasLoaded ? 'visible' : 'visible'
+          )
+        }
+        title='Payment Gateway'
+        loading='lazy'
+        allowFullScreen
+        allow="payment"
+        sandbox="allow-forms allow-modals allow-popups 
+          allow-presentation allow-same-origin"
+        referrerPolicy="no-referrer-when-downgrade"
+        frameBorder="0"
+        scrolling="no"
+        onLoad={onLoad}
+        style={{  
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          overflow: 'hidden'
+        }}
+      />
     </div>
   )
 }

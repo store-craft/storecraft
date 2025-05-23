@@ -158,23 +158,21 @@ export default function html_buy_ui(config, order_data) {
 
       body {
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 16px;
+        font-size: 10px;
         -webkit-font-smoothing: antialiased;
+        height: content;
+        background-color: white;
         display: flex;
-        justify-content: center;
-        align-content: center;
-        height: 100vh;
-        width: 100vw;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
       }
 
       form {
-        width: 30vw;
-        min-width: 500px;
+        width: 100%;
+        max-width: 500px;
+        mmmin-width: 500px;
         align-self: center;
-        box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-          0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
-        border-radius: 7px;
-        padding: 40px;
       }
 
       .hidden {
@@ -287,12 +285,6 @@ export default function html_buy_ui(config, order_data) {
         }
       }
 
-      @media only screen and (max-width: 600px) {
-        form {
-          width: 80vw;
-          min-width: initial;
-        }
-      }
 
     </style>
   </head>

@@ -21,6 +21,9 @@
   background: rgba(0.0, 0.0, 0.0, 0.5);
 }
 
+iframe {
+  color-scheme: light;
+}
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

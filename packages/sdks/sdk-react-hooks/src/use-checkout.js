@@ -70,10 +70,6 @@ export const useCheckout = () => {
   } = useCheckoutState(create_new_checkout());
   const [errors, setErrors] = useState(
     /** @type {string[]} */(undefined));
-  const [buyUiHtml, setBuyUiHtml] = useState(
-    /** @type {string} */(undefined));
-  const [buyUrl, setBuyUrl] = useState(
-    /** @type {string} */(undefined));
   const [creatingCheckout, setCreatingCheckout] = useState(
     /** @type {boolean} */(false));
 
@@ -263,19 +259,7 @@ export const useCheckout = () => {
               it => ({message: it.message})
             )
           });
-        } else {
-          setBuyUrl(
-            sdk.payments.getBuyUiUrl(
-              checkout_attempt.id
-            )
-          );
-          
-          // const buyUiHtml = await sdk.payments.getBuyUI(
-          //   checkout_attempt.id
-          // );
-
-          // setBuyUiHtml(buyUiHtml);
-        }
+        } 
         
         notify('create_checkout');
         setCheckout({
@@ -292,7 +276,6 @@ export const useCheckout = () => {
           [e.message] : format_storecraft_errors(e);
 
         setErrors(error_messages);
-        setBuyUiHtml(undefined);
         setCheckout({
           ...checkout,
           latest_checkout_attempt: undefined,
@@ -368,12 +351,22 @@ export const useCheckout = () => {
       }, 0
     ), [checkout]
   );
+
+  const buyUrl = useMemo(
+    () => {
+      if(!checkout?.latest_checkout_attempt?.id) {
+        return undefined;
+      }
+      return sdk.payments.getBuyUiUrl(
+        checkout?.latest_checkout_attempt?.id
+      );
+    }, [checkout, sdk]
+  );
   
   return {
     creatingCheckout,
     errors,
     checkout,
-    buyUiHtml,
     buyUrl,
     itemsCount,
     quickSubTotal,

@@ -25,10 +25,11 @@ export default function html_buy_ui(config, order_data) {
 <html style="height: 100%; width: 100%">
   <head>
     <meta charset="UTF-8" />
+    <meta name="color-scheme" content="light">
     <meta name="viewport" content="width=device-width; height=device-height, initial-scale=1.0" />
     <title>PayPal JS SDK Standard Integration</title>
   </head>
-  <body style='display: flex; flex-direction: column; justify-content: start; height: 100%; align-items: center;'>
+  <body style='background: white; display: flex; flex-direction: column; justify-content: start; height: 100%; align-items: center;'>
     <div id="paypal-button-container" style='width: 100%' ></div>
     <p id="result-message"></p>
 

@@ -31,7 +31,7 @@ export const CheckoutPaymentGateway = (
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text chat-bg border-l'>
+          chat-text chat-bg border-l '>
 
         {/* Cart Header */}
         <Header 
@@ -41,11 +41,13 @@ export const CheckoutPaymentGateway = (
 
         <div 
           className='w-full flex-1 overflow-y-auto 
-            flex flex-col gap-3 p-3'>
+            flex flex-col gap-3'>
           <Iframe 
-            className='w-full h-full'
+            className='w-full h-full overflow-y-auto 
+              rounded-md border'
             iframe={{
               src: buyUrl
+              // src: 'https://storecraft.app'
             }}
           />
         </div>
@@ -119,16 +121,17 @@ const Iframe = (
     <div {...rest}>
       <div 
         className={
-          'w-full h-full bg-black/10 dark:bg-white/10 \
+          'overflow-y-scroll w-full h-full bg-black/10 dark:bg-white/10 \
             animate-pulse ' + (
             wasLoaded ? 'hidden' : 'hidden'
           )
         }
       />
       <iframe
+        scrolling="yes"
         src={iframe.src}
         className={
-          'w-full h-full border-0 ' + (
+          'w-full h-full border-0 overflow-y-scroll ' + (
             wasLoaded ? 'visible' : 'visible'
           )
         }
@@ -137,16 +140,16 @@ const Iframe = (
         allowFullScreen
         allow="payment"
         sandbox="allow-forms allow-modals allow-popups 
-          allow-presentation allow-same-origin"
+          allow-presentation allow-same-origin allow-scripts"
         referrerPolicy="no-referrer-when-downgrade"
         frameBorder="0"
-        scrolling="no"
         onLoad={onLoad}
         style={{  
+          'colorScheme': 'light',
           width: '100%',
           height: '100%',
           border: 'none',
-          overflow: 'hidden'
+          // overflow: 'hidden'
         }}
       />
     </div>

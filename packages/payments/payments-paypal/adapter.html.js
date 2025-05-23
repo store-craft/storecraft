@@ -28,8 +28,25 @@ export default function html_buy_ui(config, order_data) {
     <meta name="color-scheme" content="light">
     <meta name="viewport" content="width=device-width; height=device-height, initial-scale=1.0" />
     <title>PayPal JS SDK Standard Integration</title>
+    <style>
+      /* Variables */
+      * { 
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 10px;
+        width: 100vw;
+        max-width: 500px;
+        margin: auto;
+        padding: 10px;
+        -webkit-font-smoothing: antialiased;
+        background-color: white;
+      }
+    </style>    
   </head>
-  <body style='background: white; display: flex; flex-direction: column; justify-content: start; height: 100%; align-items: center;'>
+  <body>
     <div id="paypal-button-container" style='width: 100%' ></div>
     <p id="result-message"></p>
 
@@ -41,7 +58,6 @@ export default function html_buy_ui(config, order_data) {
     const resultMessage = (msg) => {
       document.getElementById('result-message').innerHTML = msg
       console.log(msg);
-
     }
 
     window.paypal

@@ -37,7 +37,16 @@ export default function html_buy_ui(config, order_data) {
     <script defer>
       // This is your test publishable API key.
       const stripe = new Stripe("${config.publishable_key}");
-
+      const dispatchEvent = (event, data) => {
+        window?.parent?.postMessage(
+          {
+            who: "storecraft",
+            event,
+            data
+          },
+          "*"
+        );
+      }
       let elements;
 
       window.onload = function() {
@@ -76,6 +85,7 @@ export default function html_buy_ui(config, order_data) {
             // Make sure to change this to your payment completion page
             return_url: "https://storecraft.app/",
           },
+          redirect: 'if_required'
         });
 
         // This point will only be reached if there is an immediate error when

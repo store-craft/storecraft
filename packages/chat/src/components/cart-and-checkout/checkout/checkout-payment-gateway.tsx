@@ -1,8 +1,9 @@
 import { useCheckout } from "@storecraft/sdk-react-hooks";
-import React, { useCallback, useState } from "react"
-import { MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
+import React, { useCallback, useEffect, useState } from "react"
+import { MdFullscreen, MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { OrderSummary } from "./order-summary";
+import { SlSizeFullscreen } from "react-icons/sl";
 
 export const CheckoutPaymentGateway = (
   {
@@ -22,7 +23,24 @@ export const CheckoutPaymentGateway = (
     errors
   } = useCheckout();
 
+  const [fullscreen, setFullscreen] = useState(false);
   console.log({buyUrl});
+
+  useEffect(
+    () => {
+      window.addEventListener(
+        'message', 
+        function(event) {
+          if(typeof event==='object') {
+            if (event.data?.event === 'storecraft/checkout-created') {
+              console.log('Checkout created', event.data);
+            }
+          }
+          // console.log({event})
+        }
+      );
+    }, []
+  );
 
   if(creatingCheckout)
     return null;
@@ -31,7 +49,7 @@ export const CheckoutPaymentGateway = (
     <div {...rest}>
       <div 
         className='w-full h-full flex flex-col 
-          chat-text chat-bg border-l '>
+          chat-text chat-bg border-l relative'>
 
         {/* Cart Header */}
         <Header 
@@ -40,15 +58,28 @@ export const CheckoutPaymentGateway = (
         />
 
         <div 
-          className='w-full flex-1 overflow-y-auto 
-            flex flex-col gap-3'>
+          className={
+            'overflow-y-auto \
+            flex flex-col gap-3 ' + (
+              fullscreen ? 
+                'h-dvh w-screen fixed z-100 left-0 top-0' : 
+                'w-full flex-1 relative'
+            )
+          }>
           <Iframe 
             className='w-full h-full overflow-y-auto 
-              rounded-md border'
+              rounded-md border 
+              -- --w-screen --h-screen'
             iframe={{
               src: buyUrl
               // src: 'https://storecraft.app'
             }}
+          />
+          <MdFullscreen 
+            className='absolute right-2 bottom-2 text-3xl
+              border rounded-md p-0.5 text-white cursor-pointer 
+              bg-black'
+            onClick={() => setFullscreen(!fullscreen)}
           />
         </div>
 

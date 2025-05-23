@@ -60,6 +60,17 @@ export default function html_buy_ui(config, order_data) {
       console.log(msg);
     }
 
+    const dispatchEvent = (event, data) => {
+      window?.parent?.postMessage(
+        {
+          who: "storecraft",
+          event,
+          data
+        },
+        "*"
+      );
+    }
+
     window.paypal
       .Buttons(
         {
@@ -77,6 +88,7 @@ export default function html_buy_ui(config, order_data) {
 
           async createOrder() {
             try {
+
               if ('${orderData.id}') {
                 return '${orderData.id}';
               }
@@ -138,9 +150,26 @@ export default function html_buy_ui(config, order_data) {
                   orderData,
                   JSON.stringify(orderData, null, 2)
                 );
+                dispatchEvent(
+                  "storecraft/checkout-complete",
+                  {
+                    orderData,
+                    order_id: '${orderData.id}',
+                    payment_gateway: 'paypal'
+                  }
+                );
+
               }
             } catch (error) {
               console.error(error);
+              dispatchEvent(
+                "storecraft/checkout-error",
+                {
+                  error: error.message,
+                  order_id: '${orderData.id}',
+                  payment_gateway: 'paypal'
+                }
+              );
               resultMessage(
                 "Sorry, your transaction could not be processed... " + error
               );

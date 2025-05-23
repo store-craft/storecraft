@@ -56,7 +56,7 @@ export const OrderSummary = (
   const [open, setOpen] = useState(summary?.open ?? false);
   const [pricing, setPricing] = useState<Partial<PricingData>>(null);
 
-  console.log({pricing})
+  // console.log({pricing})
 
   const {
     suggested: {
@@ -161,7 +161,7 @@ export const OrderSummary = (
                     className='w-full' 
                     key={e.discount_code}
                     label={{
-                      key: `${e.discount_code} (discount)`, 
+                      key: `discount: ${e.discount_code}`, 
                       value: `${-e.total_discount}`
                     }}
                   />

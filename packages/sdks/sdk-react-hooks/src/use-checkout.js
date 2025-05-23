@@ -1,6 +1,7 @@
 /**
- * @import { CheckoutCreateType, error, HandleOrID,
- *  LineItem, OrderData, ProductType, ShippingMethodType 
+ * @import { 
+ *  CheckoutCreateType, error, HandleOrID, 
+ *  LineItem
  * } from "@storecraft/core/api"
  * @import { 
  *  CheckoutEvents, CheckoutSubscriber, CheckoutType 
@@ -70,6 +71,8 @@ export const useCheckout = () => {
   const [errors, setErrors] = useState(
     /** @type {string[]} */(undefined));
   const [buyUiHtml, setBuyUiHtml] = useState(
+    /** @type {string} */(undefined));
+  const [buyUrl, setBuyUrl] = useState(
     /** @type {string} */(undefined));
   const [creatingCheckout, setCreatingCheckout] = useState(
     /** @type {boolean} */(false));
@@ -234,7 +237,7 @@ export const useCheckout = () => {
         //     {message: 'Not implemented'},
         //   ]
         // }
-        
+
         if(creatingCheckout) {
           throw new Error(
             'Already creating checkout, please wait'
@@ -261,11 +264,17 @@ export const useCheckout = () => {
             )
           });
         } else {
-          const buyUiHtml = await sdk.payments.getBuyUI(
-            checkout_attempt.id
+          setBuyUrl(
+            sdk.payments.getBuyUiUrl(
+              checkout_attempt.id
+            )
           );
+          
+          // const buyUiHtml = await sdk.payments.getBuyUI(
+          //   checkout_attempt.id
+          // );
 
-          setBuyUiHtml(buyUiHtml);
+          // setBuyUiHtml(buyUiHtml);
         }
         
         notify('create_checkout');
@@ -360,11 +369,12 @@ export const useCheckout = () => {
     ), [checkout]
   );
   
-  
   return {
     creatingCheckout,
     errors,
     checkout,
+    buyUiHtml,
+    buyUrl,
     itemsCount,
     quickSubTotal,
     /**

@@ -103,8 +103,19 @@ const OrderPrice = (
           context.getState().data
         );
 
-        setPricing(pricing_new);
-        onChange(pricing_new);
+        if(!pricing_new?.pricing) {
+          let msg = 'An error occured while calculating pricing';
+          if(pricing_new?.validation) {
+            msg = pricing_new.validation.map(
+              (e) => `- ${e.message}`
+            ).join('\n ');
+          }
+          setError(msg);
+          return;
+        }
+
+        setPricing(pricing_new.pricing);
+        onChange(pricing_new.pricing);
 
         console.log('pricing ', pricing_new);
   
@@ -128,7 +139,9 @@ const OrderPrice = (
       value={pricing?.shipping_method?.price ?? 0} 
     />
     { // discounts
-      pricing?.evo?.slice(1).filter(e => e.total_discount>0).map(
+      pricing?.evo?.slice(1)
+      .filter(e => e.total_discount>0)
+      .map(
         e => (
           <Entry 
             key={e.discount_code}

@@ -378,16 +378,18 @@ export const Card = (
     { 
       error && 
       <div 
-        className='flex relative flex-row flex-nowrap items-center text-base 
-                  text-red-700 dark:text-red-400
-                  bg-red-400/25 border border-red-400 rounded-md p-3 mt-5 '>
-        <BiErrorCircle className='flex-inline text-2xl flex-shrink-0 opacity-70' /> 
-        <MDView value={error} className='mx-3 overflow-auto' />
+        className='flex relative flex-col flex-nowrap 
+          items-center text-base 
+          text-red-700 dark:text-red-400
+          bg-red-400/25 border border-red-400 
+          rounded-md p-2 mt-5 '>
+        <MDView value={error} className='--mx-3 overflow-auto' />
         {/* <div children={error} className='mx-3' /> */}
         <IoClose 
-            className='flex-inline absolute top-1 right-1 
-                       cursor-pointer text-2xl flex-shrink-0 opacity-90' 
-            onClick={() => setError && setError(undefined)}/>
+          className='flex-inline --absolute top-0.5 right-0.5 
+            cursor-pointer text-xl flex-shrink-0 opacity-90
+            self-end' 
+          onClick={() => setError && setError(undefined)}/>
       </div>
     }
   </div>

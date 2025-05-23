@@ -29,8 +29,9 @@ export default function html_buy_ui(config, order_data) {
     <title>PayPal JS SDK Standard Integration</title>
   </head>
   <body style='display: flex; flex-direction: column; justify-content: start; height: 100%; align-items: center;'>
-      <div id="paypal-button-container" style='width: 100%' ></div>
-      <p id="result-message"></p>
+    <div id="paypal-button-container" style='width: 100%' ></div>
+    <p id="result-message"></p>
+
     <!-- Initialize the JS-SDK -->
     <script src="https://www.paypal.com/sdk/js?currency=${config.default_currency_code}&client-id=${config.client_id}&intent=${config.intent_on_checkout.toLowerCase()}"></script>
 
@@ -76,7 +77,7 @@ export default function html_buy_ui(config, order_data) {
 
           async onApprove(data, actions) {
             try {
-              const response = await fetch("/api/checkout/${order_data.id}/complete", {
+              const response = await fetch("http://localhost:8000/api/checkout/${order_data.id}/complete", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

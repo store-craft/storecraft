@@ -18,8 +18,14 @@ export const CheckoutPaymentGateway = (
       createCheckout
     },
     checkout,
+    buyUrl,
     errors
   } = useCheckout();
+
+  console.log({buyUrl});
+
+  if(creatingCheckout)
+    return null;
 
   return(
     <div {...rest}>
@@ -39,7 +45,7 @@ export const CheckoutPaymentGateway = (
           <Iframe 
             className='w-full h-full'
             iframe={{
-              src: 'https://storecraft.app'
+              src: buyUrl
             }}
           />
         </div>
@@ -105,7 +111,7 @@ const Iframe = (
     (e) => {
       console.log({e})
       setWasLoaded(true);
-      alert('Iframe loaded');
+      // alert('Iframe loaded');
     }, []
   );
 

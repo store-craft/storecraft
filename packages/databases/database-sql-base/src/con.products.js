@@ -370,8 +370,6 @@ const remove = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["list"]}
  */
 const list = (driver) => {

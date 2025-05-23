@@ -6,7 +6,8 @@
 import { StorecraftSDK } from '../index.js'
 import { 
   fetchApiWithAuth, get_from_collection_resource, 
-  list_from_collection_resource 
+  list_from_collection_resource, 
+  url
 } from './utils.api.fetch.js';
 
 /**
@@ -94,6 +95,18 @@ export default class Payments {
     )
   }
     
+  /**
+   * Get an optional HTML Pay UI of the `payment gateway`
+   * @param {string} order_id the `id` of the `order`
+   * @returns {string} buy UI url
+   */
+  getBuyUiUrl(order_id) {
+    return url(
+      this.sdk.config, 
+      `/payments/buy_ui/${order_id}`
+    );
+  }
+  
   /**
    * invoke the webhook endpoint for async payment
    * @param {string} gateway_handle The handle of the `payment gateway`

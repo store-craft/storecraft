@@ -56,7 +56,7 @@ export const OrderSummary = (
   const [open, setOpen] = useState(summary?.open ?? false);
   const [pricing, setPricing] = useState<Partial<PricingData>>(null);
 
-  // console.log({pricing})
+  console.log({pricing})
 
   const {
     suggested: {
@@ -72,7 +72,11 @@ export const OrderSummary = (
 
   useEffect(
     () => {
-      backend_pricing().then(setPricing);
+      backend_pricing().then(
+        (validation_or_pricing) => setPricing(
+          validation_or_pricing?.pricing ?? null
+        )
+      );
     }, [suggestedCheckout, backend_pricing]
   );
 

@@ -64,7 +64,7 @@ async (checkout) => {
   if(!shipping_method) {
     errorWith(
       shipping_id, 
-      `Shipping Method ${shipping_id} not found`,
+      `Shipping Method \`${shipping_id}\` not found`,
       'shipping-method-not-found'
     );
   }
@@ -77,7 +77,7 @@ async (checkout) => {
       if(!it) {
         errorWith(
           li?.id, 
-          `Product ${li?.data?.title ?? li?.id} not found`,
+          `Product \`${li?.data?.title ?? li?.id}\` not found`,
           'product-not-exists'
         );
       } else {
@@ -87,14 +87,14 @@ async (checkout) => {
         if(pd.qty==0) {
           errorWith(
             pd?.id, 
-            `Product ${pd?.title ?? pd?.id} is out of stock`, 
+            `Product \`${pd?.title ?? pd?.id}\` is out of stock`, 
             'product-out-of-stock'
           );
         }
         else if(li.qty>pd.qty) {
           errorWith(
             pd?.id, 
-            `Product ${pd?.title ?? pd?.id} has ${pd?.qty} in stock, ` + 
+            `Product \`${pd?.title ?? pd?.id}\` has **${pd?.qty}** in stock, ` + 
             'try to lower the quantity',
             'product-not-enough-stock'
           );
@@ -103,7 +103,7 @@ async (checkout) => {
         if(!pd.active) {
           errorWith(
             pd.id, 
-            `Product ${pd.title} is inactive`,
+            `Product \`${pd.title}\` is inactive`,
             'product-inactive'
           );
         }
@@ -123,7 +123,6 @@ async (checkout) => {
   }
 
 }
-
 
 /**
  * @param {App} app 
@@ -184,6 +183,54 @@ async (order) => {
   }
 }
 
+/**
+ * @template {App} T
+ * @param {T} app 
+ */
+export const validation_and_pricing = app =>
+/**
+ * @description Create a quick validation and pricing of a checkout.
+ * This should be used by frontents to show the user the pricing and 
+ * validation of a cart and checkout while the customer hasn't created
+ * a checkout yet.
+ * @param {CheckoutCreateType} order_checkout
+ * @returns {Promise<Partial<Pick<OrderData, "pricing" | "validation">>>}
+ */
+async (order_checkout) => {
+
+  assert_zod(
+    checkoutCreateTypeSchema.transform(x => x ?? undefined), 
+    order_checkout
+  );
+
+  // order_checkout.line_items.push(
+  //   {
+  //     id: 'dddd'
+  //   },
+  // );
+  // order_checkout.shipping_method = {
+  //   id: 'diojsidj'
+  // }
+
+  // fetch correct data from backend. we dont trust client
+  const order_validated = await validate_checkout(app)(order_checkout);
+  const validation = order_validated.validation;
+
+  // we had reserve errors, so publish it without pricing etc..
+  if(validation.length > 0) {
+    return {
+      validation,
+    }
+  }
+
+  // eval pricing with discounts
+  const order_priced = await eval_pricing(app)(order_validated);
+
+  return {
+    pricing: order_priced.pricing,
+  };
+}
+
 
 /**
  * @template {App} T
@@ -240,7 +287,6 @@ async (order_checkout, gateway_handle) => {
     },
   }
   
-
   // reserve stock
   if(app.config.checkout_reserve_stock_on==='checkout_create') {
     await reserve_stock_of_order(app, order);
@@ -373,6 +419,7 @@ export const inter = app => {
 
   return {
     eval_pricing: eval_pricing(app),
+    validation_and_pricing: validation_and_pricing(app),
     validate_checkout: validate_checkout(app),
     create_checkout: create_checkout(app),
     complete_checkout: complete_checkout(app),

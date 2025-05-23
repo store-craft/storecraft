@@ -66,7 +66,7 @@ export default class Checkout {
    * @description calculate the pricing of an `order`. 
    * Using auto-discounts, coupons, shipping and line-items.
    * @param {CheckoutCreateTypeAfterValidation} order 
-   * @returns {Promise<Partial<PricingData>>}
+   * @returns {Promise<Partial<Pick<OrderData, "pricing" | "validation">>>}
    */
   pricing = async (order) => {
 

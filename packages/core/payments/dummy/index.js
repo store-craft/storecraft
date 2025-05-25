@@ -220,20 +220,62 @@ export class DummyPayments {
     <title>Dummy payment</title>
     <style>
       body {
+        width: wvh;
+        max-width: 600px;
+        margin: auto;
         font-family: Arial, sans-serif;
-        margin: 20px;
         background-color: white;
+        padding: 10px;
+      }
+      
+      #pay_btn {
+        padding: 10px 20px;
+        background-color: purple;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        width: 100%;
       }
     </style>
     </head>
     <body>
     <h1>Dummy payment</h1>
     <p>Dummy payment processor</p>
-    <p>Price: ${order.pricing.total}</p>
-    <p>Order ID: ${order.id}</p>
-    <p>Order payment status: ${order.status.payment.name}</p>
+    <p>Total: <strong>${order.pricing.total}</strong></p>
+    <p>Order ID: <strong>${order?.id?.replace('order_', '') ?? 'unknown'}</strong></p>
+    <p>Order Status: <strong>${order.status.payment.name}</strong></p>
     <button id="pay_btn" onclick="handlePayment()">Pay Now</button>
     <script>
+      const dispatchEvent = (event, data) => {
+        window?.parent?.postMessage(
+          {
+            who: "storecraft",
+            event,
+            data
+          },
+          "*"
+        );
+      }
+      // Override console.log to send messages to the parent window
+      console.log = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-log",
+          args
+        );
+      };
+
+      console.error = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-error",
+          args
+        );
+      };
+              
       // alert('This is a dummy payment processor. Payment will not be processed.');
       // payButton.addEventListener('click', handlePayment);
 
@@ -241,13 +283,27 @@ export class DummyPayments {
         // find button and add listener
         // Simulate payment processing
         // alert('Payment processing is simulated. This is a dummy payment processor.');
-        const response = await fetch(window.location.origin + "/api/checkout/${order.id}/complete", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        window.location.reload();
+
+        try {
+          const response = await fetch(window.location.origin + "/api/checkout/${order.id}/complete", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if(response.ok) {
+            dispatchEvent('storecraft/checkout-complete', {
+              order_id: '${order.id}',
+            });
+          }
+          window.location.reload();
+        } catch (e) {
+          console.error('Error processing payment:', e);
+          dispatchEvent('storecraft/checkout-error', {
+            error: e.message
+          });
+        }
+
       }
     </script>
   </body>

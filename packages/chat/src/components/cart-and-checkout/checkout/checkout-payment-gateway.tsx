@@ -1,9 +1,10 @@
 import { useCheckout } from "@storecraft/sdk-react-hooks";
 import React, { useCallback, useEffect, useState } from "react"
-import { MdFullscreen, MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
+import { 
+  MdFullscreen, MdOutlineArrowBack, MdOutlinePayment 
+} from "react-icons/md";
 import { CheckoutProps } from ".";
 import { OrderSummary } from "./order-summary";
-import { SlSizeFullscreen } from "react-icons/sl";
 
 export const CheckoutPaymentGateway = (
   {
@@ -12,19 +13,12 @@ export const CheckoutPaymentGateway = (
 ) => {
   const {
     creatingCheckout, 
-    suggested: {
-      suggestedCheckout
-    },
-    actions: {
-      createCheckout
-    },
     checkout,
     buyUrl,
-    errors
   } = useCheckout();
 
   const [fullscreen, setFullscreen] = useState(false);
-  console.log({buyUrl});
+  // console.log({buyUrl});
 
   useEffect(
     () => {
@@ -38,12 +32,16 @@ export const CheckoutPaymentGateway = (
                   storecraft_iframe_event: event.data,
                 }
               );
+
+              if(event.data?.event === 'storecraft/checkout-complete') {
+                checkout_props?.next();
+              }
             }
           }
           // console.log({event})
         }
       );
-    }, []
+    }, [checkout_props]
   );
 
   if(creatingCheckout)
@@ -91,7 +89,10 @@ export const CheckoutPaymentGateway = (
         <OrderSummary
           className='w-full h-fit'
           summary={{
-            open: true
+            open: true,
+            pricing: checkout?.latest_checkout_attempt?.pricing,
+            orderId: checkout?.latest_checkout_attempt?.id,
+            showCoupons: false
           }}
         />
 

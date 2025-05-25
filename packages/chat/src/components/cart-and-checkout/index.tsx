@@ -47,7 +47,7 @@ export const CartAndCheckout = (
           <Checkout 
             className='w-full h-full' 
             checkout={{
-              close: () => setShowCheckout(false),
+              exit: () => setShowCheckout(false),
             }}
           />
         )

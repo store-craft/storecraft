@@ -5,6 +5,7 @@
  * @import { CartEvents, CartSubscriber, CartType } from "./use-cart.types.js"
  */
 
+import { isEmpty } from "@storecraft/core/api/utils.func.js";
 import { create_local_storage_hook, useStorecraft } from "@storecraft/sdk-react-hooks"
 import React, { useCallback, useMemo } from "react"
 
@@ -207,6 +208,7 @@ export const useCart = () => {
   
   
   return {
+    isEmpty: cart.line_items.length === 0,
     cart,
     itemsCount,
     quickSubTotal,

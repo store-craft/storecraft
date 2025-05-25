@@ -10,7 +10,7 @@ import {
 import { 
   CheckoutAddressimperativeInterface, CheckoutContactAddress 
 } from "./checkout-contact-address";
-import { OrderSummary } from "./order-summary";
+import { HookedOrderSummary } from "./order-summary";
 
 export const CheckoutContact = (
   {
@@ -91,7 +91,7 @@ export const CheckoutContact = (
           onClick={onSubmit}
         />
         
-        <OrderSummary
+        <HookedOrderSummary
           className='w-full h-fit --p-2'
         />
       </div>
@@ -112,7 +112,7 @@ const Header = (
           items-center border-b p-2 font-semibold'>
         <MdClose 
           className='text-xl cursor-pointer' 
-          onClick={checkout?.close}
+          onClick={checkout?.exit}
         />    
         <div className="flex flex-row gap-2 items-center">
           <IoMdContact className='text-2xl' />

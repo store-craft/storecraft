@@ -42,16 +42,16 @@ const Label = (
   )
 }
 
-export type OrderSummaryProps = {
+export type HookedOrderSummaryProps = {
   summary?: {
     open?: boolean,
   }
 } & React.ComponentProps<'div'>;
 
-export const OrderSummary = (
+export const HookedOrderSummary = (
   {
     summary, ...rest
-  } : OrderSummaryProps
+  } : HookedOrderSummaryProps
 ) => {
   const [open, setOpen] = useState(summary?.open ?? false);
   const [pricing, setPricing] = useState<Partial<PricingData>>(null);
@@ -67,7 +67,8 @@ export const OrderSummary = (
     },
     events: {
       subscribe
-    }
+    },
+    checkout
   } = useCheckout();
 
   useEffect(
@@ -93,6 +94,38 @@ export const OrderSummary = (
   );
 
   return(
+    <OrderSummary
+      {...rest}
+      summary={{
+        open: open,
+        pricing: pricing,
+        orderId: checkout?.latest_checkout_attempt?.id,
+        onToggle: () => setOpen(!open),
+        onCouponsFocus: () => setOpen(true),
+        showCoupons: true
+      }}
+    />
+  )
+}
+
+export type OrderSummaryProps = {
+  summary?: {
+    open?: boolean,
+    showCoupons?: boolean,
+    pricing?: Partial<PricingData>,
+    orderId?: string,
+    onToggle?: () => void,
+    onCouponsFocus?: () => void,
+  }
+} & React.ComponentProps<'div'>;
+
+export const OrderSummary = (
+  {
+    summary, ...rest
+  } : OrderSummaryProps
+) => {
+
+  return(
     <div {...rest}>
 
       {/* button */}
@@ -103,16 +136,21 @@ export const OrderSummary = (
           hover:bg-black/10 dark:hover:bg-white/10 ` +
           (open ? 'bg-black/10 dark:bg-white/10' : '') 
         }
-        onClick={(_) => setOpen(!open)}>
+        onClick={(_) => summary?.onToggle?.()}>
         
         <div 
           className='w-fit flex flex-row 
             gap-1 items-center opacity-70 '>
           <span 
-            className='text-sm 
+            className='text-xs 
               underline underline-offset-4 
+              whitespace-nowrap text-ellipsis
               decoration-dashed tracking-wide'
-            children='Order Summary'
+            children={
+              summary?.orderId ? 
+              `Order ${summary?.orderId?.replace('order_', '')}` : 
+              'Order Summary'
+            }
           />
           <FaAngleDown 
             className={
@@ -124,7 +162,7 @@ export const OrderSummary = (
         <span 
           className={'text-sm font-mono ' + 
             (open ? 'opacity-0' : 'opacity-70')}
-          children={pricing?.total ?? '--'}
+          children={summary?.pricing?.total ?? '--'}
         />
       </div>
 
@@ -134,7 +172,7 @@ export const OrderSummary = (
         {/* drawer */}
         <Drawer
           className={'w-full h-fit --p-3 border-b'}
-          drawer={{open}}>
+          drawer={{open: summary?.open}}>
 
           <div 
             className='w-full h-full flex flex-col 
@@ -143,18 +181,18 @@ export const OrderSummary = (
               className='w-full' 
               label={{
                 key: 'Subtotal', 
-                value: `${pricing?.subtotal_undiscounted ?? 0}`
+                value: `${summary?.pricing?.subtotal_undiscounted ?? 0}`
               }} 
             />
             <Label 
               className='w-full' 
               label={{
                 key: 'Shipping', 
-                value: `${pricing?.shipping_method?.price ?? '--'}`
+                value: `${summary?.pricing?.shipping_method?.price ?? '--'}`
               }} 
             />
             { // discounts
-              pricing?.evo?.slice(1)
+              summary?.pricing?.evo?.slice(1)
               .filter(e => e.total_discount>0).map(
                 e => (
                   <Label 
@@ -169,7 +207,7 @@ export const OrderSummary = (
               )
             }
             { // taxes
-              pricing?.taxes.map(
+              summary?.pricing?.taxes.map(
                 (tax) => (
                   <Label 
                     className='w-full' 
@@ -186,7 +224,7 @@ export const OrderSummary = (
               className='w-full' 
               label={{
                 key: 'Total', 
-                value: `${pricing?.total ?? '--'}`
+                value: `${summary?.pricing?.total ?? '--'}`
               }} 
             />
 
@@ -194,10 +232,14 @@ export const OrderSummary = (
         </Drawer>
 
         {/* add coupons */}
-        <AddCoupons
-          onFocus={(_) => setOpen(true)}
-          className='w-full h-fit --p-1' 
-        />
+        {
+          summary?.showCoupons && (
+            <AddCoupons
+              onFocus={(_) => summary?.onCouponsFocus?.()}
+              className='w-full h-fit --p-1' 
+            />
+          )
+        }
 
       </div>
 

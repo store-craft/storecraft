@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react"
 import { MdOutlineArrowBack, MdOutlinePayment } from "react-icons/md";
 import { CheckoutProps } from ".";
 import { PaymentGatewayItemGet } from "@storecraft/core/api";
-import { OrderSummary } from "./order-summary";
+import { HookedOrderSummary } from "./order-summary";
 import { LoadingSingleImage } from "@/components/common/loading-image";
 import { ErrorsView } from "@/components/common/error-view";
 import { CgSpinner } from "react-icons/cg";
@@ -94,7 +94,7 @@ export const CheckoutPaymentSelect = (
         </div>
 
         {/* Footer */}
-        <OrderSummary
+        <HookedOrderSummary
           className='w-full h-fit'
           summary={{
             open: true

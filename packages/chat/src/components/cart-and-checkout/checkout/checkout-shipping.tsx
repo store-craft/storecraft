@@ -4,7 +4,7 @@ import { MdOutlineArrowBack, MdOutlineLocalShipping, MdOutlineRadioButtonChecked
 import { CheckoutProps } from ".";
 import { Button } from "../../common/button";
 import { CheckoutCreateType, ShippingMethodType } from "@storecraft/core/api";
-import { OrderSummary } from "./order-summary";
+import { HookedOrderSummary } from "./order-summary";
 
 export const CheckoutShipping = (
   {
@@ -98,7 +98,7 @@ export const CheckoutShipping = (
           onClick={onNext}
         />
 
-        <OrderSummary
+        <HookedOrderSummary
           className='w-full h-fit --p-1'
         />
 

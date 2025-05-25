@@ -250,7 +250,7 @@ const OrderPaymentGateway = (
   <div className='flex flex-row items-center justify-between shelf-text-label-color mt-3'>
     <div className='w-fit flex flex-row gap-3 shelf-text-label-color'>
       {
-        status.actions.map(
+        status?.actions?.map(
           (action) => (
             <ActionButton 
               key={action.handle}

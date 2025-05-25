@@ -67,7 +67,7 @@ export const ChatApp = (
             className={
               'w-fit h-full shrink-0 overflow-hidden \
               absolute right-0 top-0 lg:relative z-10 --hidden \
-              transition-all  duration-400 ' +
+              transition-all  duration-700 ' +
               (isCartOpen ? 'max-w-dvw' : 'max-w-0')
             }
           >

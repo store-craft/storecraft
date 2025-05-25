@@ -38,7 +38,9 @@ export const useAuth = () => {
     contact: {
       email: auth?.access_token?.claims?.email,
       firstname: auth?.access_token?.claims?.firstname,
-      customer_id: auth?.user_id,
+      lastname: auth?.access_token?.claims?.lastname,
+      auth_id: auth?.user_id,
+      customer_id: auth?.user_id?.replace('au_', 'cus_'),
     },
     isAuthenticated: sdk.auth.isAuthenticated,
     actions: {

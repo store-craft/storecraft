@@ -32,8 +32,12 @@ export const CheckoutPaymentGateway = (
         'message', 
         function(event) {
           if(typeof event==='object') {
-            if (event.data?.event === 'storecraft/checkout-created') {
-              console.log('Checkout created', event.data);
+            if (event.data?.who === 'storecraft') {
+              console.log(
+                {
+                  storecraft_iframe_event: event.data,
+                }
+              );
             }
           }
           // console.log({event})

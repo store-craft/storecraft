@@ -55,129 +55,149 @@ export default function html_buy_ui(config, order_data) {
 
     <!-- code --> 
     <script>
-    const resultMessage = (msg) => {
-      document.getElementById('result-message').innerHTML = msg
-      console.log(msg);
-    }
+      const resultMessage = (msg) => {
+        document.getElementById('result-message').innerHTML = msg
+        console.log(msg);
+      }
 
-    const dispatchEvent = (event, data) => {
-      window?.parent?.postMessage(
-        {
-          who: "storecraft",
-          event,
-          data
-        },
-        "*"
+      const dispatchEvent = (event, data) => {
+        window?.parent?.postMessage(
+          {
+            who: "storecraft",
+            event,
+            data
+          },
+          "*"
+        );
+      }
+      // Override console.log to send messages to the parent window
+      console.log = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-log",
+          args
+        );
+      };
+
+      console.error = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-error",
+          args
+        );
+      };
+
+      console.log(
+      window.location.href,
       );
-    }
 
-    window.paypal
-      .Buttons(
-        {
-          style: {
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "paypal",
-            disableMaxWidth: true
-          },
+      window.paypal
+        .Buttons(
+          {
+            style: {
+              shape: "rect",
+              layout: "vertical",
+              color: "gold",
+              label: "paypal",
+              disableMaxWidth: true
+            },
 
-          message: {
-            amount: ${order_data.pricing.total},
-          },
+            message: {
+              amount: ${order_data.pricing.total},
+            },
 
-          async createOrder() {
-            try {
+            async createOrder() {
+              try {
 
-              if ('${orderData.id}') {
-                return '${orderData.id}';
+                if ('${orderData.id}') {
+                  return '${orderData.id}';
+                }
+                const errorDetail = ${orderData?.details?.[0]};
+                const errorMessage = errorDetail
+                  ? (errorDetail.issue + errorDetail.description + "(" + '${orderData.debug_id}' + ")")
+                  : JSON.stringify(orderData);
+
+                throw new Error(errorMessage);
+              } catch (error) {
+                console.error(error);
+                resultMessage("Could not initiate PayPal Checkout...<br><br> " + error);
               }
-              const errorDetail = ${orderData?.details?.[0]};
-              const errorMessage = errorDetail
-                ? (errorDetail.issue + errorDetail.description + "(" + '${orderData.debug_id}' + ")")
-                : JSON.stringify(orderData);
+            },
 
-              throw new Error(errorMessage);
-            } catch (error) {
-              console.error(error);
-              resultMessage("Could not initiate PayPal Checkout...<br><br> " + error);
-            }
-          },
+            async onApprove(data, actions) {
+              try {
+                const response = await fetch(window.location.origin + "/api/checkout/${order_data.id}/complete", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                });
 
-          async onApprove(data, actions) {
-            try {
-              const response = await fetch("http://localhost:8000/api/checkout/${order_data.id}/complete", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
+                const orderData_main = await response.json();
+                const orderData = orderData_main.payment_gateway.on_checkout_complete;
 
-              const orderData_main = await response.json();
-              const orderData = orderData_main.payment_gateway.on_checkout_complete;
+                // Three cases to handle:
+                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                //   (2) Other non-recoverable errors -> Show a failure message
+                //   (3) Successful transaction -> Show confirmation or thank you message
 
-              // Three cases to handle:
-              //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-              //   (2) Other non-recoverable errors -> Show a failure message
-              //   (3) Successful transaction -> Show confirmation or thank you message
+                const errorDetail = orderData?.details?.[0];
 
-              const errorDetail = orderData?.details?.[0];
-
-              if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                // recoverable state, per
-                // https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                return actions.restart();
-              } else if (errorDetail) {
-                // (2) Other non-recoverable errors -> Show a failure message
-                throw new Error(errorDetail.description + "(" + orderData.debug_id + ")");
-              } 
-              // else if (!orderData.purchase_units) {
-              //   throw new Error(JSON.stringify(orderData));
-              // } 
-              else {
-                // (3) Successful transaction -> Show confirmation or thank you message
-                // Or go to another URL:  actions.redirect('thank_you.html');
-                const transaction =
-                  orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
-                  orderData?.purchase_units?.[0]?.payments?.authorizations?.[0];
-                resultMessage(
-                  "Transaction " + transaction?.status + ":" + transaction?.id + 
-                  " See console for all available details"
-                );
-                console.log(
-                  "Capture result",
-                  orderData,
-                  JSON.stringify(orderData, null, 2)
-                );
-                dispatchEvent(
-                  "storecraft/checkout-complete",
-                  {
+                if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
+                  // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                  // recoverable state, per
+                  // https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
+                  return actions.restart();
+                } else if (errorDetail) {
+                  // (2) Other non-recoverable errors -> Show a failure message
+                  throw new Error(errorDetail.description + "(" + orderData.debug_id + ")");
+                } 
+                // else if (!orderData.purchase_units) {
+                //   throw new Error(JSON.stringify(orderData));
+                // } 
+                else {
+                  // (3) Successful transaction -> Show confirmation or thank you message
+                  // Or go to another URL:  actions.redirect('thank_you.html');
+                  const transaction =
+                    orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
+                    orderData?.purchase_units?.[0]?.payments?.authorizations?.[0];
+                  resultMessage(
+                    "Transaction " + transaction?.status + ":" + transaction?.id + 
+                    " See console for all available details"
+                  );
+                  console.log(
+                    "Capture result",
                     orderData,
+                    JSON.stringify(orderData, null, 2)
+                  );
+                  dispatchEvent(
+                    "storecraft/checkout-complete",
+                    {
+                      orderData,
+                      order_id: '${orderData.id}',
+                      payment_gateway: 'paypal'
+                    }
+                  );
+
+                }
+              } catch (error) {
+                console.error(error);
+                dispatchEvent(
+                  "storecraft/checkout-error",
+                  {
+                    error: error.message,
                     order_id: '${orderData.id}',
                     payment_gateway: 'paypal'
                   }
                 );
-
+                resultMessage(
+                  "Sorry, your transaction could not be processed... " + error
+                );
               }
-            } catch (error) {
-              console.error(error);
-              dispatchEvent(
-                "storecraft/checkout-error",
-                {
-                  error: error.message,
-                  order_id: '${orderData.id}',
-                  payment_gateway: 'paypal'
-                }
-              );
-              resultMessage(
-                "Sorry, your transaction could not be processed... " + error
-              );
             }
+              
           }
-            
-        }
-      ).render("#paypal-button-container"); 
+        ).render("#paypal-button-container"); 
 
     </script>
     

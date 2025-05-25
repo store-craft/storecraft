@@ -218,13 +218,38 @@ export class DummyPayments {
 <html>
   <head>
     <title>Dummy payment</title>
-  </head>
-  <body>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: white;
+      }
+    </style>
+    </head>
+    <body>
     <h1>Dummy payment</h1>
     <p>Dummy payment processor</p>
     <p>Price: ${order.pricing.total}</p>
     <p>Order ID: ${order.id}</p>
     <p>Order payment status: ${order.status.payment.name}</p>
+    <button id="pay_btn" onclick="handlePayment()">Pay Now</button>
+    <script>
+      // alert('This is a dummy payment processor. Payment will not be processed.');
+      // payButton.addEventListener('click', handlePayment);
+
+      async function handlePayment() {
+        // find button and add listener
+        // Simulate payment processing
+        // alert('Payment processing is simulated. This is a dummy payment processor.');
+        const response = await fetch(window.location.origin + "/api/checkout/${order.id}/complete", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        window.location.reload();
+      }
+    </script>
   </body>
 </html>  
     `

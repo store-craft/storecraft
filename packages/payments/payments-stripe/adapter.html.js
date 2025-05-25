@@ -47,6 +47,23 @@ export default function html_buy_ui(config, order_data) {
           "*"
         );
       }
+      // Override console.log to send messages to the parent window
+      console.log = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-log",
+          args
+        );
+      };
+
+      console.error = function(...args) {
+        // Log to console
+        dispatchEvent(
+          "storecraft/checkout-error",
+          args
+        );
+      };
+              
       let elements;
 
       window.onload = function() {
@@ -82,21 +99,34 @@ export default function html_buy_ui(config, order_data) {
         const { error } = await stripe.confirmPayment({
           elements,
           confirmParams: {
-            // Make sure to change this to your payment completion page
-            return_url: "https://storecraft.app/",
+            // return to this same page, which can also interpret the
+            // payment intent status from the URL parameters
+            return_url: window.location.href,
           },
           redirect: 'if_required'
         });
 
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Otherwise, your customer will be redirected to
-        // your \`return_url\`. For some payment methods like iDEAL, your customer will
+        // your \`return_url\` unless 'if_required' ise set. For some payment methods like iDEAL, your customer will
         // be redirected to an intermediate site first to authorize the payment, then
         // redirected to the \`return_url\`.
-        if (error.type === "card_error" || error.type === "validation_error") {
-          showMessage(error.message);
+        if(error) {
+          dispatchEvent("storecraft/checkout-error", {
+            order_id: "${order_data.id}"
+          }); 
+
+          if (error.type === "card_error" || error.type === "validation_error") {
+            showMessage(error.message);
+          } else if(error) {
+            showMessage("An unexpected error occurred.");
+          }
         } else {
-          showMessage("An unexpected error occurred.");
+          // if 'if_required' is set and no redirect is needed,
+          // Payment succeeded, you can show a success message to your customer
+          dispatchEvent("storecraft/checkout-complete", {
+            order_id: "${order_data.id}"
+          }); 
         }
 
         setLoading(false);
@@ -117,6 +147,10 @@ export default function html_buy_ui(config, order_data) {
         switch (paymentIntent.status) {
           case "succeeded":
             showMessage("Payment succeeded!");
+            dispatchEvent("storecraft/checkout-complete", {
+              order_id: "${order_data.id}"
+            }); 
+
             break;
           case "processing":
             showMessage("Your payment is processing.");
@@ -126,6 +160,9 @@ export default function html_buy_ui(config, order_data) {
             break;
           default:
             showMessage("Something went wrong.");
+            dispatchEvent("storecraft/checkout-error", {
+              order_id: "${order_data.id}"
+            }); 
             break;
         }
       }
@@ -137,6 +174,8 @@ export default function html_buy_ui(config, order_data) {
 
         messageContainer.classList.remove("hidden");
         messageContainer.textContent = messageText;
+
+        console.log(messageText);
 
         setTimeout(function () {
           messageContainer.classList.add("hidden");

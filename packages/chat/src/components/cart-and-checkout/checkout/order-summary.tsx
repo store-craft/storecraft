@@ -1,6 +1,5 @@
 import { useCheckout } from "@storecraft/sdk-react-hooks";
 import { useEffect, useState } from "react"
-import { type CheckoutProps } from ".";
 import { type PricingData } from "@storecraft/core/api";
 import { FaAngleDown } from "react-icons/fa6";
 import { AddCoupons } from "./add-coupons";
@@ -125,6 +124,8 @@ export const OrderSummary = (
   } : OrderSummaryProps
 ) => {
 
+  // console.log(summary?.pricing)
+
   return(
     <div {...rest}>
 
@@ -134,7 +135,7 @@ export const OrderSummary = (
           justify-between items-center 
           --border-b cursor-pointer px-4
           hover:bg-black/10 dark:hover:bg-white/10 ` +
-          (open ? 'bg-black/10 dark:bg-white/10' : '') 
+          (summary?.open ? 'bg-black/10 dark:bg-white/10' : '') 
         }
         onClick={(_) => summary?.onToggle?.()}>
         
@@ -155,13 +156,13 @@ export const OrderSummary = (
           <FaAngleDown 
             className={
               'text-sm transition-all duration-300 ' + 
-              (open ? 'rotate-180' : 'rotate-0')
+              (summary?.open ? 'rotate-180' : 'rotate-0')
             }   
           />
         </div>  
         <span 
           className={'text-sm font-mono ' + 
-            (open ? 'opacity-0' : 'opacity-70')}
+            (summary?.open ? 'opacity-100' : 'opacity-70')}
           children={summary?.pricing?.total ?? '--'}
         />
       </div>

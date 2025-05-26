@@ -45,8 +45,8 @@ export const CheckoutSuccess = (
         confetti.create(ref_canvas.current, { resize: true });
 
       ref_canvas.current.confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 200,
+        spread: 100,
         origin: { y: 1 }
       });
     }, [checkoutSnapshot]

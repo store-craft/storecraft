@@ -14,6 +14,11 @@ export class UniformTaxes {
   #percents = 0;
   #name = 'vat';
 
+  /**
+   * 
+   * @param {number} percents a number between 0 and 100
+   * @param {*} name name of the tax, defaults to 'vat'
+   */
   constructor(percents = 0.0, name = 'vat') {
     this.#percents = percents;
     this.#name = name;
@@ -31,7 +36,9 @@ export class UniformTaxes {
    * @type {tax_provider["compute"]}
    */
   async compute (shipping_address, pricing) {
-    const value = (pricing.total_without_taxes * this.#percents) / 100.0;
+    const value = parseFloat(
+      ((pricing.total_without_taxes * this.#percents) / 100.0).toFixed(2)
+    );
 
     return [
       {

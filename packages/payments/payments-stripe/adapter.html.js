@@ -13,7 +13,7 @@
  * Or use the following dummy details:
  * https://docs.stripe.com/testing?testing-method=card-numbers
  * - Card number: 4242424242424242
- * - Expiry date: 12/2027
+ * - Expiry date:   
  * - CVC code: 897
  * 
  * @param {Config} config 

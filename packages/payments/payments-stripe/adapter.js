@@ -57,6 +57,7 @@ export class Stripe {
         automatic_payment_methods: {
           enabled: true,
         },
+        capture_method: 'manual',
         payment_method_options: {
           card: {
             capture_method: 'manual',

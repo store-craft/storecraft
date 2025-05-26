@@ -25,7 +25,7 @@ export const CheckoutPaymentSelect = (
     errors
   } = useCheckout();
 
-  const {
+  let {
     page
   } = useCollection(
     'payments/gateways'
@@ -70,6 +70,21 @@ export const CheckoutPaymentSelect = (
             className='w-full h-fit'
             errors={errors}
           />
+
+          {
+            !page?.length && (
+              <div className='w-full h-fit flex flex-col gap-2'>
+                <span 
+                  className='text-lg font-semibold text-gray-500'
+                  children='No payment gateways available.' 
+                />
+                <span 
+                  className='text-sm font-light text-gray-400'
+                  children='Please contact support if you think this is an error.' 
+                />
+              </div>
+            )
+          }
 
           {
             page?.map(

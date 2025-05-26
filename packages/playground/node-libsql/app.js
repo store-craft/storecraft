@@ -27,6 +27,7 @@ import { GithubAuth } from "@storecraft/core/auth/providers/github";
 import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
 import { XAuth } from "@storecraft/core/auth/providers/x";
 import { DummyAuth } from "@storecraft/core/auth/providers/dummy";
+import { UniformTaxes } from "@storecraft/core/tax";
 
 export const app = new App({
   auth_secret_access_token: 'auth_secret_access_token',
@@ -73,6 +74,9 @@ export const app = new App({
   facebook: new FacebookAuth(),
   x: new XAuth(),
 })
+.withTaxes(
+  new UniformTaxes(17)
+)
 .on(
   'templates/get',
   async (e) => {

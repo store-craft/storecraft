@@ -1981,8 +1981,7 @@ export interface BaseCheckoutCreateType {
   /** 
    * @description Shipping method `handle` or `id`
    */
-  shipping_method: HandleOrID; 
-  // shipping_method: Partial<ShippingMethodType>; 
+  shipping_method?: HandleOrID; 
 }
 
 
@@ -2005,7 +2004,7 @@ export interface CheckoutCreateTypeAfterValidation extends Omit<CheckoutCreateTy
   /** 
    * @description Shipping method after validation
    */
-  shipping_method: ShippingMethodType; 
+  shipping_method?: ShippingMethodType; 
   /** 
    * @description In case the order went through validation  
    */

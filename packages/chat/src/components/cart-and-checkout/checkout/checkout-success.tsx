@@ -1,6 +1,7 @@
 import { useCart, useCheckout } from "@storecraft/sdk-react-hooks";
 import React, { useCallback, useEffect, useState } from "react"
 import { 
+  MdClose,
   MdOutlineArrowBack, 
 } from "react-icons/md";
 import { CheckoutProps } from ".";
@@ -161,12 +162,11 @@ const Header = (
       <div 
         className='flex flex-row w-full justify-between 
           items-center border-b p-2 font-semibold'>
-        <MdOutlineArrowBack 
+        <MdClose 
           className='text-xl cursor-pointer' 
           onClick={checkout?.exit}
         />    
         <div className="flex flex-row gap-2 items-center">
-          {/* <LuReceiptText className='text-2xl' /> */}
           <span 
             className='font-thin text-xl uppercase 
               italic tracking-wide'

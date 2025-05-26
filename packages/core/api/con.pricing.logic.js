@@ -1051,8 +1051,8 @@ export const calculate_pricing = async (
             ...evo_entry,
             discount_code: discount.handle,
             discount,
-            subtotal: ctx.subtotal,
-            total: ctx.total,
+            subtotal: parseFloat(ctx.subtotal.toFixed(2)),
+            total: parseFloat(ctx.total.toFixed(2)),
           }
         );
 
@@ -1090,7 +1090,13 @@ export const calculate_pricing = async (
   report.total_without_taxes = parseFloat(
     report.total_without_taxes.toFixed(2)
   );
-
+  report.subtotal = parseFloat(report.subtotal.toFixed(2));
+  report.subtotal_undiscounted = parseFloat(
+    report.subtotal_undiscounted.toFixed(2)
+  );
+  report.subtotal_discount = parseFloat(
+    report.subtotal_discount.toFixed(2)
+  );
 
   // now, let's clean all of the line items data field 
   // as it's not needed and redundant

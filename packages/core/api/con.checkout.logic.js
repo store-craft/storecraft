@@ -27,21 +27,22 @@ export const validate_checkout = app =>
  * 
  * @template {CheckoutCreateType} T
  * @param {T} checkout
+ * @param {{skip_shipping_if_missing?: boolean}} [options=undefined]
  * @returns {Promise<CheckoutCreateTypeAfterValidation>
  * }
  */
-async (checkout) => {
+async (checkout, options) => {
 
   // get shipping snapshot
-  const shipping_id = checkout.shipping_method.id ?? 
-    checkout.shipping_method.handle;
-  const shipping_method = await app._.db.resources.shipping_methods.get(
+  const shipping_id = checkout?.shipping_method?.id ?? 
+    checkout?.shipping_method?.handle;
+  const shipping_method = shipping_id && (await app.api.shipping_methods.get(
     shipping_id
-  );
+  ));
 
   // get products snapshot
   const snaps_products = await app._.db.resources.products.getBulk(
-    checkout.line_items.map(li => li.id)
+    checkout.line_items.map(li => li.id).filter(Boolean)
   );
 
   // console.log('snaps_products', snaps_products)
@@ -60,8 +61,8 @@ async (checkout) => {
     );
   }
 
-  // assert shipping is valid
-  if(!shipping_method) {
+  // assert shipping is valid only if it was provided
+  if(shipping_id && !shipping_method) {
     errorWith(
       shipping_id, 
       `Shipping Method \`${shipping_id}\` not found`,
@@ -198,10 +199,10 @@ export const validation_and_pricing = app =>
  */
 async (order_checkout) => {
 
-  assert_zod(
-    checkoutCreateTypeSchema.transform(x => x ?? undefined), 
-    order_checkout
-  );
+  // assert_zod(
+  //   checkoutCreateTypeSchema.transform(x => x ?? undefined), 
+  //   order_checkout
+  // );
 
   // order_checkout.line_items.push(
   //   {

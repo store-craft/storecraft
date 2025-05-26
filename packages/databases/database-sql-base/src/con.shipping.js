@@ -58,7 +58,8 @@ const get = (driver) => {
     const result = await driver.client
       .selectFrom(table_name)
       .selectAll()
-      .select(eb => [
+      .select(
+        eb => [
           with_media(eb, id_or_handle, driver.dialectType),
           with_tags(eb, id_or_handle, driver.dialectType),
           with_search(eb, id_or_handle, driver.dialectType),

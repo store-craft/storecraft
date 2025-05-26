@@ -1774,9 +1774,9 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: handleOrIDSchema.describe(
-    "Shipping method `handle` or `id`",
-  ),
+  shipping_method: handleOrIDSchema
+    .optional()
+    .describe("Shipping method `handle` or `id`"),
 });
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
@@ -1791,9 +1791,9 @@ export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
 export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema
   .omit({ shipping_method: true })
   .extend({
-    shipping_method: shippingMethodTypeSchema.describe(
-      "Shipping method after validation",
-    ),
+    shipping_method: shippingMethodTypeSchema
+      .optional()
+      .describe("Shipping method after validation"),
     validation: z
       .array(validationEntrySchema)
       .optional()

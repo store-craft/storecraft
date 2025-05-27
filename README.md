@@ -113,6 +113,11 @@ Located at `/chat`
       width='500px' />
 </div><hr/><br/>
 
+<div style='text-align: center' align="center">
+  <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/mobile-stripe.gif' 
+      style="margin: auto"
+      width='500px' />
+</div><hr/><br/>
 
 # Dashboard
 

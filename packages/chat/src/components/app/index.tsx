@@ -61,24 +61,30 @@ export const ChatApp = (
             h-full chat-bg '
         />
 
-        {
-          // isCartOpen && 
-          <div
-            className={
-              'w-fit h-full shrink-0 overflow-hidden \
-              absolute right-0 top-0 lg:relative z-10 --hidden \
-              transition-all  duration-700 ' +
-              (isCartOpen ? 'max-w-dvw' : 'max-w-0')
-            }
-          >
-            <CartAndCheckout 
-              className='w-screen xs:w-[350px] --w-full h-full'
-              cart={{
-                onClose: () => setCartOpen(false),
-              }}
-            />
-          </div>
-        }
+        {/* cart */}
+        <div 
+          className={
+            'w-full h-full bg-teal-400/5 --backdrop-blur-xs  cursor-pointer \
+            lg:hidden absolute top-0 left-0 z-10 ' + 
+            (isCartOpen ? 'block' : 'hidden')
+          } 
+          onClick={() => setCartOpen(false)} 
+        />
+        <div
+          className={
+            'w-fit h-full shrink-0 overflow-hidden \
+            absolute right-0 top-0 lg:relative z-10 --hidden \
+            transition-all  duration-700 ' +
+            (isCartOpen ? 'max-w-dvw' : 'max-w-0')
+          }
+        >
+          <CartAndCheckout 
+            className='w-screen xs:w-[350px] h-full'
+            cart={{
+              onClose: () => setCartOpen(false),
+            }}
+          />
+        </div>
 
       </div>
     </div>

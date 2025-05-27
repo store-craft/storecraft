@@ -115,7 +115,7 @@ const Table = <T,>(
                       ix==0 ? 'px-3 text-left ' : 
                       ix<fields.length-1 ? 
                       'px-3 text-center' : 
-                      'px-0 text-right right-0  \
+                      'px- text-right right-0  \
                       sticky z-10 --w-0 --shelf-body-bg opacity-80 h-14 \
                       flex flex-row justify-end items-center'
                     )

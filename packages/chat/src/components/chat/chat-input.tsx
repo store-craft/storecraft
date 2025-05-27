@@ -93,16 +93,18 @@ export const ChatInputView = (
             rows={1}
             ref={ref_ta} onChange={onChange}
             className='resize-none text-base w-full outline-none pl-3 
-                      h-fit min-h-8 font-normal dark:font-light' 
+              h-fit min-h-8 font-normal dark:font-light' 
             placeholder='Ask me anything' 
           />
 
           <button 
             onClick={chat.loading ? undefined : internal_onSend} 
-            className={`rounded-md h-8 w-8 p-2  absolute right-3 
-                      cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
-                      ease-in-out top-3 transition-all duration-300 ` + 
-                      ((hasText || chat.loading) ? `-translate-y-0` : '-translate-y-10') }
+            className={
+              `rounded-md h-8 w-8 p-2  absolute right-3 
+              cursor-pointer bg-blue-500 shadow-lg  shadow-blue-500/50
+              ease-in-out top-3 transition-all duration-300 ` + 
+              ((hasText || chat.loading) ? `-translate-y-0` : '-translate-y-10') 
+            }
           >
             <ShowSwitch index={chat.loading ? 1 : 0}>
               <BsSend className='w-full h-full text-white' />

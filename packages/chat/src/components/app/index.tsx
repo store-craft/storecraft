@@ -73,7 +73,7 @@ export const ChatApp = (
             extra_input_action_components: [CartButton],
             ...config?.chat,
           }}
-          className='max-w-full md:flex-1 mx-auto 
+          className='w-full max-w-full md:flex-1 mx-auto 
             h-full chat-bg '
         />
 

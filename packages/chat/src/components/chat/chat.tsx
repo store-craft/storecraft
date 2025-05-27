@@ -205,14 +205,18 @@ export const Chat = (
             )
           }
 
-          <ChatMessagesView 
-            messages={messages} 
-            onChatWindowScroll={onChatMessagesScroll}
-            onChatWindowTouch={onChatMessagesTouch}
-            onChatWindowResize={onChatMessagesWindowResize}
-            className='w-full flex-1 h-full '
-            ref={ref_chat_messages}
-          />
+          {
+            messages.length>0 && (
+              <ChatMessagesView 
+                messages={messages} 
+                onChatWindowScroll={onChatMessagesScroll}
+                onChatWindowTouch={onChatMessagesTouch}
+                onChatWindowResize={onChatMessagesWindowResize}
+                className='w-full flex-1 h-full '
+                ref={ref_chat_messages}
+              />
+            )
+          }
 
           <button 
             className={`absolute mx-auto rounded-full border 

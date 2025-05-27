@@ -135,12 +135,12 @@ export const CustomerOrdersView = (
 
   if(!isAuthenticated) {
     return (
-      <Card className='max-w-3/4 sm:max-w-1/2 p-3'>
+      <Card className='max-w-3/4 sm:max-w-1/2 --p-3'>
         <Login 
           chat={
             {header:'Please login to perform this action '}
           }
-          className='w-full h-fit'
+          className='w-full h-fit p-3'
         />
       </Card>
     );

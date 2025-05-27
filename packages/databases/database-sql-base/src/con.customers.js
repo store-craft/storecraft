@@ -155,6 +155,8 @@ const list = (driver) => {
 const list_customer_orders = (driver) => {
   return async (id, query) => {
 
+    console.dir({ id, query }, { depth: 5 });
+
     const items = await withSort(
       driver.client
       .selectFrom('orders')
@@ -166,7 +168,7 @@ const list_customer_orders = (driver) => {
       .where(
         (eb) => eb.and(
           [
-            query_to_eb(eb, query, table_name),
+            query_to_eb(eb, query, 'orders'),
             eb.or(
               [
                 eb('_customer_id', '=', id),

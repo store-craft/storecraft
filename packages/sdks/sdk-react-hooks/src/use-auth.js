@@ -7,9 +7,7 @@ import useTrigger from "./use-trigger.js";
 
 
 /**
- * 
- * `useAuth` hook 
- * 
+ * @description `useAuth` hook 
  */
 export const useAuth = () => {
 
@@ -31,10 +29,19 @@ export const useAuth = () => {
     }, []
   );
 
+  const auth = (/** @type {ApiAuthResult} */  (
+    sdk?.auth?.currentAuth));
+
   return {
     sdk,
-    
-    auth: (/** @type {ApiAuthResult} */  (sdk.auth.currentAuth)),
+    auth,
+    contact: {
+      email: auth?.access_token?.claims?.email,
+      firstname: auth?.access_token?.claims?.firstname,
+      lastname: auth?.access_token?.claims?.lastname,
+      auth_id: auth?.user_id,
+      customer_id: auth?.user_id?.replace('au_', 'cus_'),
+    },
     isAuthenticated: sdk.auth.isAuthenticated,
     actions: {
       signin : sdk.auth.signin, 

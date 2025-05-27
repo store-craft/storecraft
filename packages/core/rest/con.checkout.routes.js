@@ -52,10 +52,10 @@ export const create_routes = (app) => {
   polka.post(
     '/pricing',
     async (req, res) => {
-      const r = await app.api.checkout.eval_pricing(
+      const r = await app.api.checkout.validation_and_pricing(
         req.parsedBody
       );
-      res.sendJson(r?.pricing ?? null);
+      res.sendJson(r);
     }
   );
 

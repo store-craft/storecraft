@@ -79,7 +79,9 @@ export const Root = () => {
           threadId: undefined,
           storecraft_config: {
             endpoint: 'http://localhost:8000',
-          }
+          },
+          apply_default_background_style: true,
+          default_dark_mode: true
         }
       />
     </div>

@@ -103,20 +103,28 @@ export const create = (app) => {
             { 
               test: async () => {
                 { // non-secured
-                  sdk.config.auth = undefined;
-                  await assert_async_throws(
-                    () => sdk.payments.list(),
-                    'list_all is not secured'
-                  );
+                  await sdk.auth.signout();
+                  const proof = await sdk.payments.list();
+                  assert.equal(proof[0].handle, 'dummy');
+                  assert.equal(proof[0].config, undefined);
                 }
                 { // secured
                   await sdk.auth.signin(user.email, user.password);
                   const proof = await sdk.payments.list();
-                  assert.equal(proof, 'proof.payments.list_all');
+                  assert.equal(proof[0].handle, 'dummy');
+                  assert.equal(proof[0].config, 'hello');
                 }
               },
               intercept_backend_api: async (_) => {
-                return 'proof.payments.list_all';
+                return [
+                  {
+                    info: undefined,
+                    actions: undefined,
+                    handle: 'dummy',
+                    name: 'Dummy Payments',
+                    config: 'hello',
+                  }
+                ];
               },
             }
           ]

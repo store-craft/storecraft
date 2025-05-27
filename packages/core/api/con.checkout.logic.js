@@ -27,18 +27,22 @@ export const validate_checkout = app =>
  * 
  * @template {CheckoutCreateType} T
  * @param {T} checkout
+ * @param {{skip_shipping_if_missing?: boolean}} [options=undefined]
  * @returns {Promise<CheckoutCreateTypeAfterValidation>
  * }
  */
-async (checkout) => {
+async (checkout, options) => {
 
-  const shipping_id = checkout.shipping_method.id ?? checkout.shipping_method.handle;
-  const shipping_method = await app.__show_me_everything.db.resources.shipping_methods.get(
+  // get shipping snapshot
+  const shipping_id = checkout?.shipping_method?.id ?? 
+    checkout?.shipping_method?.handle;
+  const shipping_method = shipping_id && (await app.api.shipping_methods.get(
     shipping_id
-  );
+  ));
 
-  const snaps_products = await app.__show_me_everything.db.resources.products.getBulk(
-    checkout.line_items.map(li => li.id)
+  // get products snapshot
+  const snaps_products = await app._.db.resources.products.getBulk(
+    checkout.line_items.map(li => li.id).filter(Boolean)
   );
 
   // console.log('snaps_products', snaps_products)
@@ -47,17 +51,24 @@ async (checkout) => {
   const errors = [];
 
   /**
-   * 
    * @param {string} id 
    * @param {ValidationEntry["message"]} message 
+   * @param {ValidationEntry["code"]} code 
    */
-  const errorWith = (id, message) => {
-    errors.push({ id, message });
+  const errorWith = (id, message, code) => {
+    errors.push(
+      { id, message, code, extra: { id } }
+    );
   }
 
-  // assert shipping is valid
-  if(!shipping_method)
-    errorWith(shipping_id, 'shipping-method-not-found')
+  // assert shipping is valid only if it was provided
+  if(shipping_id && !shipping_method) {
+    errorWith(
+      shipping_id, 
+      `Shipping Method \`${shipping_id}\` not found`,
+      'shipping-method-not-found'
+    );
+  }
 
   // assert stock
   snaps_products.forEach(
@@ -65,18 +76,38 @@ async (checkout) => {
       const li = checkout.line_items[ix];
 
       if(!it) {
-        errorWith(li?.id, 'product-not-exists');
+        errorWith(
+          li?.id, 
+          `Product \`${li?.data?.title ?? li?.id}\` not found`,
+          'product-not-exists'
+        );
       } else {
         const pd = it;
         const li = checkout.line_items[ix];
 
-        if(pd.qty==0)
-          errorWith(it?.id, 'product-out-of-stock');
-        else if(li.qty>pd.qty)
-          errorWith(it?.id, 'product-not-enough-stock');
+        if(pd.qty==0) {
+          errorWith(
+            pd?.id, 
+            `Product \`${pd?.title ?? pd?.id}\` is out of stock`, 
+            'product-out-of-stock'
+          );
+        }
+        else if(li.qty>pd.qty) {
+          errorWith(
+            pd?.id, 
+            `Product \`${pd?.title ?? pd?.id}\` has **${pd?.qty}** in stock, ` + 
+            'try to lower the quantity',
+            'product-not-enough-stock'
+          );
+        }
         
-        if(!pd.active)
-          errorWith(it?.id, 'product-inactive');
+        if(!pd.active) {
+          errorWith(
+            pd.id, 
+            `Product \`${pd.title}\` is inactive`,
+            'product-inactive'
+          );
+        }
 
         // patch line items inline
         li.data = pd;
@@ -93,7 +124,6 @@ async (checkout) => {
   }
 
 }
-
 
 /**
  * @param {App} app 
@@ -128,7 +158,12 @@ async (order) => {
   const manual_discounts = discounts.filter(
     it => it.application.id===DiscountApplicationEnum.Manual.id
   ).filter(
-    d => order.coupons.find(c => c.handle===d.handle)!==undefined
+    d => order.coupons.find(
+      c => (
+        (c.handle===d.handle) ||
+        (c.id===d.id)
+      )
+    )!==undefined
   );
 
   const pricing = await calculate_pricing(
@@ -138,7 +173,7 @@ async (order) => {
     order.shipping_method, 
     order.address,
     order?.contact?.customer_id,
-    app.__show_me_everything.taxes
+    app._.taxes
   );
 
   // console.log(pricing)
@@ -147,6 +182,54 @@ async (order) => {
     ...order,
     pricing
   }
+}
+
+/**
+ * @template {App} T
+ * @param {T} app 
+ */
+export const validation_and_pricing = app =>
+/**
+ * @description Create a quick validation and pricing of a checkout.
+ * This should be used by frontents to show the user the pricing and 
+ * validation of a cart and checkout while the customer hasn't created
+ * a checkout yet.
+ * @param {CheckoutCreateType} order_checkout
+ * @returns {Promise<Partial<Pick<OrderData, "pricing" | "validation">>>}
+ */
+async (order_checkout) => {
+
+  // assert_zod(
+  //   checkoutCreateTypeSchema.transform(x => x ?? undefined), 
+  //   order_checkout
+  // );
+
+  // order_checkout.line_items.push(
+  //   {
+  //     id: 'dddd'
+  //   },
+  // );
+  // order_checkout.shipping_method = {
+  //   id: 'diojsidj'
+  // }
+
+  // fetch correct data from backend. we dont trust client
+  const order_validated = await validate_checkout(app)(order_checkout);
+  const validation = order_validated.validation;
+
+  // we had reserve errors, so publish it without pricing etc..
+  if(validation.length > 0) {
+    return {
+      validation,
+    }
+  }
+
+  // eval pricing with discounts
+  const order_priced = await eval_pricing(app)(order_validated);
+
+  return {
+    pricing: order_priced.pricing,
+  };
 }
 
 
@@ -199,16 +282,12 @@ async (order_checkout, gateway_handle) => {
   const order = {
     ...order_priced,
     status : {
-      // @ts-ignore
       fulfillment: FulfillOptionsEnum.draft,
-      // @ts-ignore
       payment: PaymentOptionsEnum.unpaid,
-      // @ts-ignore
       checkout: CheckoutStatusEnum.unknown
     },
   }
   
-
   // reserve stock
   if(app.config.checkout_reserve_stock_on==='checkout_create') {
     await reserve_stock_of_order(app, order);
@@ -341,6 +420,7 @@ export const inter = app => {
 
   return {
     eval_pricing: eval_pricing(app),
+    validation_and_pricing: validation_and_pricing(app),
     validate_checkout: validate_checkout(app),
     create_checkout: create_checkout(app),
     complete_checkout: complete_checkout(app),

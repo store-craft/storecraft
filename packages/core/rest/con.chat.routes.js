@@ -35,12 +35,16 @@ const html_umd = (version='latest') => `
 
       console.log({ threadId });
 
-      StorecraftChat.mountStorecraftChat(
+      StorecraftChat.mountChatApp(
         document.getElementById('root'), 
         {
-          chat: {
-            threadId,
-          }
+          config: {
+            chat: {
+              threadId,
+              apply_default_background_style: true,
+              default_dark_mode: true
+            },
+          }        
         }
       );
     </script>

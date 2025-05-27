@@ -362,7 +362,7 @@ export const create = (app) => {
         ],
         shipping_method: {
           handle: 'shipping does not exist',
-          id: ''
+          id: 'shipping does not exist'
         },
         contact: {
           email: 'a1@a.com'

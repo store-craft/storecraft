@@ -19,7 +19,6 @@ export const sleep = (ms=100) => {
 }
 
 /**
- * 
  * @param {{ app: App}} context Storecraft app instance
  */
 export const TOOLS = (context) => {
@@ -115,7 +114,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const shipping_methods = await context.app.api.shipping_methods.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -135,7 +134,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.collections.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -177,7 +176,7 @@ export const TOOLS = (context) => {
         use: async function (input) {
           const items = await context.app.api.discounts.list(
             {
-              equals: [['active', true]],
+              vql: 'active=true',
               limit: 10
             }
           );
@@ -210,25 +209,45 @@ export const TOOLS = (context) => {
     ), 
 
 
-    login_frontend: tool(
+    browse_customer_orders: tool(
       {
-        title: 'Sending login form',
-        description: 'This will send a form to the customer with login inputs, so he can fill his credentials at the frontend side',
-        schema: z.object(
-          {
-            message: z.string().describe('sends message to customer with the form'),
-          }
-        ),
-        use: async function (input) {
-          return {
-            command: 'show_login_form',
-            params: {
-              message: input.message,
+        title: '**browsing** your `orders`',
+        description: 'Send a command to the frontend to render an orders browser in the frontend, this will make the customer to login if he is not logged in',
+        schema: z.object({}),
+        use: async function (params) {
+          return (
+            {
+              command: /** @type {const} */ ('browse_customer_orders'),
+              params
             }
-          }
+          )
         }
       }
-    )
+    ), 
+
+    
+    fetch_a_single_customer_order: tool(
+      {
+        title: '**Fetching** `order`',
+        description: 'fetch a single order by id',
+        schema: z.object(
+          {
+            id: z.string().describe('The id of the order to fetch'),
+          }
+        ),
+        use: async function (params) {
+          const item = await context.app.api.orders.get(
+            params.id
+          );
+
+          if(!item) {
+            throw new Error('Order not found');
+          }
+          return sanitize_search(item);
+        }
+      }
+    ), 
+
   }
 }
 

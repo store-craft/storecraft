@@ -21,15 +21,19 @@
 
       console.log({ threadId });
 
-      StorecraftChat.mountStorecraftChat(
+      StorecraftChat.mountChatApp(
         document.getElementById('root'), 
         {
-          chat: {
-            threadId: undefined,
-            storecraft_config: {
-              endpoint: 'http://localhost:8000',
-            }
-          }
+          config: {
+            chat: {
+              threadId,
+              storecraft_config: {
+                endpoint: 'http://10.100.102.104:8000',
+              },
+              apply_default_background_style: true,
+              default_dark_mode: true
+            },
+          }        
         }
       );
     </script>

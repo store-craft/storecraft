@@ -141,7 +141,7 @@ export const create = (app) => {
         },               
         
 
-        eval_pricing: {
+        validation_and_pricing: {
           __tests: [
             () => {
               let has_run = false;
@@ -150,7 +150,8 @@ export const create = (app) => {
                   { // non-secured
                     sdk.config.auth = undefined;
                     try {
-                      await sdk.checkout.pricing(order_item)
+                      const proof = await sdk.checkout.pricing(order_item);
+                      assert.equal(proof, 'proof.checkout.validation_and_pricing');
                     } catch(e) {}
                     assert.ok(has_run, 'eval_pricing did not run');
                   }
@@ -158,6 +159,7 @@ export const create = (app) => {
                 intercept_backend_api: async (params) => {
                   assert.equal(params, order_item);
                   has_run=true;
+                  return 'proof.checkout.validation_and_pricing';
                 },
               }
             }

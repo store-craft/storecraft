@@ -282,6 +282,8 @@ export const variantOptionSchema = z.object({
     ),
 });
 
+export const handleOrIDSchema = withOptionalHandleOrIDSchema;
+
 export const discountApplicationEnumSchema = z.object({
   Auto: z.object({
     id: z.literal(0),
@@ -718,7 +720,6 @@ export const addressTypeSchema = z.object({
   lastname: z.string().optional().describe("Last name of recipient"),
   phone_number: z
     .string()
-    .regex(/^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$ Invalid phone number/)
     .optional()
     .describe("The phone number of the recipient"),
   company: z.string().optional().describe("Optional company name of recipient"),
@@ -815,13 +816,9 @@ export const orderContactSchema = z.object({
 });
 
 export const validationEntrySchema = z.object({
-  id: z.string().describe("`id`"),
-  title: z
-    .string()
-    .min(3, "Title should be longer than 3")
-    .optional()
-    .describe("title"),
-  message: z
+  id: z.string().optional().describe("id of problamatic item"),
+  message: z.string().optional().describe("readable message for user"),
+  code: z
     .union([
       z.literal("shipping-method-not-found"),
       z.literal("product-not-exists"),
@@ -831,6 +828,7 @@ export const validationEntrySchema = z.object({
     ])
     .optional()
     .describe("message"),
+  extra: z.any().optional().describe("extra params for the validation"),
 });
 
 export const checkoutStatusEnumSchema = z.object({
@@ -1776,24 +1774,26 @@ export const baseCheckoutCreateTypeSchema = z.object({
     .array(lineItemSchema)
     .describe("Line items is a list of the purchased products"),
   notes: z.string().optional().describe("Notes for the order"),
-  shipping_method: handleAndIDSchema
-    .partial()
+  shipping_method: handleOrIDSchema
+    .optional()
     .describe("Shipping method `handle` or `id`"),
 });
 
 export const checkoutCreateTypeSchema = baseCheckoutCreateTypeSchema.extend({
   coupons: z
-    .array(discountTypeSchema)
+    .array(handleOrIDSchema)
     .optional()
-    .describe("A list of manual coupons handles"),
+    .describe(
+      "A list of `discount` codes (handles) or ids\nto apply to the order. You can watch the full `discount`\nin the `order.pricing.evo` property of the order",
+    ),
 });
 
 export const checkoutCreateTypeAfterValidationSchema = checkoutCreateTypeSchema
   .omit({ shipping_method: true })
   .extend({
-    shipping_method: shippingMethodTypeSchema.describe(
-      "Shipping method after validation",
-    ),
+    shipping_method: shippingMethodTypeSchema
+      .optional()
+      .describe("Shipping method after validation"),
     validation: z
       .array(validationEntrySchema)
       .optional()
@@ -1927,7 +1927,9 @@ export const pricingDataSchema = z.object({
     .describe("The taxes collected from the sale"),
   subtotal_undiscounted: z
     .number()
-    .describe("Subtotal of items price before discounts"),
+    .describe(
+      "Subtotal of items price before\ndiscounts, shipping and everything",
+    ),
   subtotal_discount: z.number().describe("Sum of all discounts at all stages"),
   subtotal: z
     .number()

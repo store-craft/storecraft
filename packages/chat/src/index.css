@@ -5,7 +5,7 @@
 /* width */
 ::-webkit-scrollbar {
   height: 5px;
-  width: 5px;
+  width: 0px;
 }
 ::-webkit-scrollbar-track {
   background: #00000000;
@@ -21,10 +21,45 @@
   background: rgba(0.0, 0.0, 0.0, 0.5);
 }
 
+iframe {
+  color-scheme: light;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  /* border: 1px solid #253341; */
+  -webkit-text-fill-color: forestgreen;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0.0, 0.0, 0.0, 0.0) inset;
+  box-shadow: 0 0 0px 1000px rgba(0.0, 0.0, 0.0, 0.0) inset;
+  transition: background-color 5000s ease-in-out 0s;
+  color: gray;
+}
+
+
 @theme {
   --font-inter: Inter, sans-serif;
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   --animate-rotate-bg: rotate-bg 8s linear infinite;
+
+  --breakpoint-xs: 30rem;
+  
+  --color-kf-50: #f5f1ff;
+  --color-kf-100: #ede5ff;
+  --color-kf-200: #deceff;
+  --color-kf-300: #c6a6ff;
+  --color-kf-400: #ad74ff;
+  --color-kf-500: #973cff;
+  --color-kf-600: #8f15ff;
+  --color-kf-700: #8403fe;
+  --color-kf-800: #6e02d5;
+  --color-kf-900: #440381;
 
 
   @keyframes wiggle {
@@ -49,6 +84,16 @@
 
 @layer components {
 
+  .border,
+  .border-r,
+  .border-l,
+  .border-t,
+  .border-b,
+  .border-x,
+  .border-y {
+    @apply border-gray-300 dark:border-slate-600;
+  }
+
   .chat-bg {
     @apply bg-gray-100 dark:bg-gray-800;
   }
@@ -58,7 +103,7 @@
   }
 
   .chat-bg-overlay {
-    @apply bg-black/10 dark:bg-white/10;
+    @apply bg-black/5 dark:bg-white/10;
   }
 
   .chat-border-overlay {

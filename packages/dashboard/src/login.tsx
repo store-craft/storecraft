@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import LoginConnect from './comps/login-connect'
 import LoginMarquee from './comps/login-marquee'
 import LoginForm, { LoginFormFieldsType } from './comps/login-form'
@@ -6,8 +6,16 @@ import LoginCopyright from './comps/login-copyright'
 import { useStorecraft } from '@storecraft/sdk-react-hooks'
 import useDarkMode from '@/hooks/use-dark-mode'
 import LoginLatestUpdates from './comps/login-latest-updates'
-import { ApiAuthResult } from '@storecraft/core/api'
-import { format_storecraft_errors } from './comps/error-message'
+
+export const sleep = (ms=100) => {
+  return new Promise(
+    (resolve, reject) => {
+      setTimeout(
+        resolve, ms
+      )
+    }
+  )
+}
 
 const Login = (
   { 
@@ -24,14 +32,13 @@ const Login = (
     }
   } = useStorecraft();
 
-  const [credentials, setCredentials] = useState<LoginFormFieldsType>(
+  const [defaultCredentials, setDefaultCredentials] = useState<LoginFormFieldsType>(
     {
-      email: (config?.auth as ApiAuthResult)?.access_token?.claims?.email,
       endpoint: config?.endpoint
     }
   );
-  const [error, setError] = useState(undefined);
-  const { darkMode, toggle } = useDarkMode();
+  // const [error, setError] = useState(undefined);
+  const { darkMode } = useDarkMode();
 
   // console.log('credentials ', credentials)
 
@@ -40,46 +47,22 @@ const Login = (
       const searchParams = new URLSearchParams(location.search);
       const params = Object.fromEntries(searchParams.entries());
 
-      setCredentials(c => ({...c, ...params}));
+      setDefaultCredentials(c => ({...c, ...params}));
     }, [location.search]
   );
-  
-  const onChange: ComponentProps<typeof LoginForm>["dash"]["onChange"] = useCallback(
-    (id, val) => {
-      setCredentials(
-        { 
-          ...credentials, 
-          [id] : val 
-        } 
+
+  const signinWithErrorHandling = useCallback(
+    async (email: string, password: string, endpoint?: string) => {
+      updateConfig({
+        endpoint,
+      });
+      await sleep(300)
+      const auth = await sdk.auth.signin(
+        email,    
+        password
       );
     },
-    [credentials],
-  );
-
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
-    async (e) => {
-      e.preventDefault();
-
-      try {
-        updateConfig(
-          {
-            endpoint: credentials.endpoint,
-          }
-        );
-        const auth = await sdk.auth.signin(
-          credentials.email,    
-          credentials.password
-        );
-
-      } catch (e) {
-        console.error('error ', e)
-        setError(
-          format_storecraft_errors(e)?.join('\n') ??
-          'Unknown Error'
-        )
-      }
-    },
-    [sdk, updateConfig, credentials],
+    [sdk],
   );
 
   return (
@@ -91,33 +74,24 @@ const Login = (
     <LoginMarquee 
       className='w-full h-12 --bg-green-400' />
     <LoginConnect 
-      className='absolute w-full --bg-green-300 left-0 top-12 h-fit 
-        z-30  --bg-green-300/30 ' />
+      className='absolute w-full left-0 top-12 h-fit z-30' />
     <div 
       className='w-full h-fit md:h-[calc(100%-3rem)] 
-        flex flex-col p-10
-        items-center justify-start 
-        md:justify-start md:items-start 
-        md:flex-row gap-10'>
+        flex flex-col p-10 items-center justify-start 
+        md:justify-start md:items-start md:flex-row gap-10'>
 
       <div 
         className='flex-shrink-0 order-first md:order-first
-          --scale-[0.8] origin-top
-          --md:scale-[0.8] md:origin-top-left 
-          w-full max-w-[22rem] h-fit 
-          rounded-md'
+          origin-top md:origin-top-left w-full max-w-[22rem] 
+          h-fit rounded-md'
           // @ts-ignore
           sstyle={{transformOrigin: 'top center'}}>
         <LoginForm 
-          dash={
-            {
-              is_backend_endpoint_editable,
-              onSubmit, 
-              credentials,
-              onChange,
-              error
-            }
-          }
+          dash={{
+            is_backend_endpoint_editable,
+            signinWithErrorHandling, 
+            defaultCredentials,
+          }}
           className='w-full' 
         />
       </div>

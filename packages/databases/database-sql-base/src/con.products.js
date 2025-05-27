@@ -240,8 +240,6 @@ const get = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["getBulk"]}
  */
 const getBulk = (driver) => {
@@ -372,8 +370,6 @@ const remove = (driver) => {
 
 /**
  * @param {SQL} driver 
- * 
- * 
  * @returns {db_col["list"]}
  */
 const list = (driver) => {

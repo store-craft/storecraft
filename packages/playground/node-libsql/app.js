@@ -27,6 +27,7 @@ import { GithubAuth } from "@storecraft/core/auth/providers/github";
 import { FacebookAuth } from "@storecraft/core/auth/providers/facebook";
 import { XAuth } from "@storecraft/core/auth/providers/x";
 import { DummyAuth } from "@storecraft/core/auth/providers/dummy";
+import { UniformTaxes } from "@storecraft/core/tax";
 
 export const app = new App({
   auth_secret_access_token: 'auth_secret_access_token',
@@ -54,11 +55,11 @@ export const app = new App({
   postman: new PostmanExtension()
 })
 .withAI(
-  // new XAI({model: 'grok-3'}),
+  new XAI({model: 'grok-3'}),
   // new GroqCloud({ model: 'meta-llama/llama-4-scout-17b-16e-instruct'})
   // new GroqCloud({ model: 'llama-3.3-70b-versatile'})
   // new Gemini({ model: 'gemini-2.0-flash'})
-  new OpenAI({ model: 'gpt-4.1-mini'})
+  // new OpenAI({ model: 'gpt-4.1-mini'})
   // new Anthropic({ model: 'claude-3-5-haiku-20241022' }),
   // new Mistral({ model: 'mistral-large-latest' }),
 )
@@ -73,6 +74,9 @@ export const app = new App({
   facebook: new FacebookAuth(),
   x: new XAuth(),
 })
+.withTaxes(
+  new UniformTaxes(17)
+)
 .on(
   'templates/get',
   async (e) => {

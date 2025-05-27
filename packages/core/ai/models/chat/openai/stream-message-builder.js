@@ -50,6 +50,7 @@ export const stream_message_builder = () => {
             // initial message in choice
             if(!target_choice.message) {
               target_choice.message = choice.delta;
+              return;
             } else if(choice.delta.content) {
               target_choice.message.content ??= '';
               target_choice.message.content += choice.delta.content;
@@ -63,12 +64,14 @@ export const stream_message_builder = () => {
             if(tools_delta) {
               target_choice.message.tool_calls ??= []; 
               const target_tools = target_choice.message.tool_calls; 
-              
+              // console.log('tools_delta', tools_delta);
               tools_delta.forEach(
                 (tc, ix) => {
+                  // console.log('target_tools[tc.index]', target_tools[tc.index]);
                   if(!target_tools[tc.index]) {
                     target_tools[tc.index] = tc;
                   } else {
+                    // console.log('existing tool call', tc);
                     target_tools[tc.index].function.arguments += 
                       tc.function.arguments;
                   }

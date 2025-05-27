@@ -138,6 +138,26 @@ export default () => {
                 </Bling>
               </div>
 
+              {/* ai checkout */}
+              <div className='flex flex-col w-full gap-10 
+                items-center justify-between '>
+                <CommonGradientText 
+                  className='text-5xl sm:text-7xl w-fit max-w-[705px] 
+                    text-center md:text-left  font-thin' 
+                  children='Complete Cart and Checkout from the chat' />
+                <Bling 
+                  stroke='border-[1px]' 
+                  className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'
+                  rounded='rounded-2xl'
+                  from='from-pink-500 dark:from-pink-500/90'
+                  to='to-kf-500 dark:to-kf-500/90'>
+                  <img 
+                    src='/mobile-stripe.gif' 
+                    className='border border-gray-600 --object-contain 
+                      mx-auto rounded-2xl w-full max-w-[1000px] max-h-[750px]' />
+                </Bling>
+              </div>
+
               {/* dashboard */}
               <div className='flex flex-col w-full gap-10 
                 items-center justify-between '>

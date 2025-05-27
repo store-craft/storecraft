@@ -878,6 +878,11 @@ export interface HandleAndID  {
   handle: string;
 }
 
+/** 
+ * @description `id` or `handle` of entity required
+ */
+export interface HandleOrID extends withOptionalHandleOrID {}
+
 
 /**
  * @description Product upsert interface
@@ -1655,7 +1660,6 @@ export interface AddressType  {
 
   /**
    * @description The phone number of the recipient
-   * @pattern ^([+]?d{1,2}[-s]?|)d{3}[-s]?d{3}[-s]?d{4}$ Invalid phone number
    */  
   phone_number?: string;
 
@@ -1977,8 +1981,7 @@ export interface BaseCheckoutCreateType {
   /** 
    * @description Shipping method `handle` or `id`
    */
-  shipping_method: Partial<HandleAndID>; 
-  // shipping_method: Partial<ShippingMethodType>; 
+  shipping_method?: HandleOrID; 
 }
 
 
@@ -1987,9 +1990,11 @@ export interface BaseCheckoutCreateType {
  */
 export interface CheckoutCreateType extends BaseCheckoutCreateType {
   /** 
-   * @description A list of manual coupons handles 
+   * @description A list of `discount` codes (handles) or ids
+   * to apply to the order. You can watch the full `discount`
+   * in the `order.pricing.evo` property of the order
    */
-  coupons?: DiscountType[]; 
+  coupons?: HandleOrID[]; 
 }
 
 /**
@@ -1999,7 +2004,7 @@ export interface CheckoutCreateTypeAfterValidation extends Omit<CheckoutCreateTy
   /** 
    * @description Shipping method after validation
    */
-  shipping_method: ShippingMethodType; 
+  shipping_method?: ShippingMethodType; 
   /** 
    * @description In case the order went through validation  
    */
@@ -2023,12 +2028,10 @@ export interface OrderData extends Omit<CheckoutCreateTypeAfterValidation, 'id'>
    */
   pricing: PricingData;
 
-
   /** 
    * @description Payment gateway info and status 
    */
   payment_gateway?: OrderPaymentGatewayData; 
-
 }
 
 /**
@@ -2223,7 +2226,8 @@ export interface PricingData  {
   taxes?: TaxRecord[];
 
   /** 
-   * @description Subtotal of items price before discounts 
+   * @description Subtotal of items price before 
+   * discounts, shipping and everything
    */
   subtotal_undiscounted: number; 
 
@@ -2376,22 +2380,27 @@ export interface EvoEntry  {
  */
 export interface ValidationEntry  {
   /**
-   * @description `id`
+   * @description id of problamatic item
    */
-  id: string;
+  id?: string;
 
   /**
-   * @description title
-   * @minLength 3 Title should be longer than 3
+   * @description readable message for user
    */
-  title?: string;
+  message?: string;
 
   /**
    * @description message
    */
-  message?: 'shipping-method-not-found' | 'product-not-exists' | 
-            'product-out-of-stock' | 'product-not-enough-stock' |
-            'product-inactive';
+  code?: 'shipping-method-not-found' | 'product-not-exists' | 
+    'product-out-of-stock' | 'product-not-enough-stock' |
+    'product-inactive';
+  
+  /**
+   * @description extra params for the validation
+   * @example { id: '123', name: 'product-name' }
+   */
+  extra?: any;
 }
 
 /** 

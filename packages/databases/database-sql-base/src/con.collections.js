@@ -10,7 +10,11 @@ import {
   regular_upsert_me, where_id_or_handle_table, 
   with_media, with_tags, 
   count_regular,
-  with_search
+  with_search,
+  products_with_collections,
+  products_with_discounts,
+  products_with_variants,
+  products_with_related_products
 } from './con.shared.js'
 import { sanitize, sanitize_array } from './utils.funcs.js'
 import { query_to_eb, withQuery, withSort } from './utils.query.js'
@@ -145,6 +149,17 @@ const list = (driver) => {
 const list_collection_products = (driver) => {
   return async (handle_or_id, query={}) => {
 
+    const expand = query.expand ?? ['*'];
+    const expand_collections = expand.includes('*') || 
+      expand.includes('collections');
+    const expand_discounts = expand.includes('*') || 
+      expand.includes('discounts');
+    // @ts-ignore
+    const expand_variants = expand.includes('*') || 
+      expand.includes('variants');
+    const expand_related_products = expand.includes('*') || 
+      expand.includes('related_products');
+
     const items = await withSort(
       driver.client
       .selectFrom('products')
@@ -158,7 +173,27 @@ const list_collection_products = (driver) => {
         eb => [
           with_media(eb, eb.ref('products.id'), driver.dialectType),
           with_tags(eb, eb.ref('products.id'), driver.dialectType),
-        ]
+
+          expand_collections && 
+          products_with_collections(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
+
+          expand_discounts && 
+          products_with_discounts(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
+
+          expand_variants && 
+          products_with_variants(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),
+
+          expand_related_products && 
+          products_with_related_products(
+            eb, eb.ref('products.id'), driver.dialectType
+          ),        
+        ].filter(Boolean)
       )
       .where(
         (eb) => eb.and(

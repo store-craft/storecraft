@@ -38,7 +38,7 @@ const CustomerOrders = (
         comp: ({value}) => (
           value && 
           <MDView value={`**\`${value.toString()}\`**`} 
-                  className='overflow-x-auto max-w-20 flex-shrink' />
+            className='overflow-x-auto mx-3  max-w-20 flex-shrink' />
         ) 
       },
     ]

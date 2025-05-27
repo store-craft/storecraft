@@ -9,7 +9,6 @@ import { App } from "../../../index.js";
 import { StorageHistoryProvider } from "../../core/history.js";
 import { SYSTEM } from './agent.system.js';
 import { TOOLS } from "./agent.tools.js";
-import { id } from '../../../crypto/object-id.js'
 import { content_stream_accumulate } from "../../core/content-utils.js";
 import { ID } from "../../../api/utils.func.js";
 
@@ -59,17 +58,26 @@ export class StoreAgent {
     try {
       params.maxLatestHistoryToUse ??= 
         this.config.maxLatestHistoryToUse;
-      
-      const is_new_chat = !Boolean(params.thread_id);
 
       params.thread_id = params.thread_id ?? (ID('chat'));
 
-      const [history, kvs] = await Promise.all([
+      const [history, storefront_kvs] = await Promise.all([
         this.history_provider.load(
           params.thread_id, this.#app
         ),
         storefront_to_kvs(this.#app),
       ]);
+
+      const kvs = {
+        ...storefront_kvs,
+        customer_id: params.metadata?.customer_id ?? 
+          params.metadata?.customer_email ?? 
+            'User is not logged in' ,
+      }
+
+      // console.log({
+      //   systen: SYSTEM(kvs),
+      // })
 
       const { stream } = await this.provider.streamText(
         {

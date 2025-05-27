@@ -1,8 +1,9 @@
 import { Chat, ChatProps } from "@/components/chat/chat"
 import { CartAndCheckout, CartProps } from "../cart-and-checkout";
 import useDarkMode from "@/hooks/use-dark-mode";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCart } from "@storecraft/sdk-react-hooks";
+import { EmptyChat } from "./empty-chat";
 
 export type ChatAppProps = {
   config?: {
@@ -25,7 +26,7 @@ export const ChatApp = (
   }: ChatAppProps
 ) => {
   const { darkMode } = useDarkMode();
-  const [isCartOpen, setCartOpen] = useState(true);
+  const [isCartOpen, setCartOpen] = useState(false);
   const {
     events: {
       subscribe
@@ -56,7 +57,10 @@ export const ChatApp = (
           h-full justify-between relative'>
 
         <Chat 
-          chat={config?.chat}
+          chat={{
+            empty_chat_component: EmptyChat,
+            ...config?.chat,
+          }}
           className='max-w-full md:flex-1 mx-auto 
             h-full chat-bg '
         />
@@ -64,7 +68,8 @@ export const ChatApp = (
         {/* cart */}
         <div 
           className={
-            'w-full h-full bg-teal-400/5 --backdrop-blur-xs  cursor-pointer \
+            'w-full h-full bg-black/25 dark:bg-black/50 --backdrop-blur-xs \
+            cursor-pointer \
             lg:hidden absolute top-0 left-0 z-10 ' + 
             (isCartOpen ? 'block' : 'hidden')
           } 
@@ -90,3 +95,4 @@ export const ChatApp = (
     </div>
   )
 }
+

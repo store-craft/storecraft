@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { ChatInputView } from "./chat-input"
 import { ChatMessagesView } from "./chat-messages"
 import { delta_to_scroll_end } from "./chat.utils"
@@ -39,6 +39,11 @@ export type ChatProps = {
      * @default true
      */
     default_dark_mode?: boolean,
+    /**
+     * @description Optional React component to render when 
+     * the chat is empty.
+     */
+    empty_chat_component?: React.FC<React.ComponentProps<'div'>>,
   }
 } & React.ComponentProps<'div'>;
 
@@ -183,15 +188,26 @@ export const Chat = (
         <div 
           className='max-w-[800px] w-full h-full relative --bg-red-100 
             flex flex-col gap-0 items-center'>
+          
+          {
+            messages.length>0 && chat?.empty_chat_component && (
+              <div className='w-full h-full flex flex-col 
+                items-center justify-center'>
+                <chat.empty_chat_component 
+                  className='w-fit h-full'
+                />
+              </div>
+            )
+          }
 
-          <ChatMessagesView 
+          {/* <ChatMessagesView 
             messages={messages} 
             onChatWindowScroll={onChatMessagesScroll}
             onChatWindowTouch={onChatMessagesTouch}
             onChatWindowResize={onChatMessagesWindowResize}
             className='w-full flex-1 h-full '
             ref={ref_chat_messages}
-          />
+          /> */}
 
           <button 
             className={`absolute mx-auto rounded-full border 

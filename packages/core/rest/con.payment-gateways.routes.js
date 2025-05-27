@@ -1,7 +1,7 @@
 /** @import { ApiPolka } from './types.public.js' */
 import { App } from '../index.js';
 import { Polka } from './polka/index.js'
-import { authorize_admin } from './con.auth.middle.js'
+import { authorize_admin, has_role, is_admin, parse_auth_user } from './con.auth.middle.js'
 import { assert } from '../api/utils.func.js';
 
 /**
@@ -39,9 +39,16 @@ export const create_routes = (app) => {
   // list payment gateways
   polka.get(
     '/gateways',
-    authorize_admin(app),
+    parse_auth_user(app),
     async (req, res) => {
-      const r = await app.api.payments.list_all();
+      
+      const r = await app.api.payments.list_all() ?? [];
+      if(!is_admin(req.user)) {
+        for(const g of r) {
+          // remove sensitive data
+          delete g.config;
+        }
+      }
       res.sendJson(r);
     }
   );

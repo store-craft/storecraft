@@ -52,7 +52,7 @@ export const CheckoutContactContact = forwardRef((
       setContact(
         (prev) => ({
           ...(prev ?? {}),
-          ...(auth_contact ?? {}),
+          ...(isAuthenticated ? auth_contact : {}),
         })
       );
     }, [isAuthenticated]
@@ -72,6 +72,8 @@ export const CheckoutContactContact = forwardRef((
       );
     }, []
   );
+
+  // console.log({contact, isAuthenticated, auth_contact})
 
   useImperativeHandle(
     ref, 

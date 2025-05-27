@@ -3,6 +3,7 @@ import { pubsub } from "../chat/use-chat";
 import React, { useEffect, useState } from "react";
 import { useStorecraft } from "@storecraft/sdk-react-hooks";
 import { type StorecraftAppPublicInfo } from "@storecraft/core/api";
+import favicon from '@/components/favicon.svg';
 
 const triggers = [
   {
@@ -58,6 +59,8 @@ export const EmptyChat = (
 
   // pubsub
 
+  // console.log({favicon})
+
   return (
     <div {...rest}>
       <div 
@@ -68,7 +71,7 @@ export const EmptyChat = (
             items-center gap-2'>
           <LoadingSingleImage
             className='w-6 h-6 rounded-full'
-            src={'favicon.svg'} />
+            src={info?.store_logo_url ?? favicon} />
           <h1 className='text-3xl capitalize font-bold italic'>
             {info?.store_name}
           </h1>

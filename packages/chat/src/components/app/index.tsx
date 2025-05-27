@@ -1,9 +1,10 @@
 import { Chat, ChatProps } from "@/components/chat/chat"
 import { CartAndCheckout, CartProps } from "../cart-and-checkout";
 import useDarkMode from "@/hooks/use-dark-mode";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCart } from "@storecraft/sdk-react-hooks";
 import { EmptyChat } from "./empty-chat";
+import { CiShoppingCart } from "react-icons/ci";
 
 export type ChatAppProps = {
   config?: {
@@ -45,6 +46,16 @@ export const ChatApp = (
     }, [subscribe]
   );
 
+  const CartButton = useMemo(
+    () => (...rest) => (
+      <CiShoppingCart 
+        className='w-6 h-6 -translate-x-1 translate-y-px
+          cursor-pointer' 
+        onClick={() => setCartOpen(true)}
+      />
+    ), []
+  );
+
   return (
     <div 
       className={
@@ -59,6 +70,7 @@ export const ChatApp = (
         <Chat 
           chat={{
             empty_chat_component: EmptyChat,
+            extra_input_action_components: [CartButton],
             ...config?.chat,
           }}
           className='max-w-full md:flex-1 mx-auto 
@@ -68,7 +80,7 @@ export const ChatApp = (
         {/* cart */}
         <div 
           className={
-            'w-full h-full bg-black/25 dark:bg-black/50 --backdrop-blur-xs \
+            'w-full h-full bg-black/25 dark:bg-black/50 \
             cursor-pointer \
             lg:hidden absolute top-0 left-0 z-10 ' + 
             (isCartOpen ? 'block' : 'hidden')

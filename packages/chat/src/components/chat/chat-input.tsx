@@ -19,7 +19,12 @@ export type ChatInputParams = withDiv<
       loading?: boolean,
       disabled?: boolean,
       onSend?: (contents: content[]) => void,
-      onNewChat?: () => void
+      onNewChat?: () => void,
+      /**
+       * @description Optional Extra React component to render at
+       * the bottom of the chat input.
+       */
+      extra_input_action_components?: React.FC[]
     }
   }
 >;
@@ -113,6 +118,13 @@ export const ChatInputView = (
                 <FaRegPenToSquare className='---translate-y-px cursor-pointer'
                   onClick={chat.onNewChat} />
               </ToolTip>
+              {
+                chat?.extra_input_action_components?.map(
+                  (Component, index) => (
+                    <Component key={index} />
+                  )
+                )
+              } 
             </div>
             <Tip/>
           </div>

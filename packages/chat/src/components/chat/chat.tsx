@@ -44,6 +44,11 @@ export type ChatProps = {
      * the chat is empty.
      */
     empty_chat_component?: React.FC<React.ComponentProps<'div'>>,
+    /**
+     * @description Optional Extra React component to render at
+     * the bottom of the chat input.
+     */
+    extra_input_action_components?: React.FC[]
   }
 } & React.ComponentProps<'div'>;
 
@@ -220,7 +225,12 @@ export const Chat = (
 
           <div className='w-full h-fit absolute bottom-5 px-3'>
             <ChatInputView 
-              chat={{onSend, loading, disabled: loading, onNewChat: createNewChat}} 
+              chat={{
+                onSend, loading, 
+                disabled: loading, 
+                onNewChat: createNewChat,
+                extra_input_action_components: chat?.extra_input_action_components
+              }} 
               className='w-full' />
             <div className='flex flex-row justify-between w-full h-fit mt-2'>
               <ThreadIdView threadId={threadId}/>

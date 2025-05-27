@@ -190,7 +190,7 @@ export const Chat = (
             flex flex-col gap-0 items-center'>
           
           {
-            messages.length>0 && chat?.empty_chat_component && (
+            messages.length==0 && chat?.empty_chat_component && (
               <div className='w-full h-full flex flex-col 
                 items-center justify-center'>
                 <chat.empty_chat_component 
@@ -200,14 +200,14 @@ export const Chat = (
             )
           }
 
-          {/* <ChatMessagesView 
+          <ChatMessagesView 
             messages={messages} 
             onChatWindowScroll={onChatMessagesScroll}
             onChatWindowTouch={onChatMessagesTouch}
             onChatWindowResize={onChatMessagesWindowResize}
             className='w-full flex-1 h-full '
             ref={ref_chat_messages}
-          /> */}
+          />
 
           <button 
             className={`absolute mx-auto rounded-full border 

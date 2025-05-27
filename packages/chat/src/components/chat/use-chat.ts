@@ -205,8 +205,8 @@ export const useChat = (config: ChatHookConfig) => {
             prompt, 
             thread_id: threadId,
             metadata: {
-              customer_email: auth?.auth?.access_token?.claims?.email,
-              customer_id: auth?.auth?.access_token?.claims?.id?.replace('au_', 'cus_'),
+              customer_email: auth?.contact?.email,
+              customer_id: auth?.contact?.id?.replace('au_', 'cus_'),
             }
           }
         );
@@ -350,8 +350,8 @@ export const useChat = (config: ChatHookConfig) => {
   // console.log('messages', messages)
   
   return {
-    messages: demo_1, 
-    // messages, 
+    // messages: demo_1, 
+    messages, 
     threadId, 
     loading, error, pubsub,
     actions: {

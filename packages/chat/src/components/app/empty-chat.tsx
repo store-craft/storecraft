@@ -90,7 +90,6 @@ export const EmptyChat = (
                 <TriggerMessage 
                   key={index}
                   trigger={trigger}
-                  // className='p-2 bg-white/20 rounded-md hover:bg-white/30 cursor-pointer'
                   onClick={() => {
                     pubsub.dispatch(
                       {

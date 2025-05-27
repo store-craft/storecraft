@@ -73,7 +73,7 @@ export const CustomerOrdersView = (
     hasLoaded,
     queryCount,
     actions: {
-      next, prev, query
+      next, prev, query, 
     }
   } = useCollection('orders', {limit: 5});
 
@@ -81,12 +81,13 @@ export const CustomerOrdersView = (
 
   useEffect(
     () => {
-      // actions.signin(
-      //   'tomer.shalev@gmail.com',
-      //   'admin'
-      // );
-    }, []
+      if(isAuthenticated) {
+        query({limit: 5})
+      }
+    }, [isAuthenticated, query]
   );
+
+  console.log({page, isAuthenticated})
 
   useEffect(
     () => {

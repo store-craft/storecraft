@@ -3,7 +3,7 @@
     <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' 
         width='100%' />
   </div>
-  Agentic Commerce as Code Backend
+  Rapidly build AI-powered, Headless e-commerce backends with TypeScript and Javascript
 </div><hr/><br/>
 
 
@@ -17,16 +17,19 @@
 
 # The <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' height='24px' style="transform: translateY(4px);" /> mono-repo
 
-Hi 👋, `Storecraft` is an AI agentic next generation Commerce As Code javascript backend.
+Hi 👋, `Storecraft` empowers developers to rapidly build AI-powered, Headless e-commerce backends with TypeScript and Javascript.
 
-⭐ AI first, agentic, commerce as code with agents, chat endpoint, that can serve your customers, and your team.
-Supports most of the popular LLMs, and vector stores for similarity search.
+⭐ AI first, agentic, chat endpoint and similarity search that can serve your customers, and your team. We Supports most of the popular LLMs, and vector stores for similarity search.
 
-⭐ runs on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, cloudflare workers, aws-lambda, google-functions), serverless / serverful
+⭐ Manage products, collections, orders, customers, auth, emails and more with a powerful programmable api code, REST API, VQL (Virtual Query Language) for powerful queries and similarity search.
 
-⭐ connects to any [database](https://storecraft.app/docs/backend/databases/sqlite) (mongo, libsql, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+⭐ Built in chat endpoint with an agent that serves customers with carts, checkouts and more with PayPal and Stripe.
 
-⭐ uses [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
+⭐ Runs on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, cloudflare workers, aws-lambda, google-functions), serverless / serverful
+
+⭐ Connects to any [database](https://storecraft.app/docs/backend/databases/sqlite) (mongo, libsql, sqlite, postgres, mysql, neon, turso, d1, planetscale)
+
+⭐ Uses [storage](https://storecraft.app/docs/backend/storage/s3) (local, r2, s3 compatible, google and more)
 
 ⭐ It is [extensible and modular](https://storecraft.app/docs/backend/extensions/overview)
 

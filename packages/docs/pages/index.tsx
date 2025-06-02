@@ -103,7 +103,7 @@ export default () => {
                 <CommonGradientText 
                   className='text-5xl sm:text-7xl w-fit max-w-[705px] 
                     text-center md:text-left  font-thin' 
-                  children='Will produce a server' />
+                  children='This will produce a server' />
                 <Bling 
                   stroke='border-[1px]' 
                   className='w-fit mx-auto shadow-[0px_0px_6px] shadow-pink-500/90'

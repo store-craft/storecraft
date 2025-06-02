@@ -20,7 +20,7 @@ export const Hero = () => {
         font-mono '>
         Ai first <br />
         Open Source <br />
-        Javascript <br/>
+        Typescript <br/>
         Commerce <br/>
         Backend
       </div>
@@ -31,10 +31,12 @@ export const Hero = () => {
       <LogoGradient 
         className='w-[300px] sm:w-[500px] md:w-[600px] ' />
 
-      <div className='md:-translate-y-3 lg:-translate-y-0'>
+      <div 
+        className='sm:translate-y-0 md:-translate-y-3 lg:-translate-y-0
+          text-2xl/tight sm:text-5xl md:text-5xl'>
         <span 
           children={`Next `} 
-          className='text-2xl/tight sm:text-5xl  
+          className=' 
             text-kf-900 dark:text-white/90
             whitespace-pre-line 
             font-sans italic
@@ -42,7 +44,7 @@ export const Hero = () => {
              -hidden --z-50' />
         <span 
           children={` Generation `} 
-          className='text-2xl/tight sm:text-5xl  
+          className='  
             text-kf-900/70 dark:text-white/75
             whitespace-pre-line 
             font-inter --italic
@@ -50,8 +52,8 @@ export const Hero = () => {
              -hidden --z-50' />        
         <br/>
         <span 
-          children={`Commerce `} 
-          className='text-2xl/tight sm:text-5xl  
+          children={`Headless Commerce `} 
+          className=' 
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
             font-sans italic
@@ -59,7 +61,7 @@ export const Hero = () => {
              -hidden --z-50' />
         <span 
           children={` As Code`} 
-          className='text-2xl/tight sm:text-5xl  
+          className=' 
             text-kf-900/70 dark:text-white/75
             whitespace-pre-line 
             font-inter --italic
@@ -76,7 +78,7 @@ export const Hero = () => {
              -hidden --z-50' />     
         <span 
           children={` AI`} 
-          className='text-2xl/tight sm:text-5xl  
+          className='
             text-kf-900 dark:text-white/80
             whitespace-pre-line 
             font-mono italic

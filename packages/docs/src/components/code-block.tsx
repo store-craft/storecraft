@@ -97,7 +97,7 @@ export const CodeBlock = (
     <div 
       className={`
         rounded-lg border
-        font-light overflow-auto text-[14px] 
+        font-light overflow-auto text-[10px] sm:text-[13px] 
         dark:border-kf-600/30 border-kf-600/10 
         dark:bg-kf-600/5 bg-slate-50 p-5 ${outerClassName}`
       }>

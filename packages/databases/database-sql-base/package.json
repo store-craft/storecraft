@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/database-sql-base",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Official SQL Database driver for storecraft",
   "license": "MIT",
   "author": "Tomer Shalev (https://github.com/store-craft)",
@@ -33,7 +33,7 @@
     "database-sql-base:test:postgres": "node ./tests/runner.postgres-local.test.js",
     "database-sql-base:test:mysql": "node ./tests/runner.mysql-local.test.js",
     "test": "npm run database-sql-base:test:sqlite && npm run database-sql-base:test:postgres && npm run database-sql-base:test:mysql",
-    "sc-publish": "npm publish"
+    "sc-publish-patch": "npm version patch && npm publish"
   },
   "dependencies": {
     "@storecraft/core": "^1.0.0",

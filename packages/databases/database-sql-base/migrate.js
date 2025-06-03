@@ -3,7 +3,7 @@
  * @import { SqlDialectType } from './types.public.js';
  * @import { Migration } from 'kysely';
  */
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import * as path from 'path'
 import { promises as fs } from 'fs'
 import {
@@ -38,7 +38,9 @@ export const get_migrations = async (dialect_type='SQLITE') => {
   for (const file of files) {
     if(file.endsWith('.js')) {
       const file_name = file.split('.').slice(0, -1).join('.');
-      const migration = await import(path.join(__dirname, folder, file));
+      const file_path = path.join(__dirname, folder, file);
+      const file_url = pathToFileURL(file_path);
+      const migration = await import(file_url.href);
       migrations[file_name] = migration;
     }
   }

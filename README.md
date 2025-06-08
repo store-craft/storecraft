@@ -6,6 +6,7 @@
   Rapidly build AI-powered, Headless e-commerce backends with TypeScript and Javascript
 </div><hr/><br/>
 
+![NPM Downloads](https://img.shields.io/npm/d18m/%40storecraft%2Fcore)
 
 [![Core](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.core.yml)
 [![MongoDB](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-mongodb.yml)[![SQLite / Postgres / MySQL](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml/badge.svg)](https://github.com/store-craft/storecraft/actions/workflows/test.database-sql.yml)

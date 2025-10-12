@@ -313,5 +313,6 @@ It will,
 > This can be done in a CI/CD pipeline, or manually.
 
 ```text
+
 Author: Tomer Shalev (tomer.shalev@gmail.com)
 ```

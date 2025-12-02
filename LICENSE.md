@@ -9,3 +9,4 @@ for that from us.
 2. Usage of storecraft is your own responsibility. Assume good intentions, Storecraft authors and contributors
 are not liable and will not be held responsible for any damage or unfortunate event caused by the software.
 3. You cannot sell or offer storecraft as a service or product without our permission. 
+

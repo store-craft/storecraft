@@ -3,7 +3,7 @@
     <img src='https://github.com/store-craft/storecraft/blob/main/packages/docs/public/storecraft-color.svg' 
         width='100%' />
   </div>
-  Rapidly build AI-powered, Headless e-commerce backends with TypeScript and Javascript
+  Rapidly build AI-powered, Headless e-commerce backends with TypeScript and Javascript !
 </div><hr/><br/>
 
 ![NPM Downloads](https://img.shields.io/npm/d18m/%40storecraft%2Fcore)

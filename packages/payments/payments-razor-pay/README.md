@@ -55,27 +55,41 @@ const app = new App(config)
 
 ## Webhook setup
 
-1. Go to your Razorpay Dashboard -> Settings -> Webhooks
-2. Set the webhook URL to `https://your-domain.com/api/gateways/razorpay/webhook`
-3. Select events: `payment.authorized`, `payment.captured`, `payment.failed`, `refund.created`, `refund.failed`, `payment.dispute.created`
-4. Copy the webhook secret and set it as env variable `RAZORPAY_WEBHOOK_SECRET`
+1. go to your razorpay dashboard -> settings -> webhooks
+2. set the webhook url to `https://your-domain.com/api/gateways/razorpay/webhook`
+3. select events: `payment.authorized`, `payment.captured`, `payment.failed`, `refund.processed`
+4. copy the webhook secret and set it as env variable `RAZORPAY_WEBHOOK_SECRET`
+
+the gateway handles these four events. all other events are ignored and return
+`null` so storecraft takes no action.
 
 ## Testing
 
-Get test API keys from https://dashboard.razorpay.com/app/keys (switch to Test mode).
+get test api keys from https://dashboard.razorpay.com/app/keys (switch to test mode).
 
-Test card numbers (from https://razorpay.com/docs/payments/payments/test-card-details/):
+test card numbers (from https://razorpay.com/docs/payments/payments/test-card-details/):
 
-| Card Network | Number              | CVV      | Expiry     |
-|--------------|---------------------|----------|------------|
-| Visa         | 4111 1111 1111 1111 | any 3    | any future |
-| Mastercard   | 5267 3181 8797 5449 | any 3    | any future |
+| card network | number              | cvv   | expiry     |
+|--------------|---------------------|-------|------------|
+| visa         | 4111 1111 1111 1111 | any 3 | any future |
+| mastercard   | 5267 3181 8797 5449 | any 3 | any future |
 
-To run tests:
+create `tests/.env` with your test credentials:
+```
+RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXXXXXX
+RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+to run the unit tests:
 ```bash
 cd packages/payments/payments-razorpay
-cp tests/.env.example tests/.env   # fill in your test keys
-npx uvu tests storage.test.js
+npm test
+```
+
+to run the full integration test against razorpay test mode:
+```bash
+cd packages/payments/payments-razorpay
+node --env-file=tests/.env tests/app.test.local.js
 ```
 
 Author: nischaldoescode

@@ -12,13 +12,18 @@ import {
   Kysely,
 } from 'kysely'
 import { SQL } from "./index.js";
+import { FixedFileMigrationProvider } from "./fix-migration-provider.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+/**
+ * @type {{ driver: SQL | undefined }}
+ */
 export const current = {
   driver: undefined
-}
+};
 
 export const read_files_in_folder = async (folder='') => {
   const files = await fs.readdir(folder);
@@ -40,6 +45,7 @@ export const get_migrations = async (dialect_type='SQLITE') => {
       const file_name = file.split('.').slice(0, -1).join('.');
       const file_path = path.join(__dirname, folder, file);
       const file_url = pathToFileURL(file_path);
+      // console.log("MIGRATION URL:", file_url.href);
       const migration = await import(file_url.href);
       migrations[file_name] = migration;
     }
@@ -71,7 +77,7 @@ export async function migrateToLatest(db_driver, release_db_upon_completion=true
   const migrator = new Migrator(
     {
       db,
-      provider: new FileMigrationProvider(
+      provider: new FixedFileMigrationProvider(
         {
           fs,
           path,

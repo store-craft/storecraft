@@ -12,6 +12,8 @@ import {
   Kysely,
 } from "kysely";
 import { SQL } from "./index.js";
+
+// reusing the same provider for all migrations to avoid issues with dynamic imports and file URLs
 import { FixedFileMigrationProvider } from "./fix-migration-provider.js";
 
 const __filename = fileURLToPath(import.meta.url);

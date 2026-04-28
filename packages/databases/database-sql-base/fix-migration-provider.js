@@ -21,17 +21,21 @@ export class FixedFileMigrationProvider {
     for (const file of files) {
       if (!file.endsWith(".js")) continue;
 
-      const full = this.path.join(this.migrationFolder, file);
-      let url = pathToFileURL(full).href;
+      // resolve absolute path to ensure cross-platform consistency
+      const fullPath = this.path.resolve(this.migrationFolder, file);
 
-      // fix for Windows file URL issues
-      url = url.replace(/^file:\/\/\//, "file:///");
+      /**
+       * Convert file path to file URL using Node's built-in utility.
+       * This avoids manual string manipulation (like regex) and ensures
+       * correct behavior across Windows, Linux, and macOS.
+       */
+      const fileUrl = pathToFileURL(fullPath).href;
 
       const name = file.replace(".js", "");
 
-      console.log("Provider loading:", url);
+      console.log("Provider loading:", fileUrl);
 
-      migrations[name] = await import(url);
+      migrations[name] = await import(fileUrl);
     }
 
     return migrations;

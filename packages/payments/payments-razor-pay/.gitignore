@@ -28,3 +28,4 @@ tests/.env
 tests/app.test.local.js
 tests/app.test.fixture.js
 .env
+duplicate_adapter.html.js

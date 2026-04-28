@@ -1,6 +1,6 @@
-import 'dotenv/config';
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+import "dotenv/config";
+import { test } from "uvu";
+import * as assert from "uvu/assert";
 
 /**
  * razorpay gateway tests.
@@ -22,16 +22,17 @@ import * as assert from 'uvu/assert';
  *        RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
  *
  * test card numbers for razorpay test mode:
- *   visa:        4111 1111 1111 1111  cvv: any 3 digits  expiry: any future date
- *   mastercard:  5267 3181 8797 5449  cvv: any 3 digits  expiry: any future date
+ *   visa (indian):        4100 2800 0000 1007  cvv: any  expiry: any future date
+ *   mastercard (indian):  5500 6700 0000 1002  cvv: any  expiry: any future date
+ *   visa (international): 4012 8888 8888 1881  cvv: any  expiry: any future date
  *   full list at https://razorpay.com/docs/payments/payments/test-card-details/
  *
  * to run (from this package root):
  *   npx uvu tests storage.test.js
  */
 
-test('todo', async () => {
-  assert.ok(true, 'todo');
+test("todo", async () => {
+  assert.ok(true, "todo");
 });
 
 test.run();

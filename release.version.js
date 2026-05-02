@@ -14,6 +14,15 @@ if(!['patch', 'minor', 'major'].includes(version_type)) {
   process.exit(1);
 }
 execSync(`npm version ${version_type} -ws --include-workspace-root --no-git-tag-version`);
+
 const version = JSON.parse(readFileSync('./package.json', 'utf-8')).version;
 
-console.log('New Version is: ', version);
+try {
+  console.log(`Tagging version ${version}...`);
+  execSync(`git tag -a v${version} -m "Release v${version}"`);
+  
+  // Then run your publish logic...
+} catch (e) {
+  console.error("Tagging failed. Tag might already exist.");
+}
+

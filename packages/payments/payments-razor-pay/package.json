@@ -1,6 +1,6 @@
 {
   "name": "@storecraft/payments-razorpay",
-  "version": "1.0.0",
+  "version": "1.4.2",
   "description": "Official Razorpay payment gateway integration for Storecraft",
   "license": "MIT",
   "author": "nischaldoescode",

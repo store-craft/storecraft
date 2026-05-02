@@ -1,6 +1,7 @@
 {
   "name": "@storecraft/playground",
-  "version": "1.0.0",
+  "version": "1.4.2",
+  "private": true,
   "description": "Examples of storectraft apps",
   "main": "index.js",
   "type": "module",

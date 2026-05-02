@@ -1,7 +1,8 @@
 {
   "name": "@storecraft/docs",
-  "version": "1.0.0",
+  "version": "1.4.2",
   "description": "Storecraft Official Documentation Website",
+  "private": true,
   "type": "module",
   "scripts": {
     "start": "npm run docs:dev",

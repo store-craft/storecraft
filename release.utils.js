@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import util from 'node:util';
 const exec = util.promisify(child_process.exec);
 
+// DEPRECATED. This file is no longer used. Please see release.version.js and release.publish.js for the new release process.
 
 /**
  * @description Get packages paths relative to root
@@ -31,6 +32,7 @@ export const get_packages = () => [
 
   '/payments/payments-paypal',
   '/payments/payments-stripe',
+  '/payments/payments-razor-pay',
 
   '/sdks/sdk',
   '/sdks/sdk-react-hooks',
@@ -41,7 +43,8 @@ export const get_packages = () => [
 );
 
 export const exec_command = async (
-  command='', tag='unknown', verbose_output=true
+  command='', tag='unknown', verbose_output=true,
+  throw_on_error=false
 ) => {
   try {
     const { stdout, stderr } = await exec(command);
@@ -50,7 +53,9 @@ export const exec_command = async (
       // stderr && console.error(`${tag} stderr:`, stderr);
     }
   } catch(e) {
-    // console.error(`${tag} error:`, e);
-    // throw e;
+    console.error(`${tag} error:`, e);
+    if(throw_on_error) {
+      throw e;
+    }
   }
 }

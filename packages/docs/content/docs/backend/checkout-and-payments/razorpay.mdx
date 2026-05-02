@@ -1,0 +1,99 @@
+# Razorpay payment gateway for StoreCraft
+
+[Razorpay](https://razorpay.com) payment gateway integration for StoreCraft.
+Razorpay is the dominant payment gateway in India and South Asia, supporting
+UPI, Netbanking, Cards, and Wallets.
+
+```bash
+npm i @storecraft/payments-razorpay
+```
+
+## Howto
+
+```js
+import { Razorpay } from '@storecraft/payments-razorpay';
+
+const gateway = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  default_currency_code: 'INR',
+  capture_mode: 'manual',
+});
+```
+
+If `key_id` and `key_secret` are not passed in config, they are read
+automatically from the environment variables `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`.
+
+## In StoreCraft App
+
+```ts
+import { App } from '@storecraft/core';
+import { NodePlatform } from '@storecraft/core/platform/node';
+import { MongoDB } from '@storecraft/database-mongodb';
+import { Razorpay } from '@storecraft/payments-razorpay';
+
+const app = new App(config)
+  .withPlatform(new NodePlatform())
+  .withDatabase(new MongoDB())
+  .withPaymentGateways({
+    razorpay: new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+      webhook_secret: process.env.RAZORPAY_WEBHOOK_SECRET,
+    }),
+  })
+  .init();
+```
+
+## Webhook Setup
+
+1. Go to your Razorpay Dashboard → Settings → Webhooks
+2. Set the webhook URL to `https://your-domain.com/api/payments/gateways/razorpay/webhook`
+3. Select events: `payment.authorized`, `payment.captured`, `payment.failed`, `refund.processed`
+4. Copy the webhook secret and set it as the environment variable `RAZORPAY_WEBHOOK_SECRET`
+
+The gateway handles these four events. All other events are ignored and return
+`null` so StoreCraft takes no action.
+
+## Developer Info and Test
+
+Resources from Razorpay:
+
+- [Razorpay API Docs](https://razorpay.com/docs/api/)
+- [Webhooks](https://razorpay.com/docs/webhooks/validate-test/)
+- [Test Card Details](https://razorpay.com/docs/payments/payments/test-card-details/)
+
+## Test Credentials
+
+Get test API keys from [Razorpay Dashboard](https://dashboard.razorpay.com/app/keys) (switch to Test Mode).
+
+Test card numbers:
+
+| Card Network | Number              | CVV   | Expiry     |
+|--------------|---------------------|-------|------------|
+| Visa         | 4111 1111 1111 1111 | any 3 | any future |
+| Mastercard   | 5267 3181 8797 5449 | any 3 | any future |
+
+## Test Webhooks
+
+Create `tests/.env` with your test credentials:
+
+```bash
+RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXXXXXX
+RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
+RAZORPAY_WEBHOOK_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+Run the unit tests:
+
+```bash
+cd packages/payments/payments-razorpay
+npm test
+```
+
+Run the full integration test against Razorpay test mode:
+
+```bash
+cd packages/payments/payments-razorpay
+node --env-file=tests/.env tests/app.test.local.js
+```

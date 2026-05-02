@@ -24,7 +24,7 @@ Hi 👋, `Storecraft` empowers developers to rapidly build AI-powered, Headless 
 
 ⭐ Manage products, collections, orders, customers, auth, emails and more with a powerful programmable api code, REST API, VQL (Virtual Query Language) for powerful queries and similarity search.
 
-⭐ Built in chat endpoint with an agent that serves customers with carts, checkouts and more with PayPal and Stripe.
+⭐ Built in chat endpoint with an agent that serves customers with carts, checkouts and more with PayPal, Stripe and RazorPay.
 
 ⭐ Runs on any javascript [platform](https://storecraft.app/docs/backend/platforms/node) (deno, bun, node, cloudflare workers, aws-lambda, google-functions), serverless / serverful
 

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "composite": true
+  },
+  "include": ["./**/*", "../../core/**/*"],
+  "exclude": ["node_modules", "../../../core/node_modules"]
+}

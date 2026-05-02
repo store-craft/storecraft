@@ -27,10 +27,11 @@
  * @import { MailChimp } from '@storecraft/mailer-providers-http/mailchimp';
  * @import { Mailgun } from '@storecraft/mailer-providers-http/mailgun';
  * 
- * // payments
+* // payments
  * 
  * @import { Paypal } from '@storecraft/payments-paypal';
  * @import { Stripe } from '@storecraft/payments-stripe';
+ * @import { Razorpay } from '@storecraft/payments-razorpay';
  * 
  * // ai-chat
  * 
@@ -975,6 +976,27 @@ export const infer_payments = info => {
                   publishable_key: 'STRIPE_PUBLISHABLE_KEY',
                   secret_key: 'STRIPE_SECRET_KEY',
                   webhook_endpoint_secret: 'STRIPE_WEBHOOK_SECRET'
+                }
+              )
+            )
+          }
+        }
+
+        case 'razorpay': {
+          return {
+            cls: `Razorpay`,
+            imports: [
+              `import { Razorpay } from '@storecraft/payments-razorpay';`
+            ],
+            deps: [
+              '@storecraft/payments-razorpay'
+            ],
+            env: extract_env_variables(
+              info.config,
+              /** @satisfies {typeof Razorpay.EnvConfig} */ (
+                {
+                  key_id: 'RAZORPAY_KEY_ID',
+                  key_secret: 'RAZORPAY_KEY_SECRET'
                 }
               )
             )

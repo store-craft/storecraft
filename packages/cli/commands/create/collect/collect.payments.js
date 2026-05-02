@@ -24,6 +24,10 @@ export const choices = /** @type {const} */ ([
     value: 'paypal'
   },
   {
+    name: 'Razorpay',
+    value: 'razorpay'
+  },
+  {
     name: 'Dummy Payments (For testing)',
     value: 'dummy'
   },
@@ -38,7 +42,7 @@ export const collect_payments = async () => {
     const id = await withCancel(
       select(
         {
-          message: '💳 Select Payment Provider',
+          message: 'Select Payment Provider',
           options: choices.map(
             c => (
               {
@@ -75,9 +79,7 @@ export const collect_payments = async () => {
 }
 
 /**
- * 
  * @param {choices[number]["value"]} id 
- * @returns 
  */
 const collect_general_config = async (
   id
@@ -179,6 +181,54 @@ const collect_general_config = async (
         stripe_config: {
         }
       }
+      return config;
+    }
+
+    case 'razorpay': {
+      /** @type {import('@storecraft/payments-razorpay').Config} */
+      const config = {
+        default_currency_code: await withCancel(
+          text(
+            {
+              message: 'Razorpay Currency Code',
+              defaultValue: 'INR',
+              placeholder: 'INR',
+            }
+          ),
+        ),
+        // @ts-ignore
+        capture_mode: await withCancel(
+          select(
+            {
+              message: 'Razorpay Capture Mode',
+              options: [
+                { label: 'manual - you capture explicitly after authorization', value: 'manual' },
+                { label: 'automatic - razorpay captures immediately', value: 'automatic' },
+              ],
+              initialValue: 'manual'
+            }
+          ),
+        ),
+        key_id: await withCancel(
+          text(
+            {
+              message: 'Razorpay Key ID',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          ),
+        ),
+        key_secret: await withCancel(
+          text(
+            {
+              message: 'Razorpay Key Secret',
+              defaultValue: '*****',
+              placeholder: '*****',
+            }
+          )
+        )
+      }
+
       return config;
     }
 

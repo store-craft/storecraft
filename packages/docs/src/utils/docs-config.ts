@@ -316,6 +316,11 @@ export default {
               path: 'content/docs/backend/checkout-and-payments/stripe.mdx'
             },
             {
+              title: 'Razorpay',
+              route: 'backend/checkout-and-payments/razorpay',
+              path: 'content/docs/backend/checkout-and-payments/razorpay.mdx'
+            },
+            {
               title: 'Taxes',
               route: 'backend/checkout-and-payments/taxes',
               path: 'content/docs/backend/checkout-and-payments/taxes.mdx'

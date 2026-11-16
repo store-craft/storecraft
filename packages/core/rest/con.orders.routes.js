@@ -66,8 +66,9 @@ export const create_routes = (app) => {
 
   
   // 
-  // get order is public because ids are cryptographic:
-  // - but, if you are not admin, payment gateway is partially hidden
+  // get a single order. order ids are enumerable (sequential object-ids),
+  // so access must not rely on id secrecy. bind to admin or owning customer.
+  // - if you are not admin, payment gateway is partially hidden
   polka.get(
     '/:id',
     parse_auth_user(app),
@@ -77,7 +78,15 @@ export const create_routes = (app) => {
 
       assert(item, 'not-found', 404);
 
-      if(!is_admin(req.user)) {
+      const is_admin_user = is_admin(req.user);
+      const is_owner = Boolean(
+        req.user?.email && item?.contact?.email &&
+        req.user.email===item.contact.email
+      );
+
+      assert_generic_auth(is_admin_user || is_owner);
+
+      if(!is_admin_user) {
         // non admins won't see gateway
         delete item?.payment_gateway?.on_checkout_create;
       }
